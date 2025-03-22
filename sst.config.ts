@@ -12,7 +12,7 @@ export default $config({
 					region: "us-east-1",
 				},
 			},
-		};
+		}
 	},
 	async run() {
 		new sst.aws.Nextjs("NextJS", {
@@ -26,6 +26,6 @@ export default $config({
 			dev: {
 				command: "pnpm exec next dev --turbo",
 			},
-		});
+		})
 	},
-});
+})

@@ -6,9 +6,4 @@ export default {
 			wrapper: "aws-lambda-streaming",
 		},
 	},
-
-	middleware: {
-		external: true,
-		runtime: "edge",
-	},
 } satisfies OpenNextConfig

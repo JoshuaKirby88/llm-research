@@ -1,3 +1,5 @@
+- [ ] Fix Clerk middleware error
+
 # Tech
 
 - Zero sync

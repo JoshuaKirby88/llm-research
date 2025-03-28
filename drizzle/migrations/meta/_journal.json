@@ -8,6 +8,13 @@
 			"when": 1742660787702,
 			"tag": "0000_unknown_synch",
 			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1743202483438,
+			"tag": "0001_nosy_frank_castle",
+			"breakpoints": true
 		}
 	]
 }

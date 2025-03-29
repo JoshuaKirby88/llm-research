@@ -1,5 +1,4 @@
 - [ ] Fix Clerk middleware error
-- [ ] env.ts
 
 # Tech
 

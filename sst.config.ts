@@ -20,10 +20,11 @@ export default $config({
 				DATABASE_URL: process.env.DATABASE_URL!,
 				NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
 				CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY!,
+				XATA_API_KEY: process.env.XATA_API_KEY!,
+				XATA_BRANCH: process.env.XATA_BRANCH!,
 			},
 			transform: {
 				server: {
-					timeout: "900 seconds",
 					runtime: "nodejs22.x",
 					architecture: "arm64",
 				},

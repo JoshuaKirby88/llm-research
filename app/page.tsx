@@ -1,34 +1,20 @@
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { db } from "@/drizzle/db"
+import { startResearchAction } from "@/actions/start-research.action"
+import { FormActionButton } from "@/components/form-action-button"
+import { ResearchesSearchForm } from "./_components/page/researches-search-form"
+import { ResearchesSearchResult } from "./_components/page/researches-search-result"
 
-const researchData = [
-	{ id: 1, title: "Research on Prompt Engineering", description: "Analysis of prompt variables." },
-	{ id: 2, title: "LLM Behaviour Study", description: "Exploring response trends from LLMs." },
-	{ id: 3, title: "User Prompt Analysis", description: "Understanding how users craft prompts." },
-]
+const Page = (props: { searchParams: NextSearchParams }) => (
+	<>
+		<h1 className="font-bold text-6xl">LLM Research</h1>
 
-const Page = async () => {
-	const researches = await db.query.Research.findMany()
+		<FormActionButton action={startResearchAction} size="lg">
+			Start Research
+		</FormActionButton>
 
-	return (
-		<div className="container mx-auto space-y-10 pt-40">
-			<h1 className="text-center font-bold text-6xl">LLM Research</h1>
+		<ResearchesSearchForm searchParams={props.searchParams} />
 
-			<div className="mx-auto max-w-[50rem]">
-				<Input placeholder="Search public research..." />
-			</div>
-
-			<div className="mx-auto grid max-w-[70rem] grid-cols-1 gap-4 md:grid-cols-3">
-				{researchData.map(research => (
-					<Card key={research.id} className="p-4">
-						<h2 className="mb-2 font-semibold text-2xl">{research.title}</h2>
-						<p>{research.description}</p>
-					</Card>
-				))}
-			</div>
-		</div>
-	)
-}
+		<ResearchesSearchResult searchParams={props.searchParams} />
+	</>
+)
 
 export default Page

@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
-import { ClerkProvider } from "./_components/clerk-provider"
-import { ThemeDropdown } from "./_components/theme-dropdown"
-import { ThemeProvider } from "./_components/theme-provider"
+import { ClerkProvider } from "./_components/layout/clerk-provider"
+import { ThemeDropdown } from "./_components/layout/theme-dropdown"
+import { ThemeProvider } from "./_components/layout/theme-provider"
 
 export const metadata: Metadata = {
 	title: "LLM Research",
@@ -16,7 +16,7 @@ const Layout = (props: { children: React.ReactNode }) => {
 			<body className="antialiased">
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 					<ClerkProvider>
-						<header className="flex h-16 items-center justify-end gap-4 p-4">
+						<header className="fixed z-10 flex h-16 w-full items-center justify-end gap-4 border-b bg-background p-4">
 							<ThemeDropdown />
 
 							<SignedOut>
@@ -28,7 +28,7 @@ const Layout = (props: { children: React.ReactNode }) => {
 							</SignedIn>
 						</header>
 
-						{props.children}
+						<main className="container mx-auto flex flex-col items-center space-y-10 py-40">{props.children}</main>
 					</ClerkProvider>
 				</ThemeProvider>
 			</body>

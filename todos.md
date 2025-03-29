@@ -1,11 +1,9 @@
 - [ ] Fix Clerk middleware error
+- [ ] Company name in navbar to go to home page
 
 # Tech
 
 - Zero sync
-- Tembo
-- Clerk
 - Vercel AI SDK
-- Drizzle
 - PostHog
 - Sentry

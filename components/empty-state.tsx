@@ -1,0 +1,41 @@
+import { cn } from "@/utils/cn"
+import * as React from "react"
+import { addClassName } from "./add-className"
+
+type EmptyStateProps = {
+	title: string
+	description: string
+	icons?: React.ReactNode[]
+	button: React.ReactNode
+	className?: string
+}
+
+export const EmptyState = (props: EmptyStateProps) => (
+	<div className={cn("group w-full rounded-xl border-2 border-border border-dashed bg-background p-7 text-center", props.className)}>
+		<div className="isolate flex justify-center">
+			{props.icons?.length === 3 ? (
+				<>
+					<div className="-rotate-6 group-hover:-translate-x-5 group-hover:-translate-y-0.5 group-hover:-rotate-12 relative top-1.5 left-2.5 grid size-12 place-items-center rounded-xl bg-background shadow-lg ring-1 ring-border transition duration-500 group-hover:duration-200">
+						{addClassName(props.icons[0], "w-6 h-6 text-muted-foreground")}
+					</div>
+					<div className="group-hover:-translate-y-0.5 relative z-10 grid size-12 place-items-center rounded-xl bg-background shadow-lg ring-1 ring-border transition duration-500 group-hover:duration-200">
+						{addClassName(props.icons[1], "w-6 h-6 text-muted-foreground")}
+					</div>
+					<div className="group-hover:-translate-y-0.5 relative top-1.5 right-2.5 grid size-12 rotate-6 place-items-center rounded-xl bg-background shadow-lg ring-1 ring-border transition duration-500 group-hover:translate-x-5 group-hover:rotate-12 group-hover:duration-200">
+						{addClassName(props.icons[2], "w-6 h-6 text-muted-foreground")}
+					</div>
+				</>
+			) : (
+				<div className="group-hover:-translate-y-0.5 grid size-12 place-items-center rounded-xl bg-background shadow-lg ring-1 ring-border transition duration-500 group-hover:duration-200">
+					{props.icons?.[0] && addClassName(props.icons[0], "w-6 h-6 text-muted-foreground")}
+				</div>
+			)}
+		</div>
+
+		<h2 className="mt-6 font-medium text-foreground">{props.title}</h2>
+
+		<p className="mt-1 mb-4 whitespace-pre-line text-muted-foreground text-sm">{props.description}</p>
+
+		{props.button}
+	</div>
+)

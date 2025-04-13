@@ -7,3 +7,12 @@
 - Vercel AI SDK
 - PostHog
 - Sentry
+- Cloudflare
+- Pinecone for search
+- Virgil font
+
+# Research examples
+
+- Does language consistency affect accurancy?
+- Do LLMs bias toward identified over anonymous individuals?
+- Should conversation history be in individual messages or user prompt?

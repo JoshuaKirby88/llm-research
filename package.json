@@ -4,13 +4,17 @@
 	"private": true,
 	"scripts": {
 		"build": "next build",
-		"dev": "pnpm exec sst dev",
-		"lint": "pnpm biome check .",
+		"dev": "pnpm cf-typegen && next dev --turbo",
+		"lint": "biome check .",
 		"start": "next start",
 		"studio": "drizzle-kit studio --config=drizzle/config.ts",
 		"generate": "drizzle-kit generate --config=drizzle/config.ts",
 		"migrate": "drizzle-kit migrate --config=drizzle/config.ts",
-		"drop": "drizzle-kit drop --config=drizzle/config.ts"
+		"drop": "drizzle-kit drop --config=drizzle/config.ts",
+		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^6.12.8",
@@ -42,7 +46,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@opennextjs/aws": "^3.5.3",
+		"@opennextjs/cloudflare": "^0.6.5",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^20",
 		"@types/pg": "^8.11.11",
@@ -51,7 +55,8 @@
 		"@xata.io/cli": "^0.16.12",
 		"drizzle-kit": "^0.30.5",
 		"tailwindcss": "^4",
-		"typescript": "^5"
+		"typescript": "^5",
+		"wrangler": "^4.10.0"
 	},
 	"pnpm": {
 		"neverBuiltDependencies": []

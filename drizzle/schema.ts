@@ -1,140 +1,160 @@
-import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core"
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
-export const Research = pgTable("Research", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const Research = sqliteTable("Research", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
-	isCompleted: boolean().default(false),
+	isCompleted: integer({ mode: "boolean" }).default(false),
 	userId: text().notNull(),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const Contributor = pgTable("Contributor", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const Contributor = sqliteTable("Contributor", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	count: integer().notNull(),
 	userId: text().notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const IndependentVariable = pgTable("IndependentVariable", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const IndependentVariable = sqliteTable("IndependentVariable", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
 	prompt: text(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const IndependentValue = pgTable("IndependentValue", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const IndependentValue = sqliteTable("IndependentValue", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	value: text().notNull(),
 	independentVariableId: integer()
 		.notNull()
 		.references(() => IndependentVariable.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const BlockingVariable = pgTable("BlockingVariable", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const BlockingVariable = sqliteTable("BlockingVariable", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	name: text().notNull(),
 	prompt: text(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const BlockingValue = pgTable("BlockingValue", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const BlockingValue = sqliteTable("BlockingValue", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	value: text().notNull(),
 	blockingVariableId: integer()
 		.notNull()
 		.references(() => BlockingVariable.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const MessagePrompt = pgTable("MessagePrompt", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const MessagePrompt = sqliteTable("MessagePrompt", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	role: text({ enum: ["system", "user", "assistant"] }).notNull(),
 	text: text().notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const EvalPrompt = pgTable("EvalPrompt", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const EvalPrompt = sqliteTable("EvalPrompt", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	text: text().notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const ResultEnum = pgTable("ResultEnum", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const ResultEnum = sqliteTable("ResultEnum", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	value: text().notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const TestBatch = pgTable("TestBatch", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const TestBatch = sqliteTable("TestBatch", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	count: integer().notNull(),
 	contributorId: integer()
 		.notNull()
 		.references(() => Contributor.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const Test = pgTable("Test", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const Test = sqliteTable("Test", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	resultEnumId: integer()
 		.notNull()
 		.references(() => ResultEnum.id),
@@ -144,58 +164,75 @@ export const Test = pgTable("Test", {
 	independentValueId: integer()
 		.notNull()
 		.references(() => IndependentValue.id),
-	blockingValueIds: integer().array().notNull(),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const Message = pgTable("Message", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const TestToBlockingValue = sqliteTable("TestToBlockingValue", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+	testId: integer()
+		.notNull()
+		.references(() => Test.id),
+	blockingValueId: integer()
+		.notNull()
+		.references(() => BlockingValue.id),
+})
+
+export const Message = sqliteTable("Message", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	role: text({ enum: ["system", "user", "assistant"] }).notNull(),
 	content: text().notNull(),
 	tokens: integer().notNull(),
 	testId: integer()
 		.notNull()
 		.references(() => Test.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const Completion = pgTable("Completion", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const Completion = sqliteTable("Completion", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	content: text().notNull(),
 	tokens: integer().notNull(),
 	testId: integer()
 		.notNull()
 		.references(() => Test.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const ResearchResult = pgTable("ResearchResult", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const ResearchResult = sqliteTable("ResearchResult", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	count: integer().notNull(),
 	resultEnumId: integer()
 		.notNull()
 		.references(() => ResultEnum.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })
 
-export const TestBatchResult = pgTable("TestBatchResult", {
-	id: integer().primaryKey().generatedAlwaysAsIdentity({ minValue: 1000 }),
+export const TestBatchResult = sqliteTable("TestBatchResult", {
+	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	count: integer().notNull(),
 	resultEnumId: integer()
 		.notNull()
@@ -203,9 +240,11 @@ export const TestBatchResult = pgTable("TestBatchResult", {
 	testBatchId: integer()
 		.notNull()
 		.references(() => TestBatch.id),
-	createdAt: timestamp().notNull().defaultNow(),
-	updatedAt: timestamp()
+	createdAt: integer({ mode: "timestamp_ms" })
 		.notNull()
-		.defaultNow()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
 })

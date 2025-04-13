@@ -20,7 +20,8 @@
 		{
 			"binding": "DB",
 			"database_name": "llm-research",
-			"database_id": "98fd5254-fd05-4459-a74d-3c9ad082c314"
+			"database_id": "98fd5254-fd05-4459-a74d-3c9ad082c314",
+			"migrations_dir": "drizzle/migrations"
 		}
 	]
 }

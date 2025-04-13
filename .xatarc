@@ -1,6 +1,0 @@
-{
-  "databaseURL": "https://jojokirby88-s-workspace-ctq4nn.us-east-1.xata.sh/db/llm-research",
-  "codegen": {
-    "output": "drizzle/xata.ts"
-  }
-}

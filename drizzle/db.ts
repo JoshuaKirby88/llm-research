@@ -1,6 +1,6 @@
 import * as schema from "@/drizzle/schema"
-import { drizzle } from "drizzle-orm/xata-http"
-import { getXataClient } from "./xata"
+import { getCloudflareContext } from "@opennextjs/cloudflare"
+import { drizzle } from "drizzle-orm/d1"
 
-const xata = getXataClient()
-export const db = drizzle(xata, { schema })
+const env = (await getCloudflareContext({ async: true })).env
+export const db = drizzle(env.DB, { schema })

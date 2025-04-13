@@ -1,5 +1,6 @@
 - [ ] Fix Clerk middleware error
 - [ ] Company name in navbar to go to home page
+- [ ] Remove Xata
 
 # Tech
 

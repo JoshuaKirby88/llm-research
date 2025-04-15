@@ -48,3 +48,5 @@ next-env.d.ts
 
 .xata
 .dev.vars
+.wrangler
+drizzle/migrations

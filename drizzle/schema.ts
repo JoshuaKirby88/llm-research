@@ -1,5 +1,19 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
+export const APIKey = sqliteTable("APIKey", {
+	userId: text().primaryKey(),
+	openai: text(),
+	google: text(),
+	anthropic: text(),
+	createdAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
+		.$onUpdateFn(() => new Date()),
+})
+
 export const Research = sqliteTable("Research", {
 	id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
 	name: text().notNull(),

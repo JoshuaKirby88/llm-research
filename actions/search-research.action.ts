@@ -2,7 +2,7 @@
 
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
-import { ResearchT } from "@/src/schema/research.schema"
+import { ResearchT } from "@/src/schemas"
 import { eq } from "drizzle-orm"
 
 export const searchResearchAction = async (input: { search?: string | string[] }) => {

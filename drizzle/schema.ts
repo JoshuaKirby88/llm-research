@@ -181,6 +181,13 @@ export const TestToBlockingValue = sqliteTable("TestToBlockingValue", {
 	blockingValueId: integer()
 		.notNull()
 		.references(() => BlockingValue.id),
+	createdAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: integer({ mode: "timestamp_ms" })
+		.notNull()
+		.$defaultFn(() => new Date())
+		.$onUpdateFn(() => new Date()),
 })
 
 export const Message = sqliteTable("Message", {

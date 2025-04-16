@@ -24,4 +24,6 @@ export const updateAPIKeySchema = apiKeySchema.pick({ userId: true }).merge(
 
 export type UpdateAPIKeyT = z.infer<typeof updateAPIKeySchema>
 
+export type PartialAPIKeyT = Partial<Pick<APIKeyT, APIKeyKey>>
+
 export type MaskedAPIKeyT = Record<APIKeyKey, string>

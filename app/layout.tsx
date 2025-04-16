@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import { Toaster } from "@/components/ui/sonner"
 import { Navbar } from "./_components/layout/navbar/navbar"
 import { ClerkProvider } from "./_components/layout/providers/clerk-provider"
 import { ThemeProvider } from "./_components/layout/providers/theme-provider"
@@ -18,6 +19,8 @@ const Layout = (props: { children: React.ReactNode }) => {
 						<Navbar />
 
 						<main className="container mx-auto flex flex-col items-center space-y-10 py-40">{props.children}</main>
+
+						<Toaster />
 					</ClerkProvider>
 				</ThemeProvider>
 			</body>

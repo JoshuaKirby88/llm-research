@@ -7,7 +7,7 @@ import { SettingsTabs, SettingsTabsContent } from "./_components/tabs"
 const Page = async () => {
 	const user = await authProcedure("signedIn")
 	const apiKey = await SettingsQuery.execute({ userId: user.userId })
-	const maskedAPIKey = apiKey ? APIKeyTable.mask(apiKey) : null
+	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
 	return (
 		<div className="w-full max-w-[50rem]">

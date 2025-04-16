@@ -1,4 +1,5 @@
 "use server"
+
 import { APIKeyRepo } from "@/src/repos"
 import { updateAPIKeySchema } from "@/src/schemas"
 import { APIKeyTable } from "@/src/tables/api-key.table"
@@ -8,11 +9,13 @@ export const saveAPIKeyAction = createAction(
 	"signedIn",
 	updateAPIKeySchema.omit({ userId: true }),
 )(async ({ user, input }) => {
-	const filteredAPIKey: typeof input = Object.fromEntries(Object.entries(input).filter(([_, value]) => value))
+	const encryptedAPIKey = APIKeyTable.encrypt(input)
 
-	const encryptedAPIKey = APIKeyTable.encrypt(filteredAPIKey)
+	const updatedAPIKey = await APIKeyRepo.update(user.userId, encryptedAPIKey)
 
-	const result = await APIKeyRepo.update(user.userId, encryptedAPIKey)
+	const maskedUpdatedAPIKey = APIKeyTable.mask(APIKeyTable.decrypt(updatedAPIKey))
 
-	return result
+	return {
+		maskedUpdatedAPIKey,
+	}
 })

@@ -13,7 +13,11 @@ export const Navbar = () => {
 				<Image src="/emojis/scientist.webp" alt="Scientist" width={25} height={25} />
 			</Link>
 
-			<Link href="/settings" className={cn(buttonVariants({ size: "icon", variant: "outline" }), "ml-auto")}>
+			<Link className={cn(buttonVariants(), "ml-auto")} href="/research">
+				Start Research
+			</Link>
+
+			<Link href="/settings" className={buttonVariants({ size: "icon", variant: "outline" })}>
 				<CogIcon />
 			</Link>
 

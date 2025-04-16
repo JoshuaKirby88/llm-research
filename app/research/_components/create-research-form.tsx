@@ -16,6 +16,8 @@ import React from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { z } from "zod"
 
+export type CreateResearchI = z.infer<typeof schema>
+
 const schema = z.object({
 	research: researchSchema.pick({ name: true }),
 	independentVariable: independentVariableSchema.pick({ name: true }).extend({ values: independentValueSchema.shape.value.array() }),
@@ -26,12 +28,22 @@ const schema = z.object({
 	resultEnums: resultEnumSchema.shape.value.array(),
 })
 
-export type CreateResearchI = z.infer<typeof schema>
+const defaultValues: Partial<CreateResearchI> = { blockingVariables: [{ name: "", values: [] }] }
+
+const exampleValues: CreateResearchI = {
+	research: { name: "Does using multiple language affect LLM?" },
+	independentVariable: { name: "Language", values: ["English", "Japanese"] },
+	blockingVariables: [{ name: "Topic", values: ["Toy Store A", "Car Maker B"] }],
+	systemMessagePrompt: { text: "Generate made up information about {topic}." },
+	userMessagePrompt: { text: "Based on this information:\n{systemPrompt}\n\nAsk a question that can be answered." },
+	evalPrompt: { text: "Based on this information:\n{systemPrompt}\n\nIs this answer correct?\nQuestion:\n{userPrompt}\nAnswer:\n{completion}" },
+	resultEnums: ["Correct", "Incorrect"],
+}
 
 export const CreateResearchForm = () => {
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		defaultValues: { blockingVariables: [{ name: "", values: [] }] },
+		defaultValues,
 	})
 
 	const blockingVariableFields = useFieldArray({
@@ -45,23 +57,41 @@ export const CreateResearchForm = () => {
 
 	return (
 		<Form {...form} onSubmit={onSubmit}>
-			<Label className="inline text-3xl">Research Question</Label>
-			<HintTooltip icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs." />
+			<div className="mb-10 flex items-center gap-10">
+				<Button type="button" onClick={() => form.reset(exampleValues)} variant="link">
+					View Example Research
+				</Button>
+
+				<Button type="button" variant="link" onClick={() => form.reset(defaultValues)}>
+					Reset
+				</Button>
+			</div>
+
+			<Label className="text-3xl">
+				Research Question
+				<HintTooltip icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs." />
+			</Label>
 			<FormInput name="research.name" />
 
-			<h3 className="mt-10 inline text-2xl">Independent variable</h3>
-			<HintTooltip icon={<VariableIcon />} title="Which One Was This Again?" description="This is what you change on purpose to see how it affects the outcome." />
+			<h3 className="mt-10 text-2xl">
+				Independent variable
+				<HintTooltip icon={<VariableIcon />} title="Which One Was This Again?" description="This is what you change on purpose to see how it affects the outcome." />
+			</h3>
+
 			<Label>Name</Label>
 			<FormInput name="independentVariable.name" />
 			<Label>Variables</Label>
 			<FormTagInput name="independentVariable.values" />
 
-			<h3 className="mt-10 inline text-2xl">Blocking variables</h3>
-			<HintTooltip
-				icon={<VariableIcon />}
-				title="Generate Test Variations"
-				description="Add variables here with multiple values. The system will automatically create test runs for every possible combination you define."
-			/>
+			<h3 className="mt-10 text-2xl">
+				Blocking variables
+				<HintTooltip
+					icon={<VariableIcon />}
+					title="Generate Test Variations"
+					description="Add variables here with multiple values. The system will automatically create test runs for every possible combination you define."
+				/>
+			</h3>
+
 			{blockingVariableFields.fields.map((field, i) => (
 				<React.Fragment key={field.id}>
 					<Label>Name</Label>
@@ -71,30 +101,39 @@ export const CreateResearchForm = () => {
 					<Button className="w-full" variant="destructive" onClick={() => blockingVariableFields.remove(i)}>
 						Delete Blocking Variable
 					</Button>
-					<Separator />
+					<Separator className="" />
 				</React.Fragment>
 			))}
 			<Button className="w-full" variant="secondary" onClick={() => blockingVariableFields.append({ name: "", values: [] })}>
 				Add Blocking Variable
 			</Button>
 
-			<h3 className="mt-10 inline text-2xl">Message prompt</h3>
-			<HintTooltip
-				icon={<HardHatIcon />}
-				title="Can We Prompt it? Yes We Can!"
-				description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
-			/>
+			<h3 className="mt-10 text-2xl">
+				Message prompt
+				<HintTooltip
+					icon={<HardHatIcon />}
+					title="Can We Prompt it? Yes We Can!"
+					description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
+				/>
+			</h3>
+
 			<Label>System</Label>
 			<FormTextarea name="systemMessagePrompt.text" />
 			<Label>User</Label>
 			<FormTextarea name="userMessagePrompt.text" />
 
-			<Label className="mt-10 inline text-2xl">Evaluation prompt</Label>
-			<HintTooltip icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt." />
+			<Label className="mt-10 text-2xl">
+				Evaluation prompt
+				<HintTooltip icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt." />
+			</Label>
+
 			<FormTextarea name="evalPrompt.text" />
 
-			<Label className="mt-10 inline text-2xl">Result enums</Label>
-			<HintTooltip icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined." />
+			<Label className="mt-10 text-2xl">
+				Result enums
+				<HintTooltip icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined." />
+			</Label>
+
 			<FormTagInput name="resultEnums" />
 
 			<FormButton className="mt-10">Submit</FormButton>

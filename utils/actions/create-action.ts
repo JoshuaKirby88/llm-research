@@ -4,6 +4,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error"
 import type { z } from "zod"
 
 export type ActionO<T extends (...input: any[]) => Promise<any | { error: string }>> = Exclude<Awaited<ReturnType<T>>, { error: string }>
+export type ActionI<T extends (...input: any[]) => Promise<any>> = Parameters<T>[0]
 
 type OptionalAuthProcedureO<T extends AuthProcedure | "none"> = T extends AuthProcedure ? AuthProcedureO<T> : null
 

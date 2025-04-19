@@ -5,7 +5,7 @@ import omit from "lodash.omit"
 import { CalendarIcon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
 
-export const OverviewPage = (props: NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
+export const ResearchOverviewPage = (props: NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>

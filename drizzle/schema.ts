@@ -24,10 +24,12 @@ export const Research = sqliteTable(
 	{
 		id: integer().primaryKey({ autoIncrement: true }),
 		name: text().notNull(),
-		isComplete: integer({ mode: "boolean" }).notNull().default(false),
+		description: text().notNull().default(""),
 		stars: integer().notNull().default(0),
 		conclusion: text(),
+		isComplete: integer({ mode: "boolean" }).notNull().default(false),
 		isArchived: integer({ mode: "boolean" }).notNull().default(false),
+		isUserDeleted: integer({ mode: "boolean" }).notNull().default(false),
 		userId: text().notNull(),
 		...defaultColumns,
 	},

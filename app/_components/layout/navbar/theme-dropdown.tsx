@@ -23,7 +23,7 @@ export const ThemeDropdown = (props: ButtonProps) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				{config.themes.map(theme => (
-					<DropdownMenuCheckboxItem onClick={() => setTheme(theme)} checked={selectedTheme === theme} className="capitalize">
+					<DropdownMenuCheckboxItem key={theme} onClick={() => setTheme(theme)} checked={selectedTheme === theme} className="capitalize">
 						{theme}
 					</DropdownMenuCheckboxItem>
 				))}

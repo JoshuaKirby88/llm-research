@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/utils/cn"
 import { ComponentProps } from "react"
 import TextareaAutosize from "react-textarea-autosize"

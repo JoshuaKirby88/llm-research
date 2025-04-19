@@ -25,6 +25,21 @@ export const updateResearchSchema = researchSchema.pick({ id: true }).merge(
 
 export type UpdateResearchT = z.infer<typeof updateResearchSchema>
 
+export const researchVectorSchema = z.object({
+	id: researchSchema.shape.id,
+	values: z.number().array(),
+})
+
+export type ResearchVectorT = z.infer<typeof researchVectorSchema>
+
+export const insertResearchVectorSchema = researchVectorSchema
+
+export type InsertResearchVectorT = z.infer<typeof insertResearchVectorSchema>
+
+export const updateResearchAndVectorSchema = researchSchema.pick({ id: true, name: true, description: true }).merge(updateResearchSchema.pick({ conclusion: true }))
+
+export type UpdateResearchAndVectorT = z.infer<typeof updateResearchAndVectorSchema>
+
 export const researchWithUserToStarredResearchSchema = researchSchema.extend({
 	userToStarredResearch: userToStarredResearchSchema.array(),
 })

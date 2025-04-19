@@ -1,12 +1,13 @@
 "use client"
 
 import { saveAPIKeyAction } from "@/actions/settings/save-api-key.action"
-import { Form } from "@/components/form/form"
-import { FormButton } from "@/components/form/form-button"
-import { FormInput } from "@/components/form/form-input"
+import { Form } from "@/components/form/client/form"
+import { FormButton } from "@/components/form/client/form-button"
+import { FormInput } from "@/components/form/client/form-input"
+import { AIIcons } from "@/components/icons/ai-icons"
 import { Label } from "@/components/ui/label"
-import { MaskedAPIKeyT, apiKeySchema } from "@/src/schemas"
-import { APIKeyKey, APIKeyTable } from "@/src/tables/api-key.table"
+import { AIProvider, MaskedAPIKeyT, aiProviders, apiKeySchema } from "@/src/schemas"
+import { APIKeyTable } from "@/src/tables/api-key.table"
 import { isActionValid } from "@/utils/actions/is-action-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRef } from "react"
@@ -15,10 +16,10 @@ import { z } from "zod"
 
 const config = {
 	apiKeys: [
-		{ key: "openai", title: "OpenAI" },
-		{ key: "google", title: "Google" },
-		{ key: "anthropic", title: "Anthropic" },
-	] satisfies { key: APIKeyKey; [key: string]: any }[],
+		{ aiProvider: "openai", title: "OpenAI" },
+		{ aiProvider: "google", title: "Google" },
+		{ aiProvider: "anthropic", title: "Anthropic" },
+	] satisfies { aiProvider: AIProvider; [key: string]: any }[],
 }
 
 export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
@@ -27,7 +28,7 @@ export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 	const schema = apiKeySchema.pick({ openai: true, google: true, anthropic: true })
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		defaultValues: Object.fromEntries(APIKeyTable.keys.map(key => [key, props.maskedAPIKey?.[key] ?? ""])),
+		defaultValues: Object.fromEntries(aiProviders.map(aiProvider => [aiProvider, props.maskedAPIKey?.[aiProvider] ?? ""])),
 	})
 
 	const onSubmit = async (input: z.infer<typeof schema>) => {
@@ -48,10 +49,13 @@ export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 	return (
 		<Form {...form} onSubmit={onSubmit} className="space-y-5">
 			{config.apiKeys.map(apiKey => (
-				<div key={apiKey.key}>
-					<Label className="mb-2">{apiKey.title}</Label>
+				<div key={apiKey.aiProvider}>
+					<Label className="mb-2">
+						<AIIcons aiProvider={apiKey.aiProvider} />
+						{apiKey.title}
+					</Label>
 					<div className="flex items-center gap-2">
-						<FormInput name={apiKey.key} />
+						<FormInput name={apiKey.aiProvider} />
 					</div>
 				</div>
 			))}

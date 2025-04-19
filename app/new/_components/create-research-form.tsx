@@ -1,11 +1,11 @@
 "use client"
 
 import { createResearchAction } from "@/actions/research/create-research.action"
-import { Form } from "@/components/form/form"
-import { FormButton } from "@/components/form/form-button"
-import { FormInput } from "@/components/form/form-input"
-import { FormTagInput } from "@/components/form/form-tag-input"
-import { FormTextarea } from "@/components/form/form-textarea"
+import { Form } from "@/components/form/client/form"
+import { FormButton } from "@/components/form/client/form-button"
+import { FormInput } from "@/components/form/client/form-input"
+import { FormTagInput } from "@/components/form/client/form-tag-input"
+import { FormTextarea } from "@/components/form/client/form-textarea"
 import { HintTooltip } from "@/components/hint-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -56,30 +56,30 @@ export const CreateResearchForm = () => {
 				</Button>
 			</div>
 
-			<Label className="text-3xl">
+			<Label size="3xl">
 				Research Question
 				<HintTooltip icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs." />
 			</Label>
 			<FormInput name="research.name" />
 
-			<h3 className="mt-10 text-2xl">
+			<Label className="mt-10" size="2xl">
 				Independent variable
 				<HintTooltip icon={<VariableIcon />} title="Which One Was This Again?" description="This is what you change on purpose to see how it affects the outcome." />
-			</h3>
+			</Label>
 
 			<Label>Name</Label>
 			<FormInput name="independentVariable.name" />
 			<Label>Variables</Label>
 			<FormTagInput name="independentVariable.values" />
 
-			<h3 className="mt-10 text-2xl">
+			<Label size="2xl" className="mt-10">
 				Blocking variables
 				<HintTooltip
 					icon={<VariableIcon />}
 					title="Generate Test Variations"
 					description="Add variables here with multiple values. The system will automatically create test runs for every possible combination you define."
 				/>
-			</h3>
+			</Label>
 
 			{blockingVariableFields.fields.map((field, i) => (
 				<React.Fragment key={field.id}>
@@ -97,28 +97,28 @@ export const CreateResearchForm = () => {
 				Add Blocking Variable
 			</Button>
 
-			<h3 className="mt-10 text-2xl">
+			<Label size="2xl" className="mt-10">
 				Message prompt
 				<HintTooltip
 					icon={<HardHatIcon />}
 					title="Can We Prompt it? Yes We Can!"
 					description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
 				/>
-			</h3>
+			</Label>
 
 			<Label>System</Label>
 			<FormTextarea name="systemMessagePrompt.text" />
 			<Label>User</Label>
 			<FormTextarea name="userMessagePrompt.text" />
 
-			<Label className="mt-10 text-2xl">
+			<Label className="mt-10" size="2xl">
 				Evaluation prompt
 				<HintTooltip icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt." />
 			</Label>
 
 			<FormTextarea name="evalPrompt.text" />
 
-			<Label className="mt-10 text-2xl">
+			<Label className="mt-10" size="2xl">
 				Result enums
 				<HintTooltip icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined." />
 			</Label>

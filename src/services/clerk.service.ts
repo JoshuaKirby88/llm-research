@@ -12,4 +12,8 @@ export class ClerkService {
 		const result = await client.users.getUserList({ userId: uniqueUserIds })
 		return result.data.sort((a, b) => uniqueUserIds.indexOf(a.id) - uniqueUserIds.indexOf(b.id))
 	}
+
+	static async deleteUser(userId: string) {
+		await client.users.deleteUser(userId)
+	}
 }

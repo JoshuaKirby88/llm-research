@@ -3,6 +3,7 @@ import { SettingsQuery } from "@/src/features/settings/settings.query"
 import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
 import { APIKeyTable } from "@/src/tables/api-key.table"
 import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
+import { AccountPage } from "./_components/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
 
 const config = {
@@ -29,7 +30,9 @@ const Page = async () => {
 					))}
 				</TabsList>
 
-				<TabsContent value="account"></TabsContent>
+				<TabsContent value="account">
+					<AccountPage />
+				</TabsContent>
 
 				<TabsContent value="apiKey">
 					<APIKeyPage maskedAPIKey={maskedAPIKey} />

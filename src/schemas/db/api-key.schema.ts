@@ -1,7 +1,7 @@
 import { APIKey } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
-import { APIKeyKey } from "../../tables/api-key.table"
+import { AIProvider } from "../features/ai-providers.schema"
 
 export const apiKeySchema = createSelectSchema(APIKey)
 
@@ -24,6 +24,6 @@ export const updateAPIKeySchema = apiKeySchema.pick({ userId: true }).merge(
 
 export type UpdateAPIKeyT = z.infer<typeof updateAPIKeySchema>
 
-export type PartialAPIKeyT = Partial<Pick<APIKeyT, APIKeyKey>>
+export type PartialAPIKeyT = Partial<Pick<APIKeyT, AIProvider>>
 
-export type MaskedAPIKeyT = Record<APIKeyKey, string>
+export type MaskedAPIKeyT = Record<AIProvider, string>

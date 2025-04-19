@@ -1,5 +1,5 @@
 import { newResearchAction } from "@/actions/research/new-research.action"
-import { FormActionButton } from "@/components/form-action-button"
+import { FormActionButton } from "@/components/form/server/form-action-button"
 import { ResearchesSearchForm } from "./_components/page/researches-search-form"
 import { ResearchesSearchResult } from "./_components/page/researches-search-result"
 

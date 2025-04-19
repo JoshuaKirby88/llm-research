@@ -7,28 +7,12 @@ import { ResearchTable } from "@/src/tables/research.table"
 import { createAction } from "@/utils/actions/create-action"
 import { revalidatePath } from "next/cache"
 import { after } from "next/server"
-import { z } from "zod"
 
-export const archiveResearchAction = createAction(
+export const completeResearchAction = createAction(
 	"signedIn",
-	z.object({ researchId: researchSchema.shape.id }),
+	researchSchema.pick({ id: true, conclusion: true }),
 )(async ({ input }) => {
-	const updatedResearch = await ResearchRepo.update(input.researchId, { isArchived: true })
-
-	if (ResearchTable.canDeleteVector(updatedResearch)) {
-		after(async () => {
-			await ResearchRepo.deleteVectors([input.researchId])
-		})
-	}
-
-	revalidatePath("/")
-})
-
-export const unarchiveResearchAction = createAction(
-	"signedIn",
-	z.object({ researchId: researchSchema.shape.id }),
-)(async ({ input }) => {
-	const updatedResearch = await ResearchRepo.update(input.researchId, { isArchived: false })
+	const updatedResearch = await ResearchRepo.update(input.id, { isComplete: true, conclusion: input.conclusion })
 
 	if (ResearchTable.canVectorize(updatedResearch)) {
 		after(async () => {
@@ -38,7 +22,7 @@ export const unarchiveResearchAction = createAction(
 			})
 
 			await ResearchRepo.insertVector({
-				id: input.researchId,
+				id: input.id,
 				values: embedding,
 			})
 		})

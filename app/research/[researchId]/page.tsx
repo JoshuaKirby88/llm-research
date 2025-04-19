@@ -3,16 +3,18 @@ import { buttonVariants } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { actionIsValid } from "@/utils/actions/action-is-valid"
 import { cn } from "@/utils/cn"
-import { FlaskConicalIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import { CogIcon, FlaskConicalIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { OverviewPage } from "./_components/overview/overview-page"
+import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
+import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 
 const config = {
 	tabs: [
 		{ key: "overview", title: "Overview", icon: FlaskConicalIcon },
 		{ key: "testRuns", title: "Test Runs", icon: SquareStackIcon },
 		{ key: "result", title: "Result", icon: ShapesIcon },
+		{ key: "settings", title: "Settings", icon: CogIcon },
 	],
 } as const
 
@@ -44,7 +46,11 @@ const Page = async (props: { params: Promise<{ researchId: string }> }) => {
 				</div>
 
 				<TabsContent value="overview">
-					<OverviewPage {...result} />
+					<ResearchOverviewPage {...result} />
+				</TabsContent>
+
+				<TabsContent value="settings">
+					<ResearchSettingsPage {...result} />
 				</TabsContent>
 			</Tabs>
 		</div>

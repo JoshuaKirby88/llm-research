@@ -31,9 +31,9 @@ export const buttonVariants = cva(
 		variants: {
 			variant: buttonVariantClasses,
 			size: {
-				default: "h-9 px-4 py-2 has-[>svg]:px-3",
-				sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-				lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+				default: "h-9 px-4 py-2",
+				sm: "h-8 rounded-md gap-1.5 px-3",
+				lg: "h-10 rounded-md px-6",
 				iconSm: "size-8 rounded-full",
 				icon: "size-9 rounded-full",
 			},
@@ -51,11 +51,11 @@ export type ButtonProps = React.ComponentProps<"button"> &
 		isLoading?: boolean
 	}
 
-function Button({ className, variant, size, asChild, isLoading, children, ...props }: ButtonProps) {
+function Button({ className, variant, size, asChild, isLoading, children, disabled, ...props }: ButtonProps) {
 	const Comp = asChild ? Slot : "button"
 
 	return (
-		<Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props}>
+		<Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} disabled={disabled || isLoading} {...props}>
 			{asChild ? children : <LoadingOverlay isLoading={isLoading}>{children}</LoadingOverlay>}
 		</Comp>
 	)

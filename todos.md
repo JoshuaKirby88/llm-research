@@ -1,5 +1,9 @@
 - [ ] Cloudflare vector db for search
 - [ ] Collect user name from Clerk
+- [ ] PostHog
+- [ ] PostHog LLM Observability
+- [ ] Make tabs persist
+- [ ] Check if deleting non-existant vector errors
 
 # Plan
 

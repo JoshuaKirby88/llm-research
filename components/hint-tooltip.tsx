@@ -8,7 +8,7 @@ export const HintTooltip = (props: { icon?: React.ReactNode; title?: string; des
 		<TooltipProvider delayDuration={0}>
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<Button variant="outline" size="icon" className={cn("ml-2 size-5 rounded-full text-base", props.className)}>
+					<Button variant="outline" size="icon" className={cn("ml-2 size-5 text-base", props.className)}>
 						?
 					</Button>
 				</TooltipTrigger>

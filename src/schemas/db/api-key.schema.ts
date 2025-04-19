@@ -1,7 +1,7 @@
 import { APIKey } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
-import { APIKeyKey } from "../tables/api-key.table"
+import { APIKeyKey } from "../../tables/api-key.table"
 
 export const apiKeySchema = createSelectSchema(APIKey)
 

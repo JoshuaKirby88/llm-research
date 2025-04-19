@@ -3,6 +3,7 @@ import { Research } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
 import { eq } from "drizzle-orm"
 import { InsertResearchT, ResearchT, UpdateResearchT } from "../schemas"
+import { TableSQLUpdate } from "../services/drizzle.service"
 
 export class ResearchRepo {
 	static async insert(input: InsertResearchT, tx?: TX) {
@@ -11,7 +12,7 @@ export class ResearchRepo {
 		return newResearch
 	}
 
-	static async update(id: ResearchT["id"], input: Omit<UpdateResearchT, "id">, tx?: TX) {
+	static async update(id: ResearchT["id"], input: Omit<UpdateResearchT, "id"> | TableSQLUpdate<typeof Research>, tx?: TX) {
 		const [updatedResearch] = await (tx ?? db).update(Research).set(input).where(eq(Research.id, id)).returning()
 
 		return updatedResearch

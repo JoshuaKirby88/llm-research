@@ -1,8 +1,16 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SettingsQuery } from "@/src/features/settings/settings.query"
 import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
 import { APIKeyTable } from "@/src/tables/api-key.table"
+import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
 import { APIKeyPage } from "./_components/api-key-page"
-import { SettingsTabs, SettingsTabsContent } from "./_components/tabs"
+
+const config = {
+	tabs: [
+		{ key: "account", title: "Account", icon: CircleUserRoundIcon },
+		{ key: "apiKey", title: "API Key", icon: KeyIcon },
+	],
+} as const
 
 const Page = async () => {
 	const user = await authProcedure("signedIn")
@@ -10,14 +18,23 @@ const Page = async () => {
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
 	return (
-		<div className="w-full max-w-[50rem]">
-			<SettingsTabs>
-				<SettingsTabsContent value="account"></SettingsTabsContent>
+		<div className="w-full max-w-3xl">
+			<Tabs defaultValue={config.tabs[0].key}>
+				<TabsList className="mb-10">
+					{config.tabs.map(tab => (
+						<TabsTrigger key={tab.key} value={tab.key} className="gap-2">
+							<tab.icon className="text-muted-foreground" />
+							{tab.title}
+						</TabsTrigger>
+					))}
+				</TabsList>
 
-				<SettingsTabsContent value="apiKey">
+				<TabsContent value="account"></TabsContent>
+
+				<TabsContent value="apiKey">
 					<APIKeyPage maskedAPIKey={maskedAPIKey} />
-				</SettingsTabsContent>
-			</SettingsTabs>
+				</TabsContent>
+			</Tabs>
 		</div>
 	)
 }

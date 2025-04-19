@@ -1,16 +1,14 @@
-- [ ] Fix Clerk middleware error
-- [ ] Company name in navbar to go to home page
-- [ ] Remove Xata
+- [ ] Cloudflare vector db for search
+- [ ] Collect user name from Clerk
 
-# Tech
+# Plan
 
-- Zero sync
-- Vercel AI SDK
-- PostHog
-- Sentry
-- Cloudflare
-- Pinecone for search
-- Virgil font
+- Create research form
+- Created research page
+    - View research
+    - Run tests
+    - View results
+-
 
 # Research examples
 

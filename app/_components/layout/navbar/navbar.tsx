@@ -2,26 +2,28 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/utils/cn"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { CogIcon } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { ThemeDropdown } from "./theme-dropdown"
+import { NavbarBreadCrumb } from "./navbar-breadcrumb"
 
 export const Navbar = () => {
 	return (
-		<header className="fixed z-10 flex h-16 w-full items-center gap-4 border-b bg-background p-4">
-			<Link href="/" className={buttonVariants({ size: "icon", variant: "outline" })}>
-				<Image src="/emojis/scientist.webp" alt="Scientist" width={25} height={25} />
+		<header className="fixed z-10 flex w-full items-center gap-4 bg-background px-4 py-2">
+			<NavbarBreadCrumb />
+
+			<Link className={cn(buttonVariants({ size: "sm" }), "ml-auto")} href="/new">
+				New Research
 			</Link>
 
-			<Link className={cn(buttonVariants(), "ml-auto")} href="/research">
-				Start Research
+			<Link className={cn(buttonVariants({ variant: "text", size: "sm" }))} href="/research">
+				Your Research
 			</Link>
 
-			<Link href="/settings" className={buttonVariants({ size: "icon", variant: "outline" })}>
+			<Link href="/settings" className={buttonVariants({ size: "iconSm", variant: "text" })}>
 				<CogIcon />
 			</Link>
 
-			<ThemeDropdown />
+			<ThemeDropdown variant="text" size="iconSm" />
 
 			<SignedOut>
 				<SignInButton />

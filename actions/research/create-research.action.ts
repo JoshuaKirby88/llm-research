@@ -1,20 +1,17 @@
 "use server"
 
-import { CreateResearchI } from "@/app/research/_components/create-research-form"
 import { transaction } from "@/drizzle/transaction"
 import { BlockingValueRepo, BlockingVariableRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo, ResultEnumRepo } from "@/src/repos"
-import { InsertBlockingValueT, InsertBlockingVariableT, InsertIndependentValueT, InsertMessagePromptT, InsertResultEnumT } from "@/src/schemas"
-import { auth } from "@clerk/nextjs/server"
+import { InsertBlockingValueT, InsertBlockingVariableT, InsertIndependentValueT, InsertMessagePromptT, InsertResultEnumT, createResearchSchema } from "@/src/schemas"
+import { createAction } from "@/utils/actions/create-action"
+import { redirect } from "next/navigation"
 
-export const startResearchAction = async (input: CreateResearchI) => {
-	const { userId, redirectToSignIn } = await auth()
-
-	if (!userId) {
-		return redirectToSignIn()
-	}
-
+export const createResearchAction = createAction(
+	"signedIn",
+	createResearchSchema,
+)(async ({ user, input }) => {
 	return await transaction(async tx => {
-		const newResearch = await ResearchRepo.insert({ userId, name: input.research.name }, tx)
+		const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name }, tx)
 
 		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name }, tx)
 		const independentValuesToInsert: InsertIndependentValueT[] = input.independentVariable.values.map(value => ({
@@ -46,5 +43,7 @@ export const startResearchAction = async (input: CreateResearchI) => {
 
 		const resultEnumsToInsert: InsertResultEnumT[] = input.resultEnums.map(value => ({ researchId: newResearch.id, value }))
 		const newResultEnums = await ResultEnumRepo.insertMany(resultEnumsToInsert, tx)
+
+		redirect(`/research/${newResearch.id}`)
 	})
-}
+})

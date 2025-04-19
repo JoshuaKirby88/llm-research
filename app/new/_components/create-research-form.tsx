@@ -1,5 +1,6 @@
 "use client"
 
+import { createResearchAction } from "@/actions/research/create-research.action"
 import { Form } from "@/components/form/form"
 import { FormButton } from "@/components/form/form-button"
 import { FormInput } from "@/components/form/form-input"
@@ -9,40 +10,27 @@ import { HintTooltip } from "@/components/hint-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { blockingValueSchema, blockingVariableSchema, evalPromptSchema, independentValueSchema, independentVariableSchema, messagePromptSchema, researchSchema, resultEnumSchema } from "@/src/schemas"
+import { CreateResearch, createResearchSchema } from "@/src/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import React from "react"
 import { useFieldArray, useForm } from "react-hook-form"
-import { z } from "zod"
 
-export type CreateResearchI = z.infer<typeof schema>
+const defaultValues: Partial<CreateResearch> = { blockingVariables: [{ name: "", values: [] }] }
 
-const schema = z.object({
-	research: researchSchema.pick({ name: true }),
-	independentVariable: independentVariableSchema.pick({ name: true }).extend({ values: independentValueSchema.shape.value.array() }),
-	blockingVariables: blockingVariableSchema.pick({ name: true }).extend({ values: blockingValueSchema.shape.value.array() }).array(),
-	systemMessagePrompt: messagePromptSchema.pick({ text: true }),
-	userMessagePrompt: messagePromptSchema.pick({ text: true }),
-	evalPrompt: evalPromptSchema.pick({ text: true }),
-	resultEnums: resultEnumSchema.shape.value.array(),
-})
-
-const defaultValues: Partial<CreateResearchI> = { blockingVariables: [{ name: "", values: [] }] }
-
-const exampleValues: CreateResearchI = {
+const exampleValues: CreateResearch = {
 	research: { name: "Does using multiple language affect LLM?" },
 	independentVariable: { name: "Language", values: ["English", "Japanese"] },
 	blockingVariables: [{ name: "Topic", values: ["Toy Store A", "Car Maker B"] }],
-	systemMessagePrompt: { text: "Generate made up information about {topic}." },
+	systemMessagePrompt: { text: "Generate made up information about {Topic}." },
 	userMessagePrompt: { text: "Based on this information:\n{systemPrompt}\n\nAsk a question that can be answered." },
 	evalPrompt: { text: "Based on this information:\n{systemPrompt}\n\nIs this answer correct?\nQuestion:\n{userPrompt}\nAnswer:\n{completion}" },
 	resultEnums: ["Correct", "Incorrect"],
 }
 
 export const CreateResearchForm = () => {
-	const form = useForm<z.infer<typeof schema>>({
-		resolver: zodResolver(schema),
+	const form = useForm<CreateResearch>({
+		resolver: zodResolver(createResearchSchema),
 		defaultValues,
 	})
 
@@ -51,8 +39,9 @@ export const CreateResearchForm = () => {
 		name: "blockingVariables",
 	})
 
-	const onSubmit = async (input: z.infer<typeof schema>) => {
-		console.log("input", input)
+	const onSubmit = async (input: CreateResearch) => {
+		const result = await createResearchAction(input)
+		console.log("result", JSON.stringify(result, null, 2))
 	}
 
 	return (
@@ -98,7 +87,7 @@ export const CreateResearchForm = () => {
 					<FormInput name={`blockingVariables.${i}.name`} />
 					<Label>Variables</Label>
 					<FormTagInput name={`blockingVariables.${i}.values`} />
-					<Button className="w-full" variant="destructive" onClick={() => blockingVariableFields.remove(i)}>
+					<Button className="w-full" variant="red" onClick={() => blockingVariableFields.remove(i)}>
 						Delete Blocking Variable
 					</Button>
 					<Separator className="" />

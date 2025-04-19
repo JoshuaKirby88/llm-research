@@ -8,8 +8,12 @@ export type AuthProcedure = keyof {
 export type AuthProcedureO<T extends AuthProcedure> = Awaited<ReturnType<(typeof AuthProcedureService)[T]>>
 
 export class AuthProcedureService {
+	static async public() {
+		return await auth()
+	}
+
 	static async signedIn() {
-		const user = await auth()
+		const user = await this.public()
 
 		if (!user.userId) {
 			throw new ActionError("You must be signed in.")

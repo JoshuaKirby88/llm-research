@@ -6,7 +6,7 @@ export const ResearchesSearchForm = Suspense(async (props: { searchParams: NextS
 	const { search } = searchParams
 
 	return (
-		<form className="w-full max-w-[50rem] space-y-4">
+		<form className="w-full max-w-3xl space-y-4">
 			<Input name="search" placeholder="Search public research..." defaultValue={search} autoFocus />
 		</form>
 	)

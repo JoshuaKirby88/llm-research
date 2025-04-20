@@ -4,8 +4,8 @@ import { TX } from "@/drizzle/transaction"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, eq, inArray } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
-import { TableSQLUpdate } from "../services/drizzle.service"
-import { ResearchTable } from "../tables/research.table"
+import { TableSQLUpdate } from "../services"
+import { ResearchTable } from "../tables"
 
 export class ResearchRepo {
 	static async insert(input: InsertResearchT, tx?: TX) {

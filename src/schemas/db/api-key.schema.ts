@@ -1,7 +1,7 @@
 import { APIKey } from "@/drizzle/schema"
+import { AIProvider } from "@/src/features"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
-import { AIProvider } from "../features/ai-providers.schema"
 
 export const apiKeySchema = createSelectSchema(APIKey)
 

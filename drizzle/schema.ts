@@ -1,5 +1,6 @@
+import { AIFeature, AIModelArr } from "@/src/features"
 import { and, eq, isNotNull, or, relations, sql } from "drizzle-orm"
-import { check, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core"
+import { check, integer, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core"
 
 const defaultColumns = {
 	createdAt: integer({ mode: "timestamp_ms" })
@@ -48,15 +49,19 @@ export const UserToStarredResearch = sqliteTable(
 	table => [primaryKey({ columns: [table.userId, table.researchId] })],
 )
 
-export const Contributor = sqliteTable("Contributor", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	count: integer().notNull(),
-	userId: text().notNull(),
-	researchId: integer()
-		.notNull()
-		.references(() => Research.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const Contributor = sqliteTable(
+	"Contributor",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		count: integer().notNull(),
+		userId: text().notNull(),
+		researchId: integer()
+			.notNull()
+			.references(() => Research.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.userId, table.researchId)],
+)
 
 export const IndependentVariable = sqliteTable("IndependentVariable", {
 	id: integer().primaryKey({ autoIncrement: true }),
@@ -115,7 +120,7 @@ export const EvalPrompt = sqliteTable("EvalPrompt", {
 	...defaultColumns,
 })
 
-export const ResultEnum = sqliteTable("ResultEnum", {
+export const DependentValue = sqliteTable("DependentValue", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	value: text().notNull(),
 	researchId: integer()
@@ -126,24 +131,37 @@ export const ResultEnum = sqliteTable("ResultEnum", {
 
 export const TestBatch = sqliteTable("TestBatch", {
 	id: integer().primaryKey({ autoIncrement: true }),
-	count: integer().notNull(),
+	// Maybe give this a better name?
+	// This is the model for generating the messages, to test the LLM model in subject
+	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
+	tests: integer().notNull(),
 	contributorId: integer()
 		.notNull()
 		.references(() => Contributor.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
 
-export const Test = sqliteTable("Test", {
+export const TestModelBatch = sqliteTable("TestModelBatch", {
 	id: integer().primaryKey({ autoIncrement: true }),
-	resultEnumId: integer()
-		.notNull()
-		.references(() => ResultEnum.id, { onDelete: "cascade" }),
+	tests: integer().notNull(),
+	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
 	testBatchId: integer()
 		.notNull()
 		.references(() => TestBatch.id, { onDelete: "cascade" }),
+	...defaultColumns,
+})
+
+export const Test = sqliteTable("Test", {
+	id: integer().primaryKey({ autoIncrement: true }),
 	independentValueId: integer()
 		.notNull()
 		.references(() => IndependentValue.id, { onDelete: "cascade" }),
+	dependentValueId: integer()
+		.notNull()
+		.references(() => DependentValue.id, { onDelete: "cascade" }),
+	testModelBatchId: integer()
+		.notNull()
+		.references(() => TestModelBatch.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
 
@@ -162,17 +180,9 @@ export const Message = sqliteTable("Message", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	role: text({ enum: ["system", "user", "assistant"] }).notNull(),
 	content: text().notNull(),
-	tokens: integer().notNull(),
-	testId: integer()
-		.notNull()
-		.references(() => Test.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
-
-export const Completion = sqliteTable("Completion", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	content: text().notNull(),
-	tokens: integer().notNull(),
+	promptTokens: integer().notNull(),
+	completionTokens: integer().notNull(),
+	isCompletion: integer({ mode: "boolean" }).notNull(),
 	testId: integer()
 		.notNull()
 		.references(() => Test.id, { onDelete: "cascade" }),
@@ -185,21 +195,33 @@ export const ResearchResult = sqliteTable("ResearchResult", {
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id, { onDelete: "cascade" }),
-	resultEnumId: integer()
+	dependentValueId: integer()
 		.notNull()
-		.references(() => ResultEnum.id, { onDelete: "cascade" }),
+		.references(() => DependentValue.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
 
 export const TestBatchResult = sqliteTable("TestBatchResult", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	count: integer().notNull(),
-	resultEnumId: integer()
+	dependentValueId: integer()
 		.notNull()
-		.references(() => ResultEnum.id, { onDelete: "cascade" }),
+		.references(() => DependentValue.id, { onDelete: "cascade" }),
 	testBatchId: integer()
 		.notNull()
 		.references(() => TestBatch.id, { onDelete: "cascade" }),
+	...defaultColumns,
+})
+
+export const TestModelBatchResult = sqliteTable("TestModelBatchResult", {
+	id: integer().primaryKey({ autoIncrement: true }),
+	count: integer().notNull(),
+	dependentValueId: integer()
+		.notNull()
+		.references(() => DependentValue.id, { onDelete: "cascade" }),
+	testModelBatchId: integer()
+		.notNull()
+		.references(() => TestModelBatch.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
 
@@ -210,6 +232,7 @@ export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	blockingVariables: many(BlockingVariable),
 	messagePrompts: many(MessagePrompt),
 	evalPrompt: one(EvalPrompt),
+	dependentValues: many(DependentValue),
 }))
 
 export const UserToStarredResearchRelations = relations(UserToStarredResearch, ({ one }) => ({
@@ -266,6 +289,13 @@ export const MessagePromptRelations = relations(MessagePrompt, ({ one }) => ({
 export const EvalPromptRelations = relations(EvalPrompt, ({ one }) => ({
 	research: one(Research, {
 		fields: [EvalPrompt.researchId],
+		references: [Research.id],
+	}),
+}))
+
+export const DependentValueRelations = relations(DependentValue, ({ one }) => ({
+	research: one(Research, {
+		fields: [DependentValue.researchId],
 		references: [Research.id],
 	}),
 }))

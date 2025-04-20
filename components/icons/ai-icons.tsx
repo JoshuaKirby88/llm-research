@@ -1,9 +1,9 @@
-import { AIProvider } from "@/src/schemas"
+import { AIProvider } from "@/src/features"
 import { cn } from "@/utils/cn"
 
 export const AIIcons = (props: { aiProvider: AIProvider; className?: string }) => {
 	return (
-		<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className={cn("size-5", props.className)}>
+		<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className={cn("size-5 fill-foreground", props.className)}>
 			{props.aiProvider === "openai" ? (
 				<>
 					<title>OpenAI</title>

@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm"
 import { InsertTestBatchResultT, TestBatchResultT, UpdateTestBatchResultT } from "../schemas"
 
 export class TestBatchResultRepo {
-	static async insert(input: InsertTestBatchResultT, tx?: TX) {
-		const [newTestBatchResult] = await (tx ?? db).insert(TestBatchResult).values(input).returning()
-		return newTestBatchResult
+	static async insertMany(input: InsertTestBatchResultT[], tx?: TX) {
+		const newTestBatchResults = await (tx ?? db).insert(TestBatchResult).values(input).returning()
+		return newTestBatchResults.sort((a, b) => a.id - b.id)
 	}
 
 	static async update(id: TestBatchResultT["id"], input: Omit<UpdateTestBatchResultT, "id">, tx?: TX) {

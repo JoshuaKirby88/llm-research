@@ -1,18 +1,14 @@
-- [ ] Cloudflare vector db for search
-- [ ] Collect user name from Clerk
-- [ ] PostHog
-- [ ] PostHog LLM Observability
+- [ ] Show clerk name
 - [ ] Make tabs persist
 - [ ] Check if deleting non-existant vector errors
+- [ ] Let user know that any research that has external contributions will not be deleted on account deletion
+- [ ] Make sure strings in new research form has min value
 
-# Plan
+# New research form
 
-- Create research form
-- Created research page
-    - View research
-    - Run tests
-    - View results
--
+- [ ] Generate sample prompts for all prompt inputs
+- [ ] Generate variable values with llm
+- [ ] "/" to select variables and generated prompts
 
 # Research examples
 

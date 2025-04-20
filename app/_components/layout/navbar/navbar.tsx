@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/utils/cn"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { CogIcon } from "lucide-react"
@@ -33,8 +33,12 @@ export const Navbar = () => {
 				</SignedIn>
 
 				<SignedOut>
-					<SignInButton />
-					<SignUpButton />
+					<Button asChild>
+						<SignInButton />
+					</Button>
+					<Button asChild>
+						<SignUpButton />
+					</Button>
 				</SignedOut>
 			</div>
 		</header>

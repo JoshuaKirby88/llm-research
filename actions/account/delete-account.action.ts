@@ -1,7 +1,7 @@
 "use server"
 
 import { ResearchRepo } from "@/src/repos"
-import { ClerkService } from "@/src/services/clerk.service"
+import { ClerkService } from "@/src/services"
 import { createAction } from "@/utils/actions/create-action"
 import { redirect } from "next/navigation"
 

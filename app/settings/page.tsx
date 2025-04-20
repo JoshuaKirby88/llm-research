@@ -1,7 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SettingsQuery } from "@/src/features/settings/settings.query"
+import { db } from "@/drizzle/db"
+import { APIKey } from "@/drizzle/schema"
 import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
-import { APIKeyTable } from "@/src/tables/api-key.table"
+import { APIKeyTable } from "@/src/tables"
+import { eq } from "drizzle-orm"
 import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
 import { AccountPage } from "./_components/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
@@ -15,7 +17,9 @@ const config = {
 
 const Page = async () => {
 	const user = await authProcedure("signedIn")
-	const apiKey = await SettingsQuery.execute({ userId: user.userId })
+	const apiKey = await db.query.APIKey.findFirst({
+		where: eq(APIKey.userId, user.userId),
+	})
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
 	return (

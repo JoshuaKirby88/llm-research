@@ -2,7 +2,7 @@
 
 import { APIKeyRepo } from "@/src/repos"
 import { updateAPIKeySchema } from "@/src/schemas"
-import { APIKeyTable } from "@/src/tables/api-key.table"
+import { APIKeyTable } from "@/src/tables"
 import { createAction } from "@/utils/actions/create-action"
 
 export const saveAPIKeyAction = createAction(

@@ -1,5 +1,5 @@
 import { ActionError } from "@/src/entities/errors"
-import { AuthProcedure, AuthProcedureO, AuthProcedureService } from "@/src/services/auth-procedure/auth-procedure.service"
+import { AuthProcedure, AuthProcedureO, AuthProcedureService } from "@/src/services"
 import { isRedirectError } from "next/dist/client/components/redirect-error"
 import type { z } from "zod"
 

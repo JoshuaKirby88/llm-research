@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm"
 import { InsertTestT, TestT, UpdateTestT } from "../schemas"
 
 export class TestRepo {
-	static async insert(input: InsertTestT, tx?: TX) {
-		const [newTest] = await (tx ?? db).insert(Test).values(input).returning()
-		return newTest
+	static async insertMany(input: InsertTestT[], tx?: TX) {
+		const newTests = await (tx ?? db).insert(Test).values(input).returning()
+		return newTests.sort((a, b) => a.id - b.id)
 	}
 
 	static async update(id: TestT["id"], input: Omit<UpdateTestT, "id">, tx?: TX) {

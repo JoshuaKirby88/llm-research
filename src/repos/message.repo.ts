@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm"
 import { InsertMessageT, MessageT, UpdateMessageT } from "../schemas"
 
 export class MessageRepo {
-	static async insert(input: InsertMessageT, tx?: TX) {
-		const [newMessage] = await (tx ?? db).insert(Message).values(input).returning()
-		return newMessage
+	static async insertMany(input: InsertMessageT[], tx?: TX) {
+		const newMessages = await (tx ?? db).insert(Message).values(input).returning()
+		return newMessages.sort((a, b) => a.id - b.id)
 	}
 
 	static async update(id: MessageT["id"], input: Omit<UpdateMessageT, "id">, tx?: TX) {

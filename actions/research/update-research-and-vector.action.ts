@@ -2,8 +2,8 @@
 
 import { ResearchRepo } from "@/src/repos"
 import { updateResearchAndVectorSchema } from "@/src/schemas"
-import { AIService } from "@/src/services/ai.service"
-import { ResearchTable } from "@/src/tables/research.table"
+import { AIService } from "@/src/services"
+import { ResearchTable } from "@/src/tables"
 import { createAction } from "@/utils/actions/create-action"
 import { revalidatePath } from "next/cache"
 import { after } from "next/server"

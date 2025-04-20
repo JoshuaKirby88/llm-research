@@ -1,8 +1,8 @@
 "use server"
 
 import { transaction } from "@/drizzle/transaction"
-import { BlockingValueRepo, BlockingVariableRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo, ResultEnumRepo } from "@/src/repos"
-import { InsertBlockingValueT, InsertBlockingVariableT, InsertIndependentValueT, InsertMessagePromptT, InsertResultEnumT, createResearchSchema } from "@/src/schemas"
+import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
+import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchSchema } from "@/src/schemas"
 import { createAction } from "@/utils/actions/create-action"
 import { redirect } from "next/navigation"
 
@@ -41,8 +41,8 @@ export const createResearchAction = createAction(
 
 		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: input.evalPrompt.text }, tx)
 
-		const resultEnumsToInsert: InsertResultEnumT[] = input.resultEnums.map(value => ({ researchId: newResearch.id, value }))
-		const newResultEnums = await ResultEnumRepo.insertMany(resultEnumsToInsert, tx)
+		const dependentValuesToInsert: InsertDependentValueT[] = input.dependentValues.map(value => ({ researchId: newResearch.id, value }))
+		const newDependentValues = await DependentValueRepo.insertMany(dependentValuesToInsert, tx)
 
 		redirect(`/research/${newResearch.id}`)
 	})

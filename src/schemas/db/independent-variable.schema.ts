@@ -1,6 +1,7 @@
 import { IndependentVariable } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
+import { independentValueSchema } from "./independent-value.schema"
 
 export const independentVariableSchema = createSelectSchema(IndependentVariable)
 
@@ -17,3 +18,7 @@ export type InsertIndependentVariableT = z.infer<typeof insertIndependentVariabl
 export const updateIndependentVariableSchema = independentVariableSchema.pick({ id: true }).merge(createUpdateSchema(IndependentVariable).pick({ name: true, prompt: true }))
 
 export type UpdateIndependentVariableT = z.infer<typeof updateIndependentVariableSchema>
+
+export const independentVariableWithValueSchema = independentVariableSchema.extend({ independentValues: independentValueSchema.array() })
+
+export type IndependentVariableWithValueT = z.infer<typeof independentVariableWithValueSchema>

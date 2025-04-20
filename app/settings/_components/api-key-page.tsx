@@ -6,8 +6,9 @@ import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { AIIcons } from "@/components/icons/ai-icons"
 import { Label } from "@/components/ui/label"
-import { AIProvider, MaskedAPIKeyT, aiProviders, apiKeySchema } from "@/src/schemas"
-import { APIKeyTable } from "@/src/tables/api-key.table"
+import { AIFeature, AIProvider } from "@/src/features"
+import { MaskedAPIKeyT, apiKeySchema } from "@/src/schemas"
+import { APIKeyTable } from "@/src/tables"
 import { isActionValid } from "@/utils/actions/is-action-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRef } from "react"
@@ -28,7 +29,7 @@ export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 	const schema = apiKeySchema.pick({ openai: true, google: true, anthropic: true })
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		defaultValues: Object.fromEntries(aiProviders.map(aiProvider => [aiProvider, props.maskedAPIKey?.[aiProvider] ?? ""])),
+		defaultValues: Object.fromEntries(AIFeature.providers.map(aiProvider => [aiProvider, props.maskedAPIKey?.[aiProvider] ?? ""])),
 	})
 
 	const onSubmit = async (input: z.infer<typeof schema>) => {

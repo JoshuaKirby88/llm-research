@@ -4,7 +4,7 @@ import { VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
 export const labelVariants = cva(
-	"flex select-none items-center gap-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50",
+	cn("flex cursor-text items-center gap-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50"),
 	{
 		variants: {
 			size: {

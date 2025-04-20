@@ -2,8 +2,8 @@ import { ResearchCard } from "@/components/research-card"
 import { Suspense } from "@/components/suspense"
 import { db } from "@/drizzle/db"
 import { Research, UserToStarredResearch } from "@/drizzle/schema"
+import { DrizzleService } from "@/src/services"
 import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
-import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 
 export const ResearchPage = Suspense(async (props: { tab: "all" | "complete" | "researching" | "archived" }) => {

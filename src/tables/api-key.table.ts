@@ -1,5 +1,6 @@
-import { AIProvider, APIKeyT, MaskedAPIKeyT, PartialAPIKeyT, aiProviders } from "../schemas"
-import { CryptoService } from "../services/crypto.service"
+import { AIFeature, AIProvider } from "../features"
+import { APIKeyT, MaskedAPIKeyT, PartialAPIKeyT } from "../schemas"
+import { CryptoService } from "../services"
 
 export class APIKeyTable {
 	static maskedValue = "x"
@@ -15,7 +16,7 @@ export class APIKeyTable {
 	}
 
 	static encrypt(input: PartialAPIKeyT) {
-		const filteredKeys = aiProviders.filter(aiProvider => aiProvider in input)
+		const filteredKeys = AIFeature.providers.filter(aiProvider => aiProvider in input)
 
 		const encryptedAPIKey = filteredKeys.reduce(
 			(acc, curr) => ({
@@ -29,7 +30,7 @@ export class APIKeyTable {
 	}
 
 	static decrypt(input: Pick<APIKeyT, AIProvider>) {
-		const filteredKeys = aiProviders.filter(aiProvider => aiProvider in input)
+		const filteredKeys = AIFeature.providers.filter(aiProvider => aiProvider in input)
 
 		const decryptedAPIKey = filteredKeys.reduce(
 			(acc, curr) => ({
@@ -50,5 +51,9 @@ export class APIKeyTable {
 			}),
 			{} as MaskedAPIKeyT,
 		)
+	}
+
+	static keyExists(maskedAPIKey: MaskedAPIKeyT | null): maskedAPIKey is MaskedAPIKeyT {
+		return !!maskedAPIKey && !!AIFeature.providers.find(provider => maskedAPIKey[provider])
 	}
 }

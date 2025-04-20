@@ -1,12 +1,12 @@
 import { z } from "zod"
 import { blockingValueSchema } from "../db/blocking-value.schema"
 import { blockingVariableSchema } from "../db/blocking-variable.schema"
+import { dependentValueSchema } from "../db/dependent-value.schema"
 import { evalPromptSchema } from "../db/eval-prompt.schema"
 import { independentValueSchema } from "../db/independent-value.schema"
 import { independentVariableSchema } from "../db/independent-variable.schema"
 import { messagePromptSchema } from "../db/message-prompt.schema"
 import { researchSchema } from "../db/research.schema"
-import { resultEnumSchema } from "../db/result-enum.schema"
 
 export const createResearchSchema = z.object({
 	research: researchSchema.pick({ name: true }),
@@ -15,7 +15,7 @@ export const createResearchSchema = z.object({
 	systemMessagePrompt: messagePromptSchema.pick({ text: true }),
 	userMessagePrompt: messagePromptSchema.pick({ text: true }),
 	evalPrompt: evalPromptSchema.pick({ text: true }),
-	resultEnums: resultEnumSchema.shape.value.array(),
+	dependentValues: dependentValueSchema.shape.value.array(),
 })
 
 export type CreateResearch = z.infer<typeof createResearchSchema>

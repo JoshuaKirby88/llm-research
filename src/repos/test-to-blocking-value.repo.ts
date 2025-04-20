@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm"
 import { InsertTestToBlockingValueT, TestToBlockingValueT, UpdateTestToBlockingValueT } from "../schemas"
 
 export class TestToBlockingValueRepo {
-	static async insert(input: InsertTestToBlockingValueT, tx?: TX) {
-		const [newTestToBlockingValue] = await (tx ?? db).insert(TestToBlockingValue).values(input).returning()
-		return newTestToBlockingValue
+	static async insertMany(input: InsertTestToBlockingValueT[], tx?: TX) {
+		const newTestToBlockingValues = await (tx ?? db).insert(TestToBlockingValue).values(input).returning()
+		return newTestToBlockingValues.sort((a, b) => a.id - b.id)
 	}
 
 	static async update(id: TestToBlockingValueT["id"], input: Omit<UpdateTestToBlockingValueT, "id">, tx?: TX) {

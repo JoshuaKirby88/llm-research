@@ -1,23 +1,21 @@
 import { db } from "@/drizzle/db"
 import { Contributor } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
-import { eq } from "drizzle-orm"
-import { ContributorT, InsertContributorT, UpdateContributorT } from "../schemas"
+import { InsertContributorT } from "../schemas"
+import { DrizzleService } from "../services"
 
 export class ContributorRepo {
-	static async insert(input: InsertContributorT, tx?: TX) {
-		const [newContributor] = await (tx ?? db).insert(Contributor).values(input).returning()
+	static async incrementCount(input: InsertContributorT, tx?: TX) {
+		const insertValues = input
+		const updateValues = { count: DrizzleService.increment(Contributor.count, input.count) }
 
-		return newContributor
-	}
+		const [contributor] = await (tx ?? db)
+			.insert(Contributor)
+			.values(insertValues)
+			.returning()
+			// Does this work for non primary key columns...?
+			.onConflictDoUpdate({ target: [Contributor.userId, Contributor.researchId], set: updateValues })
 
-	static async update(id: ContributorT["id"], input: Omit<UpdateContributorT, "id">, tx?: TX) {
-		const [updatedContributor] = await (tx ?? db).update(Contributor).set(input).where(eq(Contributor.id, id)).returning()
-
-		return updatedContributor
-	}
-
-	static async delete(id: ContributorT["id"], tx?: TX) {
-		await (tx ?? db).delete(Contributor).where(eq(Contributor.id, id))
+		return contributor
 	}
 }

@@ -1,4 +1,4 @@
-import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
+import { authProcedure } from "@/utils/auth-procedure"
 
 const Page = async (props: { params: Promise<{ testBatchId: string }> }) => {
 	const params = await props.params

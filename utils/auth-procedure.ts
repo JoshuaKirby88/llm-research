@@ -1,8 +1,8 @@
 import { ActionError } from "@/src/entities/errors"
+import { AuthProcedure, AuthProcedureO, AuthProcedureService } from "@/src/services/auth-procedure.service"
 import { isRedirectError } from "next/dist/client/components/redirect-error"
 import { unauthorized } from "next/navigation"
 import { cache } from "react"
-import { AuthProcedure, AuthProcedureO, AuthProcedureService } from "./auth-procedure.service"
 
 export const authProcedure = cache(async <T extends AuthProcedure>(procedure: T) => {
 	try {

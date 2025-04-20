@@ -1,6 +1,6 @@
 import { AIFeature, AIProvider } from "../features"
 import { APIKeyT, MaskedAPIKeyT, PartialAPIKeyT } from "../schemas"
-import { CryptoService } from "../services"
+import { CryptoService } from "../services/crypto.service"
 
 export class APIKeyTable {
 	static maskedValue = "x"

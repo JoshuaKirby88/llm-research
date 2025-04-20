@@ -1,6 +1,7 @@
 import { queryResearchAction } from "@/actions/research/query-research.action"
+import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { buttonVariants } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabsContent } from "@/components/ui/tabs"
 import { actionIsValid } from "@/utils/actions/action-is-valid"
 import { cn } from "@/utils/cn"
 import { CogIcon, FlaskConicalIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
@@ -18,8 +19,9 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { params: Promise<{ researchId: string }> }) => {
+const Page = async (props: { params: Promise<{ researchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
+	const searchParams = await props.searchParams
 	const result = await actionIsValid(queryResearchAction({ researchId: Number.parseInt(params.researchId) }))
 
 	if (!result) {
@@ -28,16 +30,9 @@ const Page = async (props: { params: Promise<{ researchId: string }> }) => {
 
 	return (
 		<div className="mx-auto w-full max-w-4xl">
-			<Tabs defaultValue={config.tabs[0].key}>
+			<PageTabs tabs={config.tabs} searchParams={searchParams}>
 				<div className="mb-10 flex items-center gap-5">
-					<TabsList className="">
-						{config.tabs.map(tab => (
-							<TabsTrigger key={tab.key} value={tab.key} className="gap-2">
-								<tab.icon className="text-muted-foreground" />
-								{tab.title}
-							</TabsTrigger>
-						))}
-					</TabsList>
+					<PageTabsList tabs={config.tabs} className="mb-0" />
 
 					<Link className={cn(buttonVariants({ variant: "green" }))} href={`/test/${result.research.id}`}>
 						<RocketIcon />
@@ -52,7 +47,7 @@ const Page = async (props: { params: Promise<{ researchId: string }> }) => {
 				<TabsContent value="settings">
 					<ResearchSettingsPage {...result} />
 				</TabsContent>
-			</Tabs>
+			</PageTabs>
 		</div>
 	)
 }

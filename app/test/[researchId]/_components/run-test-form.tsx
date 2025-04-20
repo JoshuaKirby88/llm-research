@@ -6,17 +6,17 @@ import { FormButton } from "@/components/form/client/form-button"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Input } from "@/components/ui/input"
 import { MaskedAPIKeyT } from "@/src/schemas"
-import { TestRunService } from "@/src/services"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HashIcon } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { AIModelSelect } from "./ai-model-select"
+import { runTestSchema } from "@/src/schemas/features/run-test.schema"
 
 export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT }) => {
 	const params = useParams<{ researchId: string }>()
-	const schema = TestRunService.schema.pick({ models: true, iterations: true })
+	const schema = runTestSchema.pick({ models: true, iterations: true })
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: { models: [] },

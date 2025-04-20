@@ -13,8 +13,7 @@ export const AddAPIKeyAlertCard = () => {
 
 			<AlertCardContent title="Add an API Key" description="To access this feature, you must have an API key for at least 1 provider." />
 
-			{/* TODO: Link to the api key tab */}
-			<Link href="/settings" className={buttonVariants()}>
+			<Link href="/settings?state=apiKey" className={buttonVariants()}>
 				<PlusIcon />
 				Add Key
 			</Link>

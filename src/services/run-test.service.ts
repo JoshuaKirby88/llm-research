@@ -17,18 +17,16 @@ import {
 	InsertTestToBlockingValueT,
 	MessagePromptT,
 	ResearchT,
-	researchSchema,
 } from "@/src/schemas"
 import { CoreMessage } from "ai"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
-import { AIFeature, AIModel, AIModelArr } from "../features"
+import { AIFeature, AIModel } from "../features"
+import { RunTest } from "../schemas/features/run-test.schema"
 import { VariableTable } from "../tables"
 import { AIService } from "./ai.service"
 
-type Input = z.infer<typeof TestRunService.schema>
-
-type Research = NonNullable<Awaited<ReturnType<(typeof TestRunService)["queryResearch"]>>>
+type Research = NonNullable<Awaited<ReturnType<(typeof RunTestService)["queryResearch"]>>>
 
 type TestRunInput = {
 	model: AIModel
@@ -58,10 +56,8 @@ type TestResult = {
 	messages: Omit<InsertMessageT, "testId">[]
 }
 
-export class TestRunService {
-	static schema = z.object({ userId: z.string(), researchId: researchSchema.shape.id, models: z.enum(AIFeature.models as AIModelArr).array(), iterations: z.number() })
-
-	static async execute(input: Input) {
+export class RunTestService {
+	static async execute(input: RunTest) {
 		const research = await this.queryResearch(input.researchId)
 
 		if (!research?.independentVariable || !research.evalPrompt) {
@@ -104,7 +100,7 @@ export class TestRunService {
 		}
 	}
 
-	static async insertTestBatch(input: Input, research: Research, testModelBatchResults: TestResult[][]) {
+	static async insertTestBatch(input: RunTest, research: Research, testModelBatchResults: TestResult[][]) {
 		return await transaction(async tx => {
 			const totalTestsCount = testModelBatchResults.flat().length
 

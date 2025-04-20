@@ -2,7 +2,7 @@ import { db } from "@/drizzle/db"
 import { Contributor } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
 import { InsertContributorT } from "../schemas"
-import { DrizzleService } from "../services"
+import { DrizzleService } from "../services/drizzle.service"
 
 export class ContributorRepo {
 	static async incrementCount(input: InsertContributorT, tx?: TX) {

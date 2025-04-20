@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server"
-import { ActionError } from "../../entities/errors"
+import { ActionError } from "../entities/errors"
 
 export type AuthProcedure = keyof {
 	[K in keyof typeof AuthProcedureService as (typeof AuthProcedureService)[K] extends (...args: any[]) => Promise<any> ? K : never]: any

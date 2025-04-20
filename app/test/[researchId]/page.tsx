@@ -1,8 +1,8 @@
 import { AddAPIKeyAlertCard } from "@/components/add-api-key-alert-card"
 import { db } from "@/drizzle/db"
 import { APIKey } from "@/drizzle/schema"
-import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
 import { APIKeyTable } from "@/src/tables"
+import { authProcedure } from "@/utils/auth-procedure"
 import { eq } from "drizzle-orm"
 import { RunTestForm } from "./_components/run-test-form"
 

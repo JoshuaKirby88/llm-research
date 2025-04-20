@@ -4,7 +4,7 @@ import { TX } from "@/drizzle/transaction"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, eq, inArray } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
-import { TableSQLUpdate } from "../services"
+import { TableSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
 
 export class ResearchRepo {

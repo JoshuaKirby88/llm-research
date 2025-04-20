@@ -1,8 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { APIKey } from "@/drizzle/schema"
-import { authProcedure } from "@/src/services/auth-procedure/auth-procedure"
 import { APIKeyTable } from "@/src/tables"
+import { authProcedure } from "@/utils/auth-procedure"
 import { eq } from "drizzle-orm"
 import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
 import { AccountPage } from "./_components/account-page"
@@ -15,7 +16,8 @@ const config = {
 	],
 } as const
 
-const Page = async () => {
+const Page = async (props: { searchParams: NextSearchParams }) => {
+	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
 	const apiKey = await db.query.APIKey.findFirst({
 		where: eq(APIKey.userId, user.userId),
@@ -24,15 +26,8 @@ const Page = async () => {
 
 	return (
 		<div className="w-full max-w-3xl">
-			<Tabs defaultValue={config.tabs[0].key}>
-				<TabsList className="mb-10">
-					{config.tabs.map(tab => (
-						<TabsTrigger key={tab.key} value={tab.key} className="gap-2">
-							<tab.icon className="text-muted-foreground" />
-							{tab.title}
-						</TabsTrigger>
-					))}
-				</TabsList>
+			<PageTabs tabs={config.tabs} searchParams={searchParams}>
+				<PageTabsList tabs={config.tabs} />
 
 				<TabsContent value="account">
 					<AccountPage />
@@ -41,7 +36,7 @@ const Page = async () => {
 				<TabsContent value="apiKey">
 					<APIKeyPage maskedAPIKey={maskedAPIKey} />
 				</TabsContent>
-			</Tabs>
+			</PageTabs>
 		</div>
 	)
 }

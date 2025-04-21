@@ -23,6 +23,7 @@ export class AIServiceInstance {
 				"o3-mini": openai("o3-mini"),
 				o3: openai("o3"),
 				"GPT-4.1": openai("gpt-4.1"),
+				"GPT-4.1 Nano": openai("gpt-4.1-nano"),
 				"Gemini 2.5 Pro": google("gemini-2.5-pro-exp-03-25"),
 				"Claude 3.7 Sonnet": anthropic("claude-3-7-sonnet-20250219"),
 			} satisfies Record<AIModel, any>,

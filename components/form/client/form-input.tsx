@@ -4,8 +4,10 @@ import { useFormContext } from "react-hook-form"
 
 type Props = RequiredObj<Pick<ComponentProps<typeof Input>, "name">> & ComponentProps<typeof Input>
 
-export const FormInput = ({ className, ...props }: Props) => {
+export const FormInput = (props: Props) => {
 	const { register } = useFormContext()
 
-	return <Input type="text" {...props} {...register(props.name)} />
+	const registration = props.type === "number" ? register(props.name, { valueAsNumber: true }) : register(props.name)
+
+	return <Input type="text" {...props} {...registration} />
 }

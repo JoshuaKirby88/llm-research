@@ -11,9 +11,7 @@ export interface Option {
 	value: string
 	label: string
 	disable?: boolean
-	/** fixed option that can't be removed. */
 	fixed?: boolean
-	/** Group the options by providing key. */
 	[key: string]: string | boolean | undefined
 }
 interface GroupOption {
@@ -23,54 +21,26 @@ interface GroupOption {
 interface MultipleSelectorProps {
 	value?: Option[]
 	defaultOptions?: Option[]
-	/** manually controlled options */
 	options?: Option[]
 	placeholder?: string
-	/** Loading component. */
 	loadingIndicator?: React.ReactNode
-	/** Empty component. */
 	emptyIndicator?: React.ReactNode
-	/** Debounce time for async search. Only work with `onSearch`. */
 	delay?: number
-	/**
-	 * Only work with `onSearch` prop. Trigger search when `onFocus`.
-	 * For example, when user click on the input, it will trigger the search to get initial options.
-	 **/
 	triggerSearchOnFocus?: boolean
-	/** async search */
 	onSearch?: (value: string) => Promise<Option[]>
-	/**
-	 * sync search. This search will not showing loadingIndicator.
-	 * The rest props are the same as async search.
-	 * i.e.: creatable, groupBy, delay.
-	 **/
 	onSearchSync?: (value: string) => Option[]
 	onChange?: (options: Option[]) => void
-	/** Limit the maximum number of selected options. */
 	maxSelected?: number
-	/** When the number of selected options exceeds the limit, the onMaxSelected will be called. */
 	onMaxSelected?: (maxLimit: number) => void
-	/** Hide the placeholder when there are options selected. */
 	hidePlaceholderWhenSelected?: boolean
 	disabled?: boolean
-	/** Group the options base on provided key. */
 	groupBy?: string
 	className?: string
 	badgeClassName?: string
-	/**
-	 * First item selected is a default behavior by cmdk. That is why the default is true.
-	 * This is a workaround solution by add a dummy item.
-	 *
-	 * @reference: https://github.com/pacocoursey/cmdk/issues/171
-	 */
 	selectFirstItem?: boolean
-	/** Allow user to create option when there is no option matched. */
 	creatable?: boolean
-	/** Props of `Command` */
 	commandProps?: React.ComponentPropsWithoutRef<typeof Command>
-	/** Props of `CommandInput` */
 	inputProps?: Omit<React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>, "value" | "placeholder" | "disabled">
-	/** hide the clear all button. */
 	hideClearAllButton?: boolean
 }
 
@@ -144,7 +114,7 @@ const CommandEmpty = ({ className, ...props }: React.ComponentProps<typeof Comma
 
 CommandEmpty.displayName = "CommandEmpty"
 
-const MultipleSelector = ({
+export const MultiSelect = ({
 	value,
 	onChange,
 	placeholder,
@@ -240,7 +210,6 @@ const MultipleSelector = ({
 	}, [value])
 
 	useEffect(() => {
-		/** If `onSearch` is provided, do not trigger options updated. */
 		if (!arrayOptions || onSearch) {
 			return
 		}
@@ -251,8 +220,6 @@ const MultipleSelector = ({
 	}, [arrayDefaultOptions, arrayOptions, groupBy, onSearch, options])
 
 	useEffect(() => {
-		/** sync search */
-
 		const doSearchSync = () => {
 			const res = onSearchSync?.(debouncedSearchTerm)
 			setOptions(transToGroupOption(res || [], groupBy))
@@ -271,12 +238,9 @@ const MultipleSelector = ({
 		}
 
 		void exec()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus])
 
 	useEffect(() => {
-		/** async search */
-
 		const doSearch = async () => {
 			setIsLoading(true)
 			const res = await onSearch?.(debouncedSearchTerm)
@@ -297,7 +261,6 @@ const MultipleSelector = ({
 		}
 
 		void exec()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus])
 
 	const CreatableItem = () => {
@@ -329,12 +292,10 @@ const MultipleSelector = ({
 			</CommandItem>
 		)
 
-		// For normal creatable
 		if (!onSearch && inputValue.length > 0) {
 			return Item
 		}
 
-		// For async search creatable. avoid showing creatable item before loading at first.
 		if (onSearch && debouncedSearchTerm.length > 0 && !isLoading) {
 			return Item
 		}
@@ -345,7 +306,6 @@ const MultipleSelector = ({
 	const EmptyItem = React.useCallback(() => {
 		if (!emptyIndicator) return undefined
 
-		// For async search that showing emptyIndicator
 		if (onSearch && !creatable && Object.keys(options).length === 0) {
 			return (
 				<CommandItem value="-" disabled>
@@ -359,7 +319,6 @@ const MultipleSelector = ({
 
 	const selectables = React.useMemo<GroupOption>(() => removePickedOption(options, selected), [options, selected])
 
-	/** Avoid Creatable Selector freezing or lagging when paste a long string. */
 	const commandFilter = React.useCallback(() => {
 		if (commandProps?.filter) {
 			return commandProps.filter
@@ -370,7 +329,6 @@ const MultipleSelector = ({
 				return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1
 			}
 		}
-		// Using default filter in `cmdk`. We don&lsquo;t have to provide it.
 		return undefined
 	}, [creatable, commandProps?.filter])
 
@@ -495,18 +453,12 @@ const MultipleSelector = ({
 					{open && (
 						<CommandList
 							className="bg-popover text-popover-foreground shadow-lg outline-hidden"
-							onMouseLeave={() => {
-								setOnScrollbar(false)
-							}}
-							onMouseEnter={() => {
-								setOnScrollbar(true)
-							}}
-							onMouseUp={() => {
-								inputRef?.current?.focus()
-							}}
+							onMouseLeave={() => setOnScrollbar(false)}
+							onMouseEnter={() => setOnScrollbar(true)}
+							onMouseUp={() => inputRef?.current?.focus()}
 						>
 							{isLoading ? (
-								<>{loadingIndicator}</>
+								loadingIndicator
 							) : (
 								<>
 									{EmptyItem()}
@@ -554,5 +506,4 @@ const MultipleSelector = ({
 	)
 }
 
-MultipleSelector.displayName = "MultipleSelector"
-export default MultipleSelector
+MultiSelect.displayName = "MultipleSelector"

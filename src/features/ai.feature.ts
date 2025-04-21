@@ -8,7 +8,7 @@ export class AIFeature {
 	static providerMap = {
 		openai: {
 			title: "OpenAI",
-			models: ["o4-mini", "o3-mini", "o3", "GPT-4.1"],
+			models: ["o4-mini", "o3-mini", "o3", "GPT-4.1", "GPT-4.1 Nano"],
 		},
 		google: {
 			title: "Google",

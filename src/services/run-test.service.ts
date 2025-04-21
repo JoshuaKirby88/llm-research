@@ -139,7 +139,7 @@ export class RunTestService {
 		const result = await AIService.getCompletion({ ...input, messages })
 
 		const { evalResult, dependentValue } = await this.evaluate({ ...input, messages, completion: result.completion }, AIService)
-		messages.push({ role: "assistant", content: evalResult.completion, isCompletion: true, ...evalResult.tokens })
+		messages.push({ role: "assistant", content: evalResult.completion.evaluation, isCompletion: true, ...evalResult.tokens })
 
 		return {
 			model: input.model,
@@ -169,10 +169,10 @@ export class RunTestService {
 		const evalResult = await AIService.getStructuredCompletion({
 			model: AIFeature.promptModel,
 			messages: [{ role: "user", content: VariableTable.replaceVariables(input.evalPrompt.text, input) }],
-			schema: z.enum(input.dependentValues.map(dp => dp.value) as [string, ...string[]]),
+			schema: z.object({ evaluation: z.enum(input.dependentValues.map(dp => dp.value) as [string, ...string[]]) }),
 		})
 
-		const dependentValue = input.dependentValues.find(dv => dv.value === evalResult.completion)
+		const dependentValue = input.dependentValues.find(dv => dv.value === evalResult.completion.evaluation)
 
 		return {
 			evalResult,

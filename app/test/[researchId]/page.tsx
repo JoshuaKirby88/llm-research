@@ -13,7 +13,11 @@ const Page = async () => {
 		return <AddAPIKeyAlertCard />
 	}
 
-	return <RunTestForm maskedAPIKey={maskedAPIKey} />
+	return (
+		<div className="w-full max-w-xl">
+			<RunTestForm maskedAPIKey={maskedAPIKey} />
+		</div>
+	)
 }
 
 export default Page

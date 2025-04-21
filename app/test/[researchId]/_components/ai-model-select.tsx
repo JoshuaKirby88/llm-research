@@ -1,6 +1,6 @@
 "use client"
 
-import MultipleSelector, { Option } from "@/components/ui/multi-select"
+import { MultiSelect, Option } from "@/components/ui/multi-select"
 import { AIFeature } from "@/src/features"
 import { MaskedAPIKeyT } from "@/src/schemas"
 import { Controller, useFormContext } from "react-hook-form"
@@ -17,5 +17,25 @@ export const AIModelSelect = (props: { name: string; maskedAPIKey: MaskedAPIKeyT
 		})),
 	)
 
-	return <Controller control={control} name={props.name} render={({ field: { value, onChange } }) => <MultipleSelector options={options} groupBy="provider" value={value} onChange={onChange} />} />
+	return (
+		<Controller
+			control={control}
+			name={props.name}
+			render={({ field: { value, onChange } }) => {
+				const selectedValues = Array.isArray(value) ? options.filter(option => value.includes(option.value)) : []
+
+				return (
+					<MultiSelect
+						options={options}
+						groupBy="provider"
+						value={selectedValues}
+						onChange={selectedOptions => {
+							console.log("selectedOptions", selectedOptions)
+							onChange(selectedOptions.map(option => option.value))
+						}}
+					/>
+				)
+			}}
+		/>
+	)
 }

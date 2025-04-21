@@ -1,3 +1,4 @@
+import { APIKeyError } from "../entities/errors"
 import { AIFeature, AIProvider } from "../features"
 import { APIKeyT, MaskedAPIKeyT, PartialAPIKeyT } from "../schemas"
 import { CryptoService } from "../services/crypto.service"
@@ -16,9 +17,9 @@ export class APIKeyTable {
 	}
 
 	static encrypt(input: PartialAPIKeyT) {
-		const filteredKeys = AIFeature.providers.filter(aiProvider => aiProvider in input)
+		const filteredProviders = AIFeature.providers.filter(aiProvider => aiProvider in input)
 
-		const encryptedAPIKey = filteredKeys.reduce(
+		const encryptedAPIKey = filteredProviders.reduce(
 			(acc, curr) => ({
 				...acc,
 				[curr]: input[curr] ? CryptoService.encrypt(input[curr] as string) : null,
@@ -29,31 +30,39 @@ export class APIKeyTable {
 		return encryptedAPIKey
 	}
 
-	static decrypt(input: Pick<APIKeyT, AIProvider>) {
-		const filteredKeys = AIFeature.providers.filter(aiProvider => aiProvider in input)
-
-		const decryptedAPIKey = filteredKeys.reduce(
+	static decrypt(input: APIKeyT) {
+		const decryptedAPIKey = AIFeature.providers.reduce(
 			(acc, curr) => ({
 				...acc,
 				[curr]: input[curr] ? CryptoService.decrypt(input[curr]) : null,
 			}),
-			{} as Pick<APIKeyT, AIProvider>,
+			{ ...input } as APIKeyT,
 		)
 
 		return decryptedAPIKey
 	}
 
-	static mask(input: Pick<APIKeyT, AIProvider>) {
-		return Object.keys(input).reduce(
+	static mask(input: APIKeyT) {
+		return AIFeature.providers.reduce(
 			(acc, curr) => ({
 				...acc,
-				[curr]: input[curr as AIProvider] ? this.maskedValue.repeat(input[curr as AIProvider]!.length) : "",
+				[curr]: input[curr] ? this.maskedValue.repeat(input[curr].length) : "",
 			}),
-			{} as MaskedAPIKeyT,
+			{ ...input } as MaskedAPIKeyT,
 		)
 	}
 
-	static keyExists(maskedAPIKey: MaskedAPIKeyT | null): maskedAPIKey is MaskedAPIKeyT {
-		return !!maskedAPIKey && !!AIFeature.providers.find(provider => maskedAPIKey[provider])
+	static keyExists<T extends APIKeyT | MaskedAPIKeyT>(apiKey: T | null): apiKey is T {
+		return !!apiKey && !!AIFeature.providers.find(provider => apiKey[provider])
+	}
+
+	static validate(apiKey: APIKeyT | undefined) {
+		if (!apiKey || !this.keyExists(apiKey)) {
+			throw new APIKeyError("noAPIKey")
+		}
+
+		const decryptedAPIKey = this.decrypt(apiKey)
+
+		return decryptedAPIKey
 	}
 }

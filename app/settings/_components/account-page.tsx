@@ -20,7 +20,7 @@ export const AccountPage = () => {
 					<Dialog
 						icon={<TriangleAlertIcon />}
 						title="Are you sure?"
-						description="This action cannot be reversed, and all your data will be permanently deleted."
+						description="Deleting your account will permanently remove all your personal data, except for any collaborative research contributions."
 						triggerButton={<Button variant="red">Delete Account</Button>}
 						cancelProps={{ children: "Cancel" }}
 						confirmButton={

@@ -1,16 +1,12 @@
 import { AddAPIKeyAlertCard } from "@/components/add-api-key-alert-card"
-import { db } from "@/drizzle/db"
-import { APIKey } from "@/drizzle/schema"
+import { APIKeyRepo } from "@/src/repos"
 import { APIKeyTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
-import { eq } from "drizzle-orm"
 import { RunTestForm } from "./_components/run-test-form"
 
 const Page = async () => {
 	const user = await authProcedure("signedIn")
-	const apiKey = await db.query.APIKey.findFirst({
-		where: eq(APIKey.userId, user.userId),
-	})
+	const apiKey = await APIKeyRepo.query(user.userId)
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
 	if (!APIKeyTable.keyExists(maskedAPIKey)) {

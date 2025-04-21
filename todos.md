@@ -1,6 +1,5 @@
-- [ ] Show clerk name 
+- [ ] Show clerk name
 - [ ] Check if deleting non-existant vector errors
-- [ ] Let user know that any research that has external contributions will not be deleted on account deletion
 - [ ] Make sure strings in new research form has min value
 
 # New research form

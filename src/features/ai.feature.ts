@@ -22,6 +22,7 @@ export class AIFeature {
 	static providers = Object.keys(this.providerMap) as AIProvider[]
 	static models = Object.values(this.providerMap).flatMap(provider => provider.models) as AIModel[]
 	static promptModel: AIModel = "GPT-4.1"
+	static apiKeyErrors = ["api key", "x-api-key"]
 
 	static modelToProvider(aiModel: AIModel) {
 		return this.providers.find(aiProvider => this.providerMap[aiProvider].models.includes(aiModel as never)) as AIProvider

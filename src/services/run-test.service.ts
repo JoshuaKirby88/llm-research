@@ -1,7 +1,7 @@
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
 import { transaction } from "@/drizzle/transaction"
-import { ContributorRepo, MessageRepo, TestBatchRepo, TestBatchResultRepo, TestModelBatchRepo, TestModelBatchResultRepo, TestRepo, TestToBlockingValueRepo } from "@/src/repos"
+import { APIKeyRepo, ContributorRepo, MessageRepo, TestBatchRepo, TestBatchResultRepo, TestModelBatchRepo, TestModelBatchResultRepo, TestRepo, TestToBlockingValueRepo } from "@/src/repos"
 import {
 	BlockingValueT,
 	BlockingVariableCombinationT,
@@ -23,8 +23,8 @@ import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
 import { RunTest } from "../schemas/features/run-test.schema"
-import { VariableTable } from "../tables"
-import { AIService } from "./ai.service"
+import { APIKeyTable, VariableTable } from "../tables"
+import { AIServiceInstance } from "./ai.service"
 
 type Research = NonNullable<Awaited<ReturnType<(typeof RunTestService)["queryResearch"]>>>
 
@@ -58,11 +58,13 @@ type TestResult = {
 
 export class RunTestService {
 	static async execute(input: RunTest) {
-		const research = await this.queryResearch(input.researchId)
+		const [research, apiKey] = await Promise.all([this.queryResearch(input.researchId), this.queryAPIKey(input.userId)])
 
 		if (!research?.independentVariable || !research.evalPrompt) {
 			throw new Error("No research")
 		}
+
+		const AIService = new AIServiceInstance(apiKey)
 
 		const blockingVariableCombinations = VariableTable.createCombination(research.blockingVariables)
 
@@ -74,15 +76,18 @@ export class RunTestService {
 			for (const independentValue of research.independentVariable.independentValues) {
 				for (const blockingVariableCombination of blockingVariableCombinations) {
 					for (let i = 0; i < input.iterations; i++) {
-						const testResultPromise = this.runTest({
-							model,
-							independentVariable: research.independentVariable,
-							independentValue,
-							blockingVariableCombination,
-							dependentValues: research.dependentValues,
-							messagePrompts: research.messagePrompts,
-							evalPrompt: research.evalPrompt,
-						})
+						const testResultPromise = this.runTest(
+							{
+								model,
+								independentVariable: research.independentVariable,
+								independentValue,
+								blockingVariableCombination,
+								dependentValues: research.dependentValues,
+								messagePrompts: research.messagePrompts,
+								evalPrompt: research.evalPrompt,
+							},
+							AIService,
+						)
 
 						testResultPromises.push(testResultPromise)
 					}
@@ -97,6 +102,81 @@ export class RunTestService {
 		return {
 			research,
 			testModelBatchResults,
+		}
+	}
+
+	private static async queryResearch(researchId: ResearchT["id"]) {
+		const research = await db.query.Research.findFirst({
+			where: eq(Research.id, researchId),
+			with: {
+				independentVariable: {
+					with: {
+						independentValues: true,
+					},
+				},
+				blockingVariables: {
+					with: {
+						blockingValues: true,
+					},
+				},
+				messagePrompts: true,
+				evalPrompt: true,
+				dependentValues: true,
+			},
+		})
+
+		return research
+	}
+
+	private static async queryAPIKey(userId: string) {
+		const apiKey = await APIKeyRepo.query(userId)
+		return APIKeyTable.validate(apiKey)
+	}
+
+	private static async runTest(input: TestRunInput, AIService: AIServiceInstance) {
+		const messages = await this.generateMessages(input, AIService)
+
+		const result = await AIService.getCompletion({ ...input, messages })
+
+		const { evalResult, dependentValue } = await this.evaluate({ ...input, messages, completion: result.completion }, AIService)
+		messages.push({ role: "assistant", content: evalResult.completion, isCompletion: true, ...evalResult.tokens })
+
+		return {
+			model: input.model,
+			independentValue: input.independentValue,
+			blockingValues: input.blockingVariableCombination.map(bvc => bvc.blockingValue),
+			dependentValue,
+			messages,
+		} satisfies TestResult
+	}
+
+	private static async generateMessages(input: TestRunInput, AIService: AIServiceInstance) {
+		const messages: Omit<InsertMessageT, "testId">[] = []
+
+		for (const messagePrompt of input.messagePrompts) {
+			const result = await AIService.getCompletion({
+				model: AIFeature.promptModel,
+				messages: [{ role: "user", content: VariableTable.replaceVariables(messagePrompt.text, { ...input, messages }) }],
+			})
+
+			messages.push({ role: messagePrompt.role, content: result.completion, isCompletion: false, ...result.tokens })
+		}
+
+		return messages
+	}
+
+	private static async evaluate(input: EvaluateInput, AIService: AIServiceInstance) {
+		const evalResult = await AIService.getStructuredCompletion({
+			model: AIFeature.promptModel,
+			messages: [{ role: "user", content: VariableTable.replaceVariables(input.evalPrompt.text, input) }],
+			schema: z.enum(input.dependentValues.map(dp => dp.value) as [string, ...string[]]),
+		})
+
+		const dependentValue = input.dependentValues.find(dv => dv.value === evalResult.completion)
+
+		return {
+			evalResult,
+			dependentValue: dependentValue!,
 		}
 	}
 
@@ -170,75 +250,5 @@ export class RunTestService {
 				newTestBatchResults,
 			}
 		})
-	}
-
-	private static async queryResearch(researchId: ResearchT["id"]) {
-		const research = await db.query.Research.findFirst({
-			where: eq(Research.id, researchId),
-			with: {
-				independentVariable: {
-					with: {
-						independentValues: true,
-					},
-				},
-				blockingVariables: {
-					with: {
-						blockingValues: true,
-					},
-				},
-				messagePrompts: true,
-				evalPrompt: true,
-				dependentValues: true,
-			},
-		})
-
-		return research
-	}
-
-	private static async runTest(input: TestRunInput) {
-		const messages = await this.generateMessages(input)
-
-		const result = await AIService.getCompletion({ ...input, messages })
-
-		const { evalResult, dependentValue } = await this.evaluate({ ...input, messages, completion: result.completion })
-		messages.push({ role: "assistant", content: evalResult.completion, isCompletion: true, ...evalResult.tokens })
-
-		return {
-			model: input.model,
-			independentValue: input.independentValue,
-			blockingValues: input.blockingVariableCombination.map(bvc => bvc.blockingValue),
-			dependentValue,
-			messages,
-		} satisfies TestResult
-	}
-
-	private static async generateMessages(input: TestRunInput) {
-		const messages: Omit<InsertMessageT, "testId">[] = []
-
-		for (const messagePrompt of input.messagePrompts) {
-			const result = await AIService.getCompletion({
-				model: AIFeature.promptModel,
-				messages: [{ role: "user", content: VariableTable.replaceVariables(messagePrompt.text, { ...input, messages }) }],
-			})
-
-			messages.push({ role: messagePrompt.role, content: result.completion, isCompletion: false, ...result.tokens })
-		}
-
-		return messages
-	}
-
-	private static async evaluate(input: EvaluateInput) {
-		const evalResult = await AIService.getStructuredCompletion({
-			model: AIFeature.promptModel,
-			messages: [{ role: "user", content: VariableTable.replaceVariables(input.evalPrompt.text, input) }],
-			schema: z.enum(input.dependentValues.map(dp => dp.value) as [string, ...string[]]),
-		})
-
-		const dependentValue = input.dependentValues.find(dv => dv.value === evalResult.completion)
-
-		return {
-			evalResult,
-			dependentValue: dependentValue!,
-		}
 	}
 }

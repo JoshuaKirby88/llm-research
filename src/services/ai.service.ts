@@ -1,33 +1,57 @@
-import { anthropic } from "@ai-sdk/anthropic"
-import { google } from "@ai-sdk/google"
+import { createAnthropic } from "@ai-sdk/anthropic"
+import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
-import { CoreMessage, customProvider, embed, generateObject, generateText } from "ai"
+import { CoreMessage, LoadAPIKeyError, customProvider, embed, generateObject, generateText } from "ai"
 import { ZodSchema, z } from "zod"
-import { AIModel } from "../features"
+import { APIKeyError } from "../entities/errors"
+import { AIFeature, AIModel } from "../features"
+import { APIKeyT } from "../schemas"
 
-type EmbeddingModel = Parameters<(typeof AIService)["models"]["textEmbeddingModel"]>[0]
+type EmbeddingModel = Parameters<(typeof AIServiceInstance)["prototype"]["models"]["textEmbeddingModel"]>[0]
 
-export class AIService {
-	private static openai = createOpenAI()
-	private static models = customProvider({
-		languageModels: {
-			"o4-mini": this.openai("o4-mini"),
-			"o3-mini": this.openai("o3-mini"),
-			o3: this.openai("o3"),
-			"GPT-4.1": this.openai("gpt-4.1"),
-			"Gemini 2.5 Pro": google("gemini-2.5-pro-exp-03-25"),
-			"Claude 3.7 Sonnet": anthropic("claude-3-7-sonnet-20250219"),
-		} satisfies Record<AIModel, any>,
-		textEmbeddingModels: {
-			"text-embedding-3-small": this.openai.embedding("text-embedding-3-small", { dimensions: 1536 }),
-		},
-	})
+export class AIServiceInstance {
+	private models
 
-	static async getCompletion(input: { model: AIModel; messages: CoreMessage[] }) {
-		const result = await generateText({
+	constructor(apiKey?: APIKeyT) {
+		const openai = createOpenAI({ apiKey: apiKey?.openai ?? "" })
+		const google = createGoogleGenerativeAI({ apiKey: apiKey?.google ?? "" })
+		const anthropic = createAnthropic({ apiKey: apiKey?.anthropic ?? "" })
+
+		this.models = customProvider({
+			languageModels: {
+				"o4-mini": openai("o4-mini"),
+				"o3-mini": openai("o3-mini"),
+				o3: openai("o3"),
+				"GPT-4.1": openai("gpt-4.1"),
+				"Gemini 2.5 Pro": google("gemini-2.5-pro-exp-03-25"),
+				"Claude 3.7 Sonnet": anthropic("claude-3-7-sonnet-20250219"),
+			} satisfies Record<AIModel, any>,
+			textEmbeddingModels: {
+				"text-embedding-3-small": openai.embedding("text-embedding-3-small", { dimensions: 1536 }),
+			},
+		})
+	}
+
+	private async handleAPIKeyError<T>(promise: Promise<T>, input: { model: AIModel }) {
+		try {
+			return await promise
+		} catch (error: any) {
+			if (error instanceof LoadAPIKeyError || AIFeature.apiKeyErrors.some(apiKeyError => error.message.toLowerCase().includes(apiKeyError))) {
+				const provider = AIFeature.modelToProvider(input.model)
+				throw new APIKeyError(provider)
+			}
+
+			throw error
+		}
+	}
+
+	async getCompletion(input: { model: AIModel; messages: CoreMessage[] }) {
+		const promise = generateText({
 			model: this.models.languageModel(input.model),
 			messages: input.messages,
 		})
+
+		const result = await this.handleAPIKeyError(promise, input)
 
 		return {
 			completion: result.text,
@@ -35,7 +59,7 @@ export class AIService {
 		}
 	}
 
-	static async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
+	async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
 		const result = await generateObject({
 			model: this.models.languageModel(input.model),
 			schema: input.schema,
@@ -48,7 +72,7 @@ export class AIService {
 		}
 	}
 
-	static async createEmbedding(input: { model: EmbeddingModel; text: string }) {
+	async createEmbedding(input: { model: EmbeddingModel; text: string }) {
 		const result = await embed({
 			model: this.models.textEmbeddingModel(input.model),
 			value: input.text,
@@ -57,3 +81,5 @@ export class AIService {
 		return result.embedding
 	}
 }
+
+export const AIService = new AIServiceInstance()

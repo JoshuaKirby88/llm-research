@@ -28,7 +28,7 @@ export const Dialog = (props: ZustandDialogStates & ZustandDialogActions) => {
 							props.cancelButton
 						) : props.cancelProps ? (
 							<DialogClose asChild>
-								<Button variant="secondary" {...props.cancelProps} className={props.cancelProps?.className} />
+								<Button variant="outline" {...props.cancelProps} className={props.cancelProps?.className} />
 							</DialogClose>
 						) : null}
 

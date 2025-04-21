@@ -26,4 +26,4 @@ export type UpdateAPIKeyT = z.infer<typeof updateAPIKeySchema>
 
 export type PartialAPIKeyT = Partial<Pick<APIKeyT, AIProvider>>
 
-export type MaskedAPIKeyT = Record<AIProvider, string>
+export type MaskedAPIKeyT = RequiredObj<APIKeyT>

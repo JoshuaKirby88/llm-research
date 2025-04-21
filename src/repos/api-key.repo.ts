@@ -10,6 +10,14 @@ export class APIKeyRepo {
 		return newKey
 	}
 
+	static async query(userId: APIKeyT["userId"]) {
+		const apiKey = await db.query.APIKey.findFirst({
+			where: eq(APIKey.userId, userId),
+		})
+
+		return apiKey
+	}
+
 	static async update(userId: APIKeyT["userId"], input: Omit<UpdateAPIKeyT, "userId">, tx?: TX) {
 		const insertValues: InsertAPIKeyT = { userId, ...input }
 		const updateValues: Omit<UpdateAPIKeyT, "userId"> = input

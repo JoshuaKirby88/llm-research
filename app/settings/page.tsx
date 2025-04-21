@@ -1,13 +1,11 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
-import { db } from "@/drizzle/db"
-import { APIKey } from "@/drizzle/schema"
 import { APIKeyTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
-import { eq } from "drizzle-orm"
 import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
 import { AccountPage } from "./_components/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
+import { APIKeyRepo } from "@/src/repos"
 
 const config = {
 	tabs: [
@@ -19,9 +17,7 @@ const config = {
 const Page = async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
-	const apiKey = await db.query.APIKey.findFirst({
-		where: eq(APIKey.userId, user.userId),
-	})
+	const apiKey = await APIKeyRepo.query(user.userId)
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
 	return (

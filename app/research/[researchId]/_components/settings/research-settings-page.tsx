@@ -1,17 +1,16 @@
-import { queryResearchAction } from "@/actions/research/query-research.action"
 import { Separator } from "@/components/ui/separator"
-import { ActionO } from "@/utils/actions/create-action"
+import { ResearchT } from "@/src/schemas"
 import { ArchiveResearchCard } from "./archive-research-card"
 import { ResearchNameAndDescriptionAndConclusionForm } from "./research-name-and-description-and-conclusion-form"
 
-export const ResearchSettingsPage = (props: NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
+export const ResearchSettingsPage = (props: { research: ResearchT }) => {
 	return (
 		<div className="flex flex-col gap-10">
-			<ResearchNameAndDescriptionAndConclusionForm {...props} />
+			<ResearchNameAndDescriptionAndConclusionForm research={props.research} />
 
 			<Separator />
 
-			<ArchiveResearchCard {...props} />
+			<ArchiveResearchCard research={props.research} />
 		</div>
 	)
 }

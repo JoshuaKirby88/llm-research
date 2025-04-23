@@ -1,11 +1,10 @@
-import { queryResearchAction } from "@/actions/research/query-research.action"
-import { ActionO } from "@/utils/actions/create-action"
+import { ContributorT, ResearchT } from "@/src/schemas"
 import { cn } from "@/utils/cn"
 import omit from "lodash.omit"
 import { CalendarIcon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
 
-export const ResearchOverviewPage = (props: NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
+export const ResearchOverviewPage = (props: { research: ResearchT; contributors: ContributorT[] }) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>

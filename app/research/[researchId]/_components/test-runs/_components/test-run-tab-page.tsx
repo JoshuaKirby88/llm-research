@@ -1,9 +1,18 @@
-import { queryResearchAction } from "@/actions/research/query-research.action"
 import { TestBatchCard } from "@/components/cards/test-batch-card"
+import { ContributorT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkUser } from "@/src/services/clerk.service"
-import { ActionO } from "@/utils/actions/create-action"
+import { User } from "@clerk/nextjs/server"
 
-export const TestRunTabPage = async (props: { tab: "all" | "yours" | "external"; user: ClerkUser } & NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
+type Props = {
+	tab: "all" | "yours" | "external"
+	user: ClerkUser
+	users: User[]
+	contributors: ContributorT[]
+	testBatches: TestBatchT[]
+	testModelBatches: TestModelBatchT[]
+}
+
+export const TestRunTabPage = async (props: Props) => {
 	const userContributor = props.contributors.find(c => c.userId === props.user.userId)
 	const testBatches = props.testBatches.filter(
 		tb => props.tab === "all" || (props.tab === "yours" && tb.contributorId === userContributor?.id) || (props.tab === "external" && tb.contributorId !== userContributor?.id),

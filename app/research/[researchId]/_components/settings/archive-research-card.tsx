@@ -1,12 +1,11 @@
 import { archiveResearchAction, unarchiveResearchAction } from "@/actions/research/archive-research.action"
-import { queryResearchAction } from "@/actions/research/query-research.action"
 import { AlertCard, AlertCardContent } from "@/components/alert-card"
 import { FormActionButton } from "@/components/form/server/form-action-button"
 import { IconWrapper } from "@/components/icon-wrapper"
-import { ActionO } from "@/utils/actions/create-action"
+import { ResearchT } from "@/src/schemas"
 import { ArchiveIcon, ArchiveRestoreIcon } from "lucide-react"
 
-export const ArchiveResearchCard = (props: NonNullable<RequiredObj<ActionO<typeof queryResearchAction>>>) => {
+export const ArchiveResearchCard = (props: { research: ResearchT }) => {
 	const isArchived = props.research.isArchived
 
 	return (

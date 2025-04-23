@@ -5,6 +5,10 @@ import { FlaskConicalIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
 import React from "react"
 
+const config = {
+	nonLinkPaths: ["user"],
+}
+
 export const NavbarBreadCrumb = () => {
 	const pathname = usePathname()
 	const paths = pathname.split("/").filter(Boolean)
@@ -23,7 +27,7 @@ export const NavbarBreadCrumb = () => {
 				{paths.map((path, i) => (
 					<React.Fragment key={i}>
 						<BreadcrumbItem>
-							{i < paths.length - 1 ? (
+							{i < paths.length - 1 && !config.nonLinkPaths.includes(path) ? (
 								<BreadcrumbLink href={`/${paths.slice(0, i + 1).join("/")}`} className="inline-flex items-center gap-1.5 capitalize">
 									{path}
 								</BreadcrumbLink>

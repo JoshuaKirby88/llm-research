@@ -20,7 +20,7 @@ const config = {
 	tabs: [
 		{ key: "all", title: "All", icon: BeanOffIcon },
 		{ key: "yours", title: "Yours", icon: UserIcon },
-		{ key: "external", title: "External", icon: UsersIcon },
+		{ key: "contributions", title: "Contributions", icon: UsersIcon },
 	],
 } as const
 

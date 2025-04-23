@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleChevronIcon, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { BlockingVariableCombinationT, DependentValueT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
+import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
 import { TestCard } from "./test-card"
 
 type Props = {
@@ -9,8 +9,10 @@ type Props = {
 	dependentValues: DependentValueT[]
 	blockingVariableCombination: BlockingVariableCombinationT
 	messagePrompts: MessagePromptT[]
+	evalPrompt: EvalPromptT
 	testsByBlockingVariableCombinations: TestT[][]
 	messages: MessageT[]
+	evals: EvalT[]
 }
 
 export const BlockingVariableCombinationCollapsible = (props: Props) => {
@@ -31,7 +33,7 @@ export const BlockingVariableCombinationCollapsible = (props: Props) => {
 				</Badge>
 			</CollapsibleTrigger>
 
-			<CollapsibleContent className="space-y-2 p-2 pt-0">
+			<CollapsibleContent className="space-y-5 p-2 pt-0">
 				{props.testsByBlockingVariableCombinations.map(testsByBlockingVariableCombination =>
 					testsByBlockingVariableCombination.map(test => (
 						<TestCard
@@ -41,8 +43,10 @@ export const BlockingVariableCombinationCollapsible = (props: Props) => {
 							blockingVariableCombination={props.blockingVariableCombination}
 							dependentValues={props.dependentValues}
 							messagePrompts={props.messagePrompts}
+							evalPrompt={props.evalPrompt}
 							test={test}
 							messages={props.messages}
+							evals={props.evals}
 						/>
 					)),
 				)}

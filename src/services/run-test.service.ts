@@ -10,6 +10,7 @@ import {
 	IndependentValueT,
 	IndependentVariableWithValueT,
 	InsertCompletionMessageT,
+	InsertEvalT,
 	InsertGeneratedMessageT,
 	InsertMessageT,
 	InsertTestBatchResultT,
@@ -24,6 +25,7 @@ import { CoreMessage } from "ai"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
+import { EvalRepo } from "../repos/eval.repo"
 import { RunTest } from "../schemas/features/run-test.schema"
 import { APIKeyTable, VariableTable } from "../tables"
 import { AIServiceInstance } from "./ai.service"
@@ -56,6 +58,7 @@ type TestResult = {
 	blockingValues: BlockingValueT[]
 	dependentValue: DependentValueT
 	messages: Omit<InsertMessageT, "testId">[]
+	evaluation: Omit<InsertEvalT, "testId">
 }
 
 export class RunTestService {
@@ -142,10 +145,11 @@ export class RunTestService {
 		messages.push(...generatedMessages)
 
 		const result = await AIService.getCompletion({ ...input, messages })
+		const completionMessage: Omit<InsertCompletionMessageT, "testId"> = { role: "assistant", content: result.completion, isCompletion: true, ...result.tokens }
+		messages.push(completionMessage)
 
 		const { evalResult, dependentValue } = await this.evaluate({ ...input, messages, completion: result.completion }, AIService)
-		const completionMessage: Omit<InsertCompletionMessageT, "testId"> = { role: "assistant", content: evalResult.completion.evaluation, isCompletion: true, ...evalResult.tokens }
-		messages.push(completionMessage)
+		const evaluation: Omit<InsertEvalT, "testId"> = { content: evalResult.completion.evaluation, evalPromptId: input.evalPrompt.id, ...evalResult.tokens }
 
 		return {
 			model: input.model,
@@ -153,6 +157,7 @@ export class RunTestService {
 			blockingValues: input.blockingVariableCombination.map(bvc => bvc.blockingValue),
 			dependentValue,
 			messages,
+			evaluation,
 		} satisfies TestResult
 	}
 
@@ -224,14 +229,22 @@ export class RunTestService {
 			const newTestToBlockingValues = await TestToBlockingValueRepo.insertMany(testToBlockingValuesToInsert, tx)
 
 			const messagesToInsert: InsertMessageT[] = testModelBatchResults.flatMap(testModelBatchResult =>
-				testModelBatchResult.flatMap((test, i) =>
-					test.messages.map(message => ({
+				testModelBatchResult.flatMap((testResult, i) =>
+					testResult.messages.map(message => ({
 						testId: newTests[i].id,
 						...message,
 					})),
 				),
 			)
 			const newMessages = await MessageRepo.insertMany(messagesToInsert, tx)
+
+			const evalsToInsert: InsertEvalT[] = testModelBatchResults.flatMap(testModelBatchResult =>
+				testModelBatchResult.flatMap((testResult, i) => ({
+					testId: newTests[i].id,
+					...testResult.evaluation,
+				})),
+			)
+			const newEvals = await EvalRepo.insertMany(evalsToInsert, tx)
 
 			const testModelBatchResultToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testModelBatchResult, i) =>
 				research.dependentValues.map(dependentValue => ({
@@ -256,6 +269,7 @@ export class RunTestService {
 				newTests,
 				newTestToBlockingValues,
 				newMessages,
+				newEvals,
 				newTestBatchResults,
 			}
 		})

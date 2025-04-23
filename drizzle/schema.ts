@@ -195,8 +195,22 @@ export const Message = sqliteTable(
 		messagePromptId: integer().references(() => MessagePrompt.id, { onDelete: "cascade" }),
 		...defaultColumns,
 	},
-	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNotNull(table.messagePromptId)))!)],
+	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNotNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNull(table.messagePromptId)))!)],
 )
+
+export const Eval = sqliteTable("Eval", {
+	id: integer().primaryKey({ autoIncrement: true }),
+	content: text().notNull(),
+	promptTokens: integer().notNull(),
+	completionTokens: integer().notNull(),
+	testId: integer()
+		.notNull()
+		.references(() => Test.id, { onDelete: "cascade" }),
+	evalPromptId: integer()
+		.notNull()
+		.references(() => EvalPrompt.id, { onDelete: "cascade" }),
+	...defaultColumns,
+})
 
 export const ResearchResult = sqliteTable("ResearchResult", {
 	id: integer().primaryKey({ autoIncrement: true }),
@@ -348,6 +362,7 @@ export const TestRelations = relations(Test, ({ one, many }) => ({
 	}),
 	testToBlockingValues: many(TestToBlockingValue),
 	messages: many(Message),
+	evals: many(Eval),
 }))
 
 export const TestToBlockingValueRelations = relations(TestToBlockingValue, ({ one }) => ({
@@ -364,6 +379,13 @@ export const TestToBlockingValueRelations = relations(TestToBlockingValue, ({ on
 export const MessageRelations = relations(Message, ({ one }) => ({
 	test: one(Test, {
 		fields: [Message.testId],
+		references: [Test.id],
+	}),
+}))
+
+export const EvalRelations = relations(Eval, ({ one }) => ({
+	test: one(Test, {
+		fields: [Eval.testId],
 		references: [Test.id],
 	}),
 }))

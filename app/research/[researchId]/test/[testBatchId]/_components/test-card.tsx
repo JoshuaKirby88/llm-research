@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { BlockingVariableCombinationT, DependentValueT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
+import { Separator } from "@/components/ui/separator"
+import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
 import { MessageCard } from "./message-card"
 
 type Props = {
@@ -8,15 +9,18 @@ type Props = {
 	dependentValues: DependentValueT[]
 	blockingVariableCombination: BlockingVariableCombinationT
 	messagePrompts: MessagePromptT[]
+	evalPrompt: EvalPromptT
 	test: TestT
 	messages: MessageT[]
+	evals: EvalT[]
 }
 
 export const TestCard = (props: Props) => {
 	const testMessages = props.messages.filter(m => m.testId === props.test.id)
+	const evaluation = props.evals.find(evaluation => evaluation.testId === props.test.id)!
 	const dependentValue = props.dependentValues.find(dv => dv.id === props.test.dependentValueId)!
-	const totalInputTokens = props.messages.reduce((acc, curr) => acc + curr.promptTokens, 0)
-	const totalOutputTokens = props.messages.reduce((acc, curr) => acc + curr.completionTokens, 0)
+	const totalInputTokens = testMessages.reduce((acc, curr) => acc + curr.promptTokens, evaluation.promptTokens)
+	const totalOutputTokens = testMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
 
 	return (
 		<Card className="border" padding="sm">
@@ -38,10 +42,22 @@ export const TestCard = (props: Props) => {
 							independentValue={props.independentValue}
 							blockingVariableCombination={props.blockingVariableCombination}
 							messagePrompts={props.messagePrompts}
-							messages={props.messages}
+							messages={testMessages}
 							message={message}
 						/>
 					))}
+
+					<Separator className="my-5" />
+
+					<MessageCard
+						key={evaluation.id}
+						independentVariable={props.independentVariable}
+						independentValue={props.independentValue}
+						blockingVariableCombination={props.blockingVariableCombination}
+						evalPrompt={props.evalPrompt}
+						messages={testMessages}
+						eval={evaluation}
+					/>
 				</div>
 			</CardContent>
 		</Card>

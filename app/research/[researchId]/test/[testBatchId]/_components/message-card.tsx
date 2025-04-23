@@ -1,7 +1,7 @@
 import { Dialog } from "@/components/dialog"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { BlockingVariableCombinationT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT } from "@/src/schemas"
+import { BlockingVariableCombinationT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT } from "@/src/schemas"
 import { VariableTable } from "@/src/tables"
 import { cn } from "@/utils/cn"
 
@@ -9,16 +9,16 @@ type Props = {
 	independentVariable: IndependentVariableT
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
-	messagePrompts: MessagePromptT[]
 	messages: MessageT[]
-	message: MessageT
-}
+} & ({ messagePrompts: MessagePromptT[]; message: MessageT } | { evalPrompt: EvalPromptT; eval: EvalT })
 
 export const MessageCard = (props: Props) => {
-	const messagePrompt = props.messagePrompts.find(mp => mp.id === props.message.messagePromptId)
-	const replacedMessagePrompt =
-		messagePrompt &&
-		VariableTable.replaceVariables(messagePrompt.text, {
+	const messageOrEval = "message" in props ? props.message : props.eval
+	const prompt = "messagePrompts" in props ? props.messagePrompts.find(mp => mp.id === (messageOrEval as MessageT).messagePromptId) : props.evalPrompt
+
+	const replacedPrompt =
+		prompt &&
+		VariableTable.replaceVariables(prompt.text, {
 			independentVariable: props.independentVariable,
 			independentValue: props.independentValue,
 			blockingVariableCombination: props.blockingVariableCombination,
@@ -27,25 +27,21 @@ export const MessageCard = (props: Props) => {
 
 	return (
 		<div
-			key={props.message.id}
+			key={messageOrEval.id}
 			className={cn(
-				"w-full space-y-3 rounded-lg p-3",
-				props.message.role === "system"
-					? "border border-yellow-200 bg-yellow-50 text-yellow-800"
-					: props.message.role === "user"
-						? "border border-gray-200 bg-gray-100 text-gray-800"
-						: "border border-blue-200 bg-blue-50 text-blue-800",
+				"w-full space-y-3 rounded-lg border p-3",
+				"role" in messageOrEval ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "bg-green-950",
 			)}
 		>
 			<div className="flex items-center justify-between">
-				<span className="font-medium capitalize">{props.message.role}</span>
+				<span className="font-medium capitalize">{"role" in messageOrEval ? messageOrEval.role : "Evaluation"}</span>
 
 				<div className="flex items-center gap-2">
 					<div className="text-muted-foreground text-xs">
-						Input Tokens: {props.message.promptTokens}, Output Tokens: {props.message.completionTokens}
+						Input Tokens: {messageOrEval.promptTokens}, Output Tokens: {messageOrEval.completionTokens}
 					</div>
 
-					{replacedMessagePrompt && (
+					{replacedPrompt && (
 						<Dialog
 							triggerButton={
 								<Button size="xs" variant="outline">
@@ -55,7 +51,7 @@ export const MessageCard = (props: Props) => {
 							contentProps={{ className: "max-w-5xl max-h-[80%] flex flex-col p-0" }}
 						>
 							<div className="overflow-y-auto p-4">
-								<p className="whitespace-pre-wrap">{replacedMessagePrompt.repeat(2)}</p>
+								<p className="whitespace-pre-wrap">{replacedPrompt.repeat(2)}</p>
 							</div>
 						</Dialog>
 					)}
@@ -64,7 +60,7 @@ export const MessageCard = (props: Props) => {
 
 			<Separator />
 
-			<div className="whitespace-pre-wrap">{props.message.content}</div>
+			<div className="whitespace-pre-wrap">{messageOrEval.content}</div>
 		</div>
 	)
 }

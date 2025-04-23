@@ -22,6 +22,7 @@ const Page = async (props: { params: Promise<{ researchId: string; testBatchId: 
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },
 			messagePrompts: true,
+			evalPrompt: true,
 			dependentValues: true,
 			testBatches: {
 				columns: {},
@@ -31,8 +32,9 @@ const Page = async (props: { params: Promise<{ researchId: string; testBatchId: 
 						with: {
 							tests: {
 								with: {
-									messages: true,
 									testToBlockingValues: true,
+									messages: true,
+									evals: true,
 								},
 							},
 						},
@@ -46,9 +48,11 @@ const Page = async (props: { params: Promise<{ researchId: string; testBatchId: 
 		notFound()
 	}
 
-	const { independentVariable: _independentVariable, blockingVariables: blockingVariablesWithValues, messagePrompts, dependentValues, testBatches } = result
+	const { independentVariable: _independentVariable, blockingVariables: blockingVariablesWithValues, messagePrompts, evalPrompt, dependentValues, testBatches } = result
 	const { independentValues, ...independentVariable } = _independentVariable!
-	const [_, { testModelBatches, tests, messages, testToBlockingValues }] = destructureArray(testBatches, { testModelBatches: { tests: { messages: true, testToBlockingValues: true } } })
+	const [_, { testModelBatches, tests, testToBlockingValues, messages, evals }] = destructureArray(testBatches, {
+		testModelBatches: { tests: { testToBlockingValues: true, messages: true, evals: true } },
+	})
 
 	const blockingVariableCombinations = VariableTable.createCombination(blockingVariablesWithValues)
 
@@ -71,10 +75,12 @@ const Page = async (props: { params: Promise<{ researchId: string; testBatchId: 
 							blockingVariableCombinations={blockingVariableCombinations}
 							dependentValues={dependentValues}
 							messagePrompts={messagePrompts}
+							evalPrompt={evalPrompt!}
 							testModelBatch={testModelBatch}
 							tests={tests}
 							testToBlockingValues={testToBlockingValues}
 							messages={messages}
+							evals={evals}
 						/>
 					</TabsContent>
 				))}

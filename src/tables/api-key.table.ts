@@ -19,24 +19,24 @@ export class APIKeyTable {
 	static encrypt(input: PartialAPIKeyT) {
 		const filteredProviders = AIFeature.providers.filter(aiProvider => aiProvider in input)
 
-		const encryptedAPIKey = filteredProviders.reduce(
+		const encryptedAPIKey = filteredProviders.reduce<PartialAPIKeyT>(
 			(acc, curr) => ({
 				...acc,
 				[curr]: input[curr] ? CryptoService.encrypt(input[curr] as string) : null,
 			}),
-			{} as PartialAPIKeyT,
+			{},
 		)
 
 		return encryptedAPIKey
 	}
 
 	static decrypt(input: APIKeyT) {
-		const decryptedAPIKey = AIFeature.providers.reduce(
+		const decryptedAPIKey = AIFeature.providers.reduce<APIKeyT>(
 			(acc, curr) => ({
 				...acc,
 				[curr]: input[curr] ? CryptoService.decrypt(input[curr]) : null,
 			}),
-			{ ...input } as APIKeyT,
+			{ ...input },
 		)
 
 		return decryptedAPIKey

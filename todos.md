@@ -1,4 +1,3 @@
-- [ ] Run test errors with multiple models
 - [ ] Replace completion variable
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Instruct LLM to only respond with the prompt when generating messages
@@ -6,6 +5,7 @@
 - [ ] Show total iterations in run test form
 - [ ] Implement transaction with a callback that fires on error
 - [ ] Check if deleting non-existant vector errors
+- [ ] Use test model batch result and test batch result
 
 # New research form
 

@@ -201,63 +201,63 @@ export class RunTestService {
 				tx,
 			)
 
-			const testModelBatchesToInsert: InsertTestModelBatchT[] = testModelBatchResults.map(testModelBatchResult => ({
-				testCount: testModelBatchResult.length,
-				model: testModelBatchResult[0].model,
+			const testModelBatchesToInsert: InsertTestModelBatchT[] = testModelBatchResults.map(testResults => ({
+				testCount: testResults.length,
+				model: testResults[0].model,
 				testBatchId: newTestBatch.id,
 			}))
 			const newTestModelBatches = await TestModelBatchRepo.insertMany(testModelBatchesToInsert, tx)
 
-			const testsToInsert: InsertTestT[] = testModelBatchResults.flatMap((testModelBatchResult, i) =>
-				testModelBatchResult.map(test => ({
+			const testsToInsert: InsertTestT[] = testModelBatchResults.flatMap((testResults, i) =>
+				testResults.map(testResult => ({
 					testModelBatchId: newTestModelBatches[i].id,
-					independentValueId: test.independentValue.id,
-					dependentValueId: test.dependentValue.id,
+					independentValueId: testResult.independentValue.id,
+					dependentValueId: testResult.dependentValue.id,
 				})),
 			)
 			const newTests = await TestRepo.insertMany(testsToInsert, tx)
 
-			const testToBlockingValuesToInsert: InsertTestToBlockingValueT[] = testModelBatchResults.flatMap(testModelBatchResult =>
-				testModelBatchResult.flatMap((test, i) =>
-					test.blockingValues.map(blockingValue => ({
-						testId: newTests[i].id,
+			const testToBlockingValuesToInsert: InsertTestToBlockingValueT[] = testModelBatchResults.flatMap((testResults, i) =>
+				testResults.flatMap((testResult, j) =>
+					testResult.blockingValues.map(blockingValue => ({
+						testId: newTests[i * testResults.length + j].id,
 						blockingValueId: blockingValue.id,
 					})),
 				),
 			)
 			const newTestToBlockingValues = await TestToBlockingValueRepo.insertMany(testToBlockingValuesToInsert, tx)
 
-			const messagesToInsert: InsertMessageT[] = testModelBatchResults.flatMap(testModelBatchResult =>
-				testModelBatchResult.flatMap((testResult, i) =>
+			const messagesToInsert: InsertMessageT[] = testModelBatchResults.flatMap((testResults, i) =>
+				testResults.flatMap((testResult, j) =>
 					testResult.messages.map(message => ({
-						testId: newTests[i].id,
+						testId: newTests[i * testResults.length + j].id,
 						...message,
 					})),
 				),
 			)
 			const newMessages = await MessageRepo.insertMany(messagesToInsert, tx)
 
-			const evalsToInsert: InsertEvalT[] = testModelBatchResults.flatMap(testModelBatchResult =>
-				testModelBatchResult.flatMap((testResult, i) => ({
-					testId: newTests[i].id,
+			const evalsToInsert: InsertEvalT[] = testModelBatchResults.flatMap((testResults, i) =>
+				testResults.flatMap((testResult, j) => ({
+					testId: newTests[i * testResults.length + j].id,
 					...testResult.evaluation,
 				})),
 			)
 			const newEvals = await EvalRepo.insertMany(evalsToInsert, tx)
 
-			const testModelBatchResultToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testModelBatchResult, i) =>
+			const testModelBatchResultsToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testResults, i) =>
 				research.dependentValues.map(dependentValue => ({
+					count: testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id).length,
 					testModelBatchId: newTestModelBatches[i].id,
 					dependentValueId: dependentValue.id,
-					count: testModelBatchResult.filter(test => test.dependentValue.id === dependentValue.id).length,
 				})),
 			)
-			await TestModelBatchResultRepo.insertMany(testModelBatchResultToInsert, tx)
+			await TestModelBatchResultRepo.insertMany(testModelBatchResultsToInsert, tx)
 
 			const testBatchResultsToInsert: InsertTestBatchResultT[] = research.dependentValues.map(dependentValue => ({
+				count: testModelBatchResults.flatMap(testResults => testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id)).length,
 				dependentValueId: dependentValue.id,
 				testBatchId: newTestBatch.id,
-				count: testModelBatchResults.flatMap(testModelBatchResult => testModelBatchResult.filter(test => test.dependentValue.id === dependentValue.id)).length,
 			}))
 			const newTestBatchResults = await TestBatchResultRepo.insertMany(testBatchResultsToInsert, tx)
 

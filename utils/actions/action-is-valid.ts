@@ -1,8 +1,6 @@
 import { isActionValid } from "./is-action-valid"
 
-type ActionO<T> = Promise<T>
-
-export const actionIsValid = async <T>(actionO: ActionO<T | { error: string }>) => {
+export const actionIsValid = async <T>(actionO: Promise<T | { error: string }>) => {
 	const result = await actionO
 
 	if (isActionValid(result)) {

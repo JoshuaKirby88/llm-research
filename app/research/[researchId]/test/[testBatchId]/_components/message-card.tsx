@@ -51,7 +51,7 @@ export const MessageCard = (props: Props) => {
 							contentProps={{ className: "max-w-5xl max-h-[80%] flex flex-col p-0" }}
 						>
 							<div className="overflow-y-auto p-4">
-								<p className="whitespace-pre-wrap">{replacedPrompt.repeat(2)}</p>
+								<p className="whitespace-pre-wrap">{replacedPrompt}</p>
 							</div>
 						</Dialog>
 					)}

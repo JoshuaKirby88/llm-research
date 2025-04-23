@@ -202,9 +202,7 @@ export const Message = sqliteTable(
 		testId: integer()
 			.notNull()
 			.references(() => Test.id, { onDelete: "cascade" }),
-		messagePromptId: integer()
-			.unique()
-			.references(() => MessagePrompt.id, { onDelete: "cascade" }),
+		messagePromptId: integer().references(() => MessagePrompt.id, { onDelete: "cascade" }),
 		...defaultColumns,
 	},
 	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNotNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNull(table.messagePromptId)))!)],

@@ -28,7 +28,7 @@ type Props = {
 }
 
 export const TestModelBatchTabContent = (props: Props) => {
-	const testModelBatchTests = props.tests.filter(t => t.testModelBatchId === props.testModelBatch.id)
+	const testModelBatchTests = props.tests.filter(test => test.testModelBatchId === props.testModelBatch.id)
 
 	return props.independentValues.map(independentValue => (
 		<IndependentValueCollapsible

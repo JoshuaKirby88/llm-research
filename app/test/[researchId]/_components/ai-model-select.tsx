@@ -30,7 +30,6 @@ export const AIModelSelect = (props: { name: string; maskedAPIKey: MaskedAPIKeyT
 						groupBy="provider"
 						value={selectedValues}
 						onChange={selectedOptions => {
-							console.log("selectedOptions", selectedOptions)
 							onChange(selectedOptions.map(option => option.value))
 						}}
 					/>

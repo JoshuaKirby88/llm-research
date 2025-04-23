@@ -23,8 +23,6 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT }) => {
 	})
 
 	const onSubmit = async (input: z.infer<typeof schema>) => {
-		console.log("input", JSON.stringify(input, null, 2))
-
 		const result = await runTestAction({ ...input, researchId: Number.parseInt(params.researchId) })
 	}
 

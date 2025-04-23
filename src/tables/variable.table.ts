@@ -1,11 +1,12 @@
 import { CoreMessage } from "ai"
+import omit from "lodash.omit"
 import { BlockingVariableCombinationT, BlockingVariableWithValueT, IndependentValueT, IndependentVariableT } from "../schemas"
 
 export class VariableTable {
 	static createCombination(blockingVariables: BlockingVariableWithValueT[]) {
-		return blockingVariables.reduce(
-			(combination, blockingVariable) => combination.flatMap(prefix => blockingVariable.blockingValues.map(blockingValue => [...prefix, { ...blockingVariable, blockingValue }])),
-			[[]] as BlockingVariableCombinationT[],
+		return blockingVariables.reduce<BlockingVariableCombinationT[]>(
+			(acc, curr) => acc.flatMap(partialCombo => curr.blockingValues.map(blockingValue => [...partialCombo, { ...omit(curr, ["blockingValues"]), blockingValue }])),
+			[[]],
 		)
 	}
 

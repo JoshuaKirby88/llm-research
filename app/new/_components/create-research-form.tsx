@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { CreateResearchI, createResearchISchema } from "@/src/schemas"
+import { isActionValid } from "@/utils/actions/is-action-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import React from "react"
@@ -41,7 +42,7 @@ export const CreateResearchForm = () => {
 
 	const onSubmit = async (input: CreateResearchI) => {
 		const result = await createResearchAction(input)
-		console.log("result", JSON.stringify(result, null, 2))
+		isActionValid(result)
 	}
 
 	return (

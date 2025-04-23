@@ -21,7 +21,7 @@ export class AIFeature {
 	} as const
 	static providers = Object.keys(this.providerMap) as AIProvider[]
 	static models = Object.values(this.providerMap).flatMap(provider => provider.models) as AIModel[]
-	static promptModel: AIModel = "GPT-4.1"
+	static promptModel: AIModel = "GPT-4.1 Nano"
 	static apiKeyErrors = ["api key", "x-api-key"]
 
 	static modelToProvider(aiModel: AIModel) {

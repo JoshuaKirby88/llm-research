@@ -1,4 +1,3 @@
-- [ ] Show clerk name
 - [ ] Check if deleting non-existant vector errors
 - [ ] Make sure strings in new research form has min value
 - [ ] I'm inserting eval completion as the completion

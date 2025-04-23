@@ -24,10 +24,10 @@ const config = {
 	],
 } as const
 
-export const TestRunPage = ({ searchParams, ...props }: Props) => {
+export const TestRunPage = (props: Props) => {
 	return (
 		<div className="flex w-full">
-			<PageTabs tabs={config.tabs} name={config.tabName} searchParams={searchParams} orientation="vertical">
+			<PageTabs tabs={config.tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
 				<PageTabsList name={config.tabName} tabs={config.tabs} />
 
 				{config.tabs.map(tab => (

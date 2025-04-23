@@ -1,10 +1,11 @@
 import { ContributorT, ResearchT } from "@/src/schemas"
 import { cn } from "@/utils/cn"
+import { User } from "@clerk/nextjs/server"
 import omit from "lodash.omit"
 import { CalendarIcon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
 
-export const ResearchOverviewPage = (props: { research: ResearchT; contributors: ContributorT[] }) => {
+export const ResearchOverviewPage = (props: { researchUser: User; research: ResearchT; contributors: ContributorT[] }) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>
@@ -20,7 +21,7 @@ export const ResearchOverviewPage = (props: { research: ResearchT; contributors:
 					<BulletItem icon={CalendarIcon}>{props.research.createdAt.toLocaleDateString()}</BulletItem>
 					<BulletItem icon={UserIcon}>
 						<Link href={`/user/${props.research.userId}`} className="text-blue-600 hover:underline">
-							{props.research.userId}
+							{props.researchUser.fullName}
 						</Link>
 					</BulletItem>
 					<BulletItem icon={UserIcon}>{props.contributors.map(c => c.id)}</BulletItem>

@@ -88,6 +88,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	})
 
 	const users = await ClerkService.getUsers(contributors.map(c => c.userId))
+	const researchUser = users.find(user => research.userId === user.id)!
 
 	if (!result) {
 		notFound()
@@ -106,7 +107,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 				</div>
 
 				<TabsContent value="overview">
-					<ResearchOverviewPage research={research} contributors={contributors} />
+					<ResearchOverviewPage researchUser={researchUser} research={research} contributors={contributors} />
 				</TabsContent>
 
 				<TabsContent value="testRuns">

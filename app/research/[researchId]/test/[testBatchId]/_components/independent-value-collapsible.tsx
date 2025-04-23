@@ -37,8 +37,8 @@ export const IndependentValueCollapsible = (props: Props) => {
 	const testsByBlockingVariableCombinations = TestTable.byCombination(testsByIndependentValue, testToBlockingValuesByIndependentValue, props.blockingVariableCombinations)
 
 	return (
-		<Collapsible key={props.independentValue.id} className="overflow-hidden rounded-xl border">
-			<CollapsibleTrigger className="group flex w-full items-center justify-between bg-muted p-4">
+		<Collapsible key={props.independentValue.id} className="border">
+			<CollapsibleTrigger>
 				<div className="flex items-center gap-2 font-medium">
 					<CollapsibleChevronIcon />
 					{props.independentVariable.name}: {props.independentValue.value}

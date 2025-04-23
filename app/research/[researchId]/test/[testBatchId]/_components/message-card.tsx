@@ -29,7 +29,7 @@ export const MessageCard = (props: Props) => {
 		<div
 			key={messageOrEval.id}
 			className={cn(
-				"w-full space-y-3 rounded-lg border p-3",
+				"w-full space-y-3 rounded-xl border p-3",
 				"role" in messageOrEval ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "bg-green-950",
 			)}
 		>

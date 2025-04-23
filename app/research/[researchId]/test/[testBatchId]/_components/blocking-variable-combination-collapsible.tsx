@@ -17,8 +17,8 @@ type Props = {
 
 export const BlockingVariableCombinationCollapsible = (props: Props) => {
 	return (
-		<Collapsible className="border-b last:border-none">
-			<CollapsibleTrigger className="group flex w-full items-center justify-between p-4">
+		<Collapsible className="rounded-none border-b last:border-none">
+			<CollapsibleTrigger className="bg-transparent">
 				<div className="flex items-center gap-2 font-medium">
 					<CollapsibleChevronIcon />
 					{props.blockingVariableCombination.map(blockingVariable => (

@@ -69,6 +69,7 @@ export const IndependentVariable = sqliteTable("IndependentVariable", {
 	prompt: text(),
 	researchId: integer()
 		.notNull()
+		.unique()
 		.references(() => Research.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
@@ -116,6 +117,7 @@ export const EvalPrompt = sqliteTable("EvalPrompt", {
 	text: text().notNull(),
 	researchId: integer()
 		.notNull()
+		.unique()
 		.references(() => Research.id, { onDelete: "cascade" }),
 	...defaultColumns,
 })
@@ -145,15 +147,19 @@ export const TestBatch = sqliteTable("TestBatch", {
 	...defaultColumns,
 })
 
-export const TestModelBatch = sqliteTable("TestModelBatch", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	testCount: integer().notNull(),
-	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
-	testBatchId: integer()
-		.notNull()
-		.references(() => TestBatch.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const TestModelBatch = sqliteTable(
+	"TestModelBatch",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		testCount: integer().notNull(),
+		model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
+		testBatchId: integer()
+			.notNull()
+			.references(() => TestBatch.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.testBatchId, table.model)],
+)
 
 export const Test = sqliteTable("Test", {
 	id: integer().primaryKey({ autoIncrement: true }),
@@ -169,16 +175,20 @@ export const Test = sqliteTable("Test", {
 	...defaultColumns,
 })
 
-export const TestToBlockingValue = sqliteTable("TestToBlockingValue", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	testId: integer()
-		.notNull()
-		.references(() => Test.id, { onDelete: "cascade" }),
-	blockingValueId: integer()
-		.notNull()
-		.references(() => BlockingValue.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const TestToBlockingValue = sqliteTable(
+	"TestToBlockingValue",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		testId: integer()
+			.notNull()
+			.references(() => Test.id, { onDelete: "cascade" }),
+		blockingValueId: integer()
+			.notNull()
+			.references(() => BlockingValue.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.testId, table.blockingValueId)],
+)
 
 export const Message = sqliteTable(
 	"Message",
@@ -192,7 +202,9 @@ export const Message = sqliteTable(
 		testId: integer()
 			.notNull()
 			.references(() => Test.id, { onDelete: "cascade" }),
-		messagePromptId: integer().references(() => MessagePrompt.id, { onDelete: "cascade" }),
+		messagePromptId: integer()
+			.unique()
+			.references(() => MessagePrompt.id, { onDelete: "cascade" }),
 		...defaultColumns,
 	},
 	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNotNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNull(table.messagePromptId)))!)],
@@ -205,6 +217,7 @@ export const Eval = sqliteTable("Eval", {
 	completionTokens: integer().notNull(),
 	testId: integer()
 		.notNull()
+		.unique()
 		.references(() => Test.id, { onDelete: "cascade" }),
 	evalPromptId: integer()
 		.notNull()
@@ -212,41 +225,53 @@ export const Eval = sqliteTable("Eval", {
 	...defaultColumns,
 })
 
-export const ResearchResult = sqliteTable("ResearchResult", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	count: integer().notNull(),
-	researchId: integer()
-		.notNull()
-		.references(() => Research.id, { onDelete: "cascade" }),
-	dependentValueId: integer()
-		.notNull()
-		.references(() => DependentValue.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const ResearchResult = sqliteTable(
+	"ResearchResult",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		count: integer().notNull(),
+		researchId: integer()
+			.notNull()
+			.references(() => Research.id, { onDelete: "cascade" }),
+		dependentValueId: integer()
+			.notNull()
+			.references(() => DependentValue.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.researchId, table.dependentValueId)],
+)
 
-export const TestBatchResult = sqliteTable("TestBatchResult", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	count: integer().notNull(),
-	dependentValueId: integer()
-		.notNull()
-		.references(() => DependentValue.id, { onDelete: "cascade" }),
-	testBatchId: integer()
-		.notNull()
-		.references(() => TestBatch.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const TestBatchResult = sqliteTable(
+	"TestBatchResult",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		count: integer().notNull(),
+		testBatchId: integer()
+			.notNull()
+			.references(() => TestBatch.id, { onDelete: "cascade" }),
+		dependentValueId: integer()
+			.notNull()
+			.references(() => DependentValue.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.testBatchId, table.dependentValueId)],
+)
 
-export const TestModelBatchResult = sqliteTable("TestModelBatchResult", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	count: integer().notNull(),
-	dependentValueId: integer()
-		.notNull()
-		.references(() => DependentValue.id, { onDelete: "cascade" }),
-	testModelBatchId: integer()
-		.notNull()
-		.references(() => TestModelBatch.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const TestModelBatchResult = sqliteTable(
+	"TestModelBatchResult",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		count: integer().notNull(),
+		testModelBatchId: integer()
+			.notNull()
+			.references(() => TestModelBatch.id, { onDelete: "cascade" }),
+		dependentValueId: integer()
+			.notNull()
+			.references(() => DependentValue.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [unique().on(table.testModelBatchId, table.dependentValueId)],
+)
 
 export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	userToStarredResearches: many(UserToStarredResearch),

@@ -1,7 +1,7 @@
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
 import { transaction } from "@/drizzle/transaction"
-import { APIKeyRepo, ContributorRepo, MessageRepo, TestBatchRepo, TestBatchResultRepo, TestModelBatchRepo, TestModelBatchResultRepo, TestRepo, TestToBlockingValueRepo } from "@/src/repos"
+import { APIKeyRepo, ContributorRepo, EvalRepo, MessageRepo, TestBatchRepo, TestBatchResultRepo, TestModelBatchRepo, TestModelBatchResultRepo, TestRepo, TestToBlockingValueRepo } from "@/src/repos"
 import {
 	BlockingValueT,
 	BlockingVariableCombinationT,
@@ -25,8 +25,7 @@ import { CoreMessage } from "ai"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
-import { EvalRepo } from "../repos/eval.repo"
-import { RunTest } from "../schemas/features/run-test.schema"
+import { RunTestI } from "../schemas/features/run-test.schema"
 import { APIKeyTable, VariableTable } from "../tables"
 import { AIServiceInstance } from "./ai.service"
 
@@ -62,7 +61,7 @@ type TestResult = {
 }
 
 export class RunTestService {
-	static async execute(input: RunTest) {
+	static async execute(input: RunTestI) {
 		const [research, apiKey] = await Promise.all([this.queryResearch(input.researchId), this.queryAPIKey(input.userId)])
 
 		if (!research?.independentVariable || !research.evalPrompt) {
@@ -191,7 +190,7 @@ export class RunTestService {
 		}
 	}
 
-	static async insertTestBatch(input: RunTest, research: Research, testModelBatchResults: TestResult[][]) {
+	static async insertTestBatch(input: RunTestI, research: Research, testModelBatchResults: TestResult[][]) {
 		return await transaction(async tx => {
 			const totalTestsCount = testModelBatchResults.flat().length
 

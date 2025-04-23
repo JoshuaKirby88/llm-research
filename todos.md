@@ -1,5 +1,5 @@
-- [ ] Replace completion variable
 - [ ] Run test errors with multiple models
+- [ ] Replace completion variable
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Instruct LLM to only respond with the prompt when generating messages
 - [ ] Visually mark replaced variables when showing messages

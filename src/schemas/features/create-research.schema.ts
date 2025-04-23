@@ -8,7 +8,7 @@ import { independentVariableSchema } from "../db/independent-variable.schema"
 import { messagePromptSchema } from "../db/message-prompt.schema"
 import { researchSchema } from "../db/research.schema"
 
-export const createResearchSchema = z.object({
+export const createResearchISchema = z.object({
 	research: researchSchema.pick({ name: true }),
 	independentVariable: independentVariableSchema.pick({ name: true }).extend({ values: independentValueSchema.shape.value.array() }),
 	blockingVariables: blockingVariableSchema.pick({ name: true }).extend({ values: blockingValueSchema.shape.value.array() }).array(),
@@ -18,4 +18,4 @@ export const createResearchSchema = z.object({
 	dependentValues: dependentValueSchema.shape.value.array(),
 })
 
-export type CreateResearch = z.infer<typeof createResearchSchema>
+export type CreateResearchI = z.infer<typeof createResearchISchema>

@@ -2,7 +2,7 @@ import { AIFeature, AIModelArr } from "@/src/features"
 import { z } from "zod"
 import { researchSchema } from "../db/research.schema"
 
-export const runTestSchema = z.object({
+export const runTestISchema = z.object({
 	userId: z.string(),
 	researchId: researchSchema.shape.id,
 	models: z
@@ -12,4 +12,4 @@ export const runTestSchema = z.object({
 	iterations: z.number().min(1),
 })
 
-export type RunTest = z.infer<typeof runTestSchema>
+export type RunTestI = z.infer<typeof runTestISchema>

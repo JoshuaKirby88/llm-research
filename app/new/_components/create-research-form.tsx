@@ -10,15 +10,15 @@ import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { CreateResearch, createResearchSchema } from "@/src/schemas"
+import { CreateResearchI, createResearchISchema } from "@/src/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import React from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 
-const defaultValues: Partial<CreateResearch> = { blockingVariables: [{ name: "", values: [] }] }
+const defaultValues: Partial<CreateResearchI> = { blockingVariables: [{ name: "", values: [] }] }
 
-const exampleValues: CreateResearch = {
+const exampleValues: CreateResearchI = {
 	research: { name: "Does using multiple language affect LLM?" },
 	independentVariable: { name: "Language", values: ["English", "Japanese"] },
 	blockingVariables: [{ name: "Topic", values: ["Toy Store A", "Car Maker B"] }],
@@ -29,8 +29,8 @@ const exampleValues: CreateResearch = {
 }
 
 export const CreateResearchForm = () => {
-	const form = useForm<CreateResearch>({
-		resolver: zodResolver(createResearchSchema),
+	const form = useForm<CreateResearchI>({
+		resolver: zodResolver(createResearchISchema),
 		defaultValues,
 	})
 
@@ -39,7 +39,7 @@ export const CreateResearchForm = () => {
 		name: "blockingVariables",
 	})
 
-	const onSubmit = async (input: CreateResearch) => {
+	const onSubmit = async (input: CreateResearchI) => {
 		const result = await createResearchAction(input)
 		console.log("result", JSON.stringify(result, null, 2))
 	}

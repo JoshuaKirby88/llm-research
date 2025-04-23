@@ -2,13 +2,13 @@
 
 import { transaction } from "@/drizzle/transaction"
 import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
-import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchSchema } from "@/src/schemas"
+import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
 import { createAction } from "@/utils/actions/create-action"
 import { redirect } from "next/navigation"
 
 export const createResearchAction = createAction(
 	"signedIn",
-	createResearchSchema,
+	createResearchISchema,
 )(async ({ user, input }) => {
 	return await transaction(async tx => {
 		const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name }, tx)

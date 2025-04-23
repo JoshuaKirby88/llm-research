@@ -1,5 +1,5 @@
 import { AIFeature, AIModelArr } from "@/src/features"
-import { and, eq, isNotNull, or, relations, sql } from "drizzle-orm"
+import { and, eq, isNotNull, isNull, or, relations, sql } from "drizzle-orm"
 import { check, integer, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core"
 
 const defaultColumns = {
@@ -34,7 +34,7 @@ export const Research = sqliteTable(
 		userId: text().notNull(),
 		...defaultColumns,
 	},
-	table => [check("isComplete", or(eq(table.isComplete, sql`false`), and(eq(table.isComplete, sql`true`), isNotNull(table.conclusion)))!)],
+	table => [check("isComplete", or(and(eq(table.isComplete, sql`false`), isNull(table.conclusion)), and(eq(table.isComplete, sql`true`), isNotNull(table.conclusion)))!)],
 )
 
 export const UserToStarredResearch = sqliteTable(
@@ -180,18 +180,23 @@ export const TestToBlockingValue = sqliteTable("TestToBlockingValue", {
 	...defaultColumns,
 })
 
-export const Message = sqliteTable("Message", {
-	id: integer().primaryKey({ autoIncrement: true }),
-	role: text({ enum: ["system", "user", "assistant"] }).notNull(),
-	content: text().notNull(),
-	promptTokens: integer().notNull(),
-	completionTokens: integer().notNull(),
-	isCompletion: integer({ mode: "boolean" }).notNull(),
-	testId: integer()
-		.notNull()
-		.references(() => Test.id, { onDelete: "cascade" }),
-	...defaultColumns,
-})
+export const Message = sqliteTable(
+	"Message",
+	{
+		id: integer().primaryKey({ autoIncrement: true }),
+		role: text({ enum: ["system", "user", "assistant"] }).notNull(),
+		content: text().notNull(),
+		promptTokens: integer().notNull(),
+		completionTokens: integer().notNull(),
+		isCompletion: integer({ mode: "boolean" }).notNull(),
+		testId: integer()
+			.notNull()
+			.references(() => Test.id, { onDelete: "cascade" }),
+		messagePromptId: integer().references(() => MessagePrompt.id, { onDelete: "cascade" }),
+		...defaultColumns,
+	},
+	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNotNull(table.messagePromptId)))!)],
+)
 
 export const ResearchResult = sqliteTable("ResearchResult", {
 	id: integer().primaryKey({ autoIncrement: true }),

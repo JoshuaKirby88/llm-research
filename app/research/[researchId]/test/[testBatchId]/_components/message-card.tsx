@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const MessageCard = (props: Props) => {
-	const messagePrompt = props.messagePrompts.find(mp => mp.role === props.message.role)
+	const messagePrompt = props.messagePrompts.find(mp => mp.id === props.message.messagePromptId)
 	const replacedMessagePrompt =
 		messagePrompt &&
 		VariableTable.replaceVariables(messagePrompt.text, {

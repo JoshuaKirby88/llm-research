@@ -9,6 +9,8 @@ import {
 	EvalPromptT,
 	IndependentValueT,
 	IndependentVariableWithValueT,
+	InsertCompletionMessageT,
+	InsertGeneratedMessageT,
 	InsertMessageT,
 	InsertTestBatchResultT,
 	InsertTestModelBatchResultT,
@@ -134,12 +136,16 @@ export class RunTestService {
 	}
 
 	private static async runTest(input: TestRunInput, AIService: AIServiceInstance) {
-		const messages = await this.generateMessages(input, AIService)
+		const messages: Omit<InsertMessageT, "testId">[] = []
+
+		const generatedMessages = await this.generateMessages(input, AIService)
+		messages.push(...generatedMessages)
 
 		const result = await AIService.getCompletion({ ...input, messages })
 
 		const { evalResult, dependentValue } = await this.evaluate({ ...input, messages, completion: result.completion }, AIService)
-		messages.push({ role: "assistant", content: evalResult.completion.evaluation, isCompletion: true, ...evalResult.tokens })
+		const completionMessage: Omit<InsertCompletionMessageT, "testId"> = { role: "assistant", content: evalResult.completion.evaluation, isCompletion: true, ...evalResult.tokens }
+		messages.push(completionMessage)
 
 		return {
 			model: input.model,
@@ -151,18 +157,18 @@ export class RunTestService {
 	}
 
 	private static async generateMessages(input: TestRunInput, AIService: AIServiceInstance) {
-		const messages: Omit<InsertMessageT, "testId">[] = []
+		const generatedMessage: Omit<InsertGeneratedMessageT, "testId">[] = []
 
 		for (const messagePrompt of input.messagePrompts) {
 			const result = await AIService.getCompletion({
 				model: AIFeature.promptModel,
-				messages: [{ role: "user", content: VariableTable.replaceVariables(messagePrompt.text, { ...input, messages }) }],
+				messages: [{ role: "user", content: VariableTable.replaceVariables(messagePrompt.text, { ...input, messages: generatedMessage }) }],
 			})
 
-			messages.push({ role: messagePrompt.role, content: result.completion, isCompletion: false, ...result.tokens })
+			generatedMessage.push({ role: messagePrompt.role, content: result.completion, isCompletion: false, messagePromptId: messagePrompt.id, ...result.tokens })
 		}
 
-		return messages
+		return generatedMessage
 	}
 
 	private static async evaluate(input: EvaluateInput, AIService: AIServiceInstance) {

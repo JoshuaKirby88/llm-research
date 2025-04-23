@@ -14,6 +14,20 @@ export const insertMessageSchema = createInsertSchema(Message).omit({
 
 export type InsertMessageT = z.infer<typeof insertMessageSchema>
 
+export const insertGeneratedMessageSchema = insertMessageSchema.extend({
+	isCompletion: z.literal(false),
+	messagePromptId: insertMessageSchema.shape.messagePromptId.unwrap().unwrap(),
+})
+
+export type InsertGeneratedMessageT = z.infer<typeof insertGeneratedMessageSchema>
+
+export const insertCompletionMessageSchema = insertMessageSchema.extend({
+	isCompletion: z.literal(true),
+	messagePromptId: z.null().optional(),
+})
+
+export type InsertCompletionMessageT = z.infer<typeof insertCompletionMessageSchema>
+
 export const updateMessageSchema = messageSchema.pick({ id: true }).merge(
 	createUpdateSchema(Message).omit({
 		id: true,

@@ -1,7 +1,6 @@
 import { Research } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
-import { userToStarredResearchSchema } from "./user-to-starred-research.schema"
 
 export const researchSchema = createSelectSchema(Research)
 
@@ -39,9 +38,3 @@ export type InsertResearchVectorT = z.infer<typeof insertResearchVectorSchema>
 export const updateResearchAndVectorSchema = researchSchema.pick({ id: true, name: true, description: true }).merge(updateResearchSchema.pick({ conclusion: true }))
 
 export type UpdateResearchAndVectorT = z.infer<typeof updateResearchAndVectorSchema>
-
-export const researchWithUserToStarredResearchSchema = researchSchema.extend({
-	userToStarredResearch: userToStarredResearchSchema.array(),
-})
-
-export type ResearchWithUserToStarredResearchT = z.infer<typeof researchWithUserToStarredResearchSchema>

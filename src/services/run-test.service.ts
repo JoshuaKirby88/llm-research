@@ -186,10 +186,13 @@ export class RunTestService {
 
 			const contributor = await ContributorRepo.incrementCount({ userId: input.userId, researchId: input.researchId, count: totalTestsCount }, tx)
 
-			const newTestBatch = await TestBatchRepo.insert({ contributorId: contributor.id, tests: totalTestsCount, model: AIFeature.promptModel }, tx)
+			const newTestBatch = await TestBatchRepo.insert(
+				{ researchId: input.researchId, contributorId: contributor.id, testCount: totalTestsCount, model: AIFeature.promptModel, iterations: input.iterations },
+				tx,
+			)
 
 			const testModelBatchesToInsert: InsertTestModelBatchT[] = testModelBatchResults.map(testModelBatchResult => ({
-				tests: testModelBatchResult.length,
+				testCount: testModelBatchResult.length,
 				model: testModelBatchResult[0].model,
 				testBatchId: newTestBatch.id,
 			}))

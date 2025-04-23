@@ -3,6 +3,7 @@ import { BlockingValue } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
 import { eq } from "drizzle-orm"
 import { BlockingValueT, InsertBlockingValueT, UpdateBlockingValueT } from "../schemas"
+import { DrizzleService } from "../services/drizzle.service"
 
 export class BlockingValueRepo {
 	static async insert(input: InsertBlockingValueT, tx?: TX) {
@@ -12,7 +13,7 @@ export class BlockingValueRepo {
 	}
 
 	static async insertMany(input: InsertBlockingValueT[], tx?: TX) {
-		const newBlockingValues = await (tx ?? db).insert(BlockingValue).values(input).returning()
+		const newBlockingValues = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(BlockingValue).values(items).returning())
 
 		return newBlockingValues
 	}

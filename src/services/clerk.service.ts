@@ -1,4 +1,7 @@
 import { clerkClient } from "@clerk/nextjs/server"
+import { AuthProcedureO } from "./auth-procedure.service"
+
+export type ClerkUser = AuthProcedureO<"signedIn">
 
 const client = await clerkClient()
 

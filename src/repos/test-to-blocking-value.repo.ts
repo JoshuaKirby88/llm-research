@@ -1,13 +1,14 @@
 import { db } from "@/drizzle/db"
 import { TestToBlockingValue } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
+import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 import { InsertTestToBlockingValueT, TestToBlockingValueT, UpdateTestToBlockingValueT } from "../schemas"
 
 export class TestToBlockingValueRepo {
 	static async insertMany(input: InsertTestToBlockingValueT[], tx?: TX) {
-		const newTestToBlockingValues = await (tx ?? db).insert(TestToBlockingValue).values(input).returning()
-		return newTestToBlockingValues.sort((a, b) => a.id - b.id)
+		const newTestToBlockingValues = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(TestToBlockingValue).values(items).returning())
+		return newTestToBlockingValues
 	}
 
 	static async update(id: TestToBlockingValueT["id"], input: Omit<UpdateTestToBlockingValueT, "id">, tx?: TX) {

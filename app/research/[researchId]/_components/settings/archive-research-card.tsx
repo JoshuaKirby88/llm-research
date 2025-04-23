@@ -15,7 +15,7 @@ export const ArchiveResearchCard = (props: NonNullable<RequiredObj<ActionO<typeo
 				<ArchiveIcon />
 			</IconWrapper>
 
-			<AlertCardContent title={isArchived ? "Unarchive Research" : "Archive Research"} description="Archiving will not delete it completely. Archived researches will not be public.">
+			<AlertCardContent title={isArchived ? "Unarchive Research" : "Archive Research"} description="Archiving a research will hide it from public view without deleting it.">
 				<FormActionButton variant={isArchived ? "blue" : "red"} action={(isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}>
 					{isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
 					{isArchived ? "Unarchive" : "Archive"}

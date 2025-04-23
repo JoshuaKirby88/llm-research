@@ -6,6 +6,8 @@ type TableKey<T extends Table> = keyof T["_"]["columns"]
 export type TableSQLUpdate<T extends Table> = Partial<Record<TableKey<T>, SQL>>
 
 export class DrizzleService {
+	private static batchInsertSize = 10
+
 	static where<T extends Table>(table: TypeSafeTable<T>, obj: TableWhere<T>) {
 		const keys = Object.keys(obj) as TableKey<T>[]
 
@@ -25,5 +27,16 @@ export class DrizzleService {
 		} else {
 			return sql`${column} - ${Math.abs(value)}`
 		}
+	}
+
+	static async batchInsert<T, K extends { id: number }>(items: T[], callback: (items: T[]) => Promise<K[]>) {
+		const results: K[] = []
+
+		for (let i = 0; i < items.length; i += this.batchInsertSize) {
+			const result = await callback(items.slice(i, i + this.batchInsertSize))
+			results.push(...result)
+		}
+
+		return results.sort((a, b) => a.id - b.id)
 	}
 }

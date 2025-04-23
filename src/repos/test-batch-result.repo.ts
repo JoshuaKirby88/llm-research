@@ -1,13 +1,14 @@
 import { db } from "@/drizzle/db"
 import { TestBatchResult } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
+import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 import { InsertTestBatchResultT, TestBatchResultT, UpdateTestBatchResultT } from "../schemas"
 
 export class TestBatchResultRepo {
 	static async insertMany(input: InsertTestBatchResultT[], tx?: TX) {
-		const newTestBatchResults = await (tx ?? db).insert(TestBatchResult).values(input).returning()
-		return newTestBatchResults.sort((a, b) => a.id - b.id)
+		const newTestBatchResults = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(TestBatchResult).values(items).returning())
+		return newTestBatchResults
 	}
 
 	static async update(id: TestBatchResultT["id"], input: Omit<UpdateTestBatchResultT, "id">, tx?: TX) {

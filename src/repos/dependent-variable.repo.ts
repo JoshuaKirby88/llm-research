@@ -1,6 +1,7 @@
 import { db } from "@/drizzle/db"
 import { DependentValue } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
+import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 import { DependentValueT, InsertDependentValueT, UpdateDependentValueT } from "../schemas"
 
@@ -12,7 +13,7 @@ export class DependentValueRepo {
 	}
 
 	static async insertMany(input: InsertDependentValueT[], tx?: TX) {
-		const newDependentValues = await (tx ?? db).insert(DependentValue).values(input).returning()
+		const newDependentValues = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(DependentValue).values(items).returning())
 
 		return newDependentValues
 	}

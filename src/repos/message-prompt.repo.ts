@@ -1,6 +1,7 @@
 import { db } from "@/drizzle/db"
 import { MessagePrompt } from "@/drizzle/schema"
 import { TX } from "@/drizzle/transaction"
+import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 import { InsertMessagePromptT, MessagePromptT, UpdateMessagePromptT } from "../schemas"
 
@@ -12,7 +13,7 @@ export class MessagePromptRepo {
 	}
 
 	static async insertMany(input: InsertMessagePromptT[], tx?: TX) {
-		const newMessagePrompts = await (tx ?? db).insert(MessagePrompt).values(input).returning()
+		const newMessagePrompts = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(MessagePrompt).values(items).returning())
 
 		return newMessagePrompts
 	}

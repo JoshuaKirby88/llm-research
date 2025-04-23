@@ -3,12 +3,14 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { actionIsValid } from "@/utils/actions/action-is-valid"
+import { authProcedure } from "@/utils/auth-procedure"
 import { cn } from "@/utils/cn"
 import { CogIcon, FlaskConicalIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
+import { TestRunPage } from "./_components/test-runs/test-run-page"
 
 const config = {
 	tabs: [
@@ -22,6 +24,7 @@ const config = {
 const Page = async (props: { params: Promise<{ researchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
+	const user = await authProcedure("signedIn")
 	const result = await actionIsValid(queryResearchAction({ researchId: Number.parseInt(params.researchId) }))
 
 	if (!result) {
@@ -42,6 +45,10 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 
 				<TabsContent value="overview">
 					<ResearchOverviewPage {...result} />
+				</TabsContent>
+
+				<TabsContent value="testRuns">
+					<TestRunPage searchParams={searchParams} user={user} {...result} />
 				</TabsContent>
 
 				<TabsContent value="settings">

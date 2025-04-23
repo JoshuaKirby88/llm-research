@@ -1,5 +1,6 @@
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger, DialogXButton, Dialog as ShadDialog } from "@/components/ui/dialog"
 import { ZustandDialogActions, ZustandDialogStates } from "@/src/zustand/dialog-zustand"
+import { cn } from "@/utils/cn"
 import { IconWrapper } from "./icon-wrapper"
 import { Button } from "./ui/button"
 import { DialogHeader } from "./ui/dialog"
@@ -9,7 +10,7 @@ export const Dialog = (props: ZustandDialogStates & ZustandDialogActions) => {
 		<ShadDialog {...(props.isOpen !== undefined ? { open: props.isOpen, onOpenChange: props.setIsOpen } : { defaultOpen: props.defaultOpen })}>
 			{props.triggerButton && <DialogTrigger asChild>{props.triggerButton}</DialogTrigger>}
 
-			<DialogContent className="space-y-5">
+			<DialogContent {...props.contentProps} className={cn("space-y-5", props.contentProps?.className)}>
 				{props.xButton && <DialogXButton />}
 
 				<DialogHeader className="text-left">

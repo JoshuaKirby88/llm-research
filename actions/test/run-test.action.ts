@@ -13,7 +13,7 @@ export const runTestAction = createAction(
 
 	const { research, testModelBatchResults } = await RunTestService.execute(payload)
 
-	await RunTestService.insertTestBatch(payload, research, testModelBatchResults)
+	const result = await RunTestService.insertTestBatch(payload, research, testModelBatchResults)
 
-	redirect(`/research/${input.researchId}/test`)
+	redirect(`/research/${input.researchId}/test/${result.newTestBatch.id}`)
 })

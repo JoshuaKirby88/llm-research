@@ -1,0 +1,52 @@
+import { Badge } from "@/components/ui/badge"
+import { Collapsible, CollapsibleChevronIcon, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { BlockingVariableCombinationT, DependentValueT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
+import { TestCard } from "./test-card"
+
+type Props = {
+	independentVariable: IndependentVariableT
+	independentValue: IndependentValueT
+	dependentValues: DependentValueT[]
+	blockingVariableCombination: BlockingVariableCombinationT
+	messagePrompts: MessagePromptT[]
+	testsByBlockingVariableCombinations: TestT[][]
+	messages: MessageT[]
+}
+
+export const BlockingVariableCombinationCollapsible = (props: Props) => {
+	return (
+		<Collapsible className="border-b last:border-none">
+			<CollapsibleTrigger className="group flex w-full items-center justify-between p-4">
+				<div className="flex items-center gap-2 font-medium">
+					<CollapsibleChevronIcon />
+					{props.blockingVariableCombination.map(blockingVariable => (
+						<div key={blockingVariable.id}>
+							{blockingVariable.name}: {blockingVariable.blockingValue.value}
+						</div>
+					))}
+				</div>
+
+				<Badge size="roundSm" variant="outline">
+					{props.testsByBlockingVariableCombinations.length}
+				</Badge>
+			</CollapsibleTrigger>
+
+			<CollapsibleContent className="space-y-2 p-2 pt-0">
+				{props.testsByBlockingVariableCombinations.map(testsByBlockingVariableCombination =>
+					testsByBlockingVariableCombination.map(test => (
+						<TestCard
+							key={test.id}
+							independentVariable={props.independentVariable}
+							independentValue={props.independentValue}
+							blockingVariableCombination={props.blockingVariableCombination}
+							dependentValues={props.dependentValues}
+							messagePrompts={props.messagePrompts}
+							test={test}
+							messages={props.messages}
+						/>
+					)),
+				)}
+			</CollapsibleContent>
+		</Collapsible>
+	)
+}

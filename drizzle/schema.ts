@@ -26,7 +26,7 @@ export const Research = sqliteTable(
 		id: integer().primaryKey({ autoIncrement: true }),
 		name: text().notNull(),
 		description: text().notNull().default(""),
-		stars: integer().notNull().default(0),
+		starCount: integer().notNull().default(0),
 		conclusion: text(),
 		isComplete: integer({ mode: "boolean" }).notNull().default(false),
 		isArchived: integer({ mode: "boolean" }).notNull().default(false),
@@ -134,7 +134,11 @@ export const TestBatch = sqliteTable("TestBatch", {
 	// Maybe give this a better name?
 	// This is the model for generating the messages, to test the LLM model in subject
 	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
-	tests: integer().notNull(),
+	iterations: integer().notNull(),
+	testCount: integer().notNull(),
+	researchId: integer()
+		.notNull()
+		.references(() => Research.id, { onDelete: "cascade" }),
 	contributorId: integer()
 		.notNull()
 		.references(() => Contributor.id, { onDelete: "cascade" }),
@@ -143,7 +147,7 @@ export const TestBatch = sqliteTable("TestBatch", {
 
 export const TestModelBatch = sqliteTable("TestModelBatch", {
 	id: integer().primaryKey({ autoIncrement: true }),
-	tests: integer().notNull(),
+	testCount: integer().notNull(),
 	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
 	testBatchId: integer()
 		.notNull()
@@ -226,13 +230,15 @@ export const TestModelBatchResult = sqliteTable("TestModelBatchResult", {
 })
 
 export const ResearchRelations = relations(Research, ({ many, one }) => ({
-	userToStarredResearch: many(UserToStarredResearch),
+	userToStarredResearches: many(UserToStarredResearch),
 	contributors: many(Contributor),
 	independentVariable: one(IndependentVariable),
 	blockingVariables: many(BlockingVariable),
 	messagePrompts: many(MessagePrompt),
 	evalPrompt: one(EvalPrompt),
 	dependentValues: many(DependentValue),
+	testBatches: many(TestBatch),
+	researchResults: many(ResearchResult),
 }))
 
 export const UserToStarredResearchRelations = relations(UserToStarredResearch, ({ one }) => ({
@@ -297,5 +303,95 @@ export const DependentValueRelations = relations(DependentValue, ({ one }) => ({
 	research: one(Research, {
 		fields: [DependentValue.researchId],
 		references: [Research.id],
+	}),
+}))
+
+export const TestBatchRelations = relations(TestBatch, ({ one, many }) => ({
+	research: one(Research, {
+		fields: [TestBatch.researchId],
+		references: [Research.id],
+	}),
+	contributor: one(Contributor, {
+		fields: [TestBatch.contributorId],
+		references: [Contributor.id],
+	}),
+	testModelBatches: many(TestModelBatch),
+	testBatchResults: many(TestBatchResult),
+}))
+
+export const TestModelBatchRelations = relations(TestModelBatch, ({ one, many }) => ({
+	testBatch: one(TestBatch, {
+		fields: [TestModelBatch.testBatchId],
+		references: [TestBatch.id],
+	}),
+	tests: many(Test),
+	testModelBatchResults: many(TestModelBatchResult),
+}))
+
+export const TestRelations = relations(Test, ({ one, many }) => ({
+	testModelBatch: one(TestModelBatch, {
+		fields: [Test.testModelBatchId],
+		references: [TestModelBatch.id],
+	}),
+	independentValue: one(IndependentValue, {
+		fields: [Test.independentValueId],
+		references: [IndependentValue.id],
+	}),
+	dependentValue: one(DependentValue, {
+		fields: [Test.dependentValueId],
+		references: [DependentValue.id],
+	}),
+	testToBlockingValues: many(TestToBlockingValue),
+	messages: many(Message),
+}))
+
+export const TestToBlockingValueRelations = relations(TestToBlockingValue, ({ one }) => ({
+	test: one(Test, {
+		fields: [TestToBlockingValue.testId],
+		references: [Test.id],
+	}),
+	blockingValue: one(BlockingValue, {
+		fields: [TestToBlockingValue.blockingValueId],
+		references: [BlockingValue.id],
+	}),
+}))
+
+export const MessageRelations = relations(Message, ({ one }) => ({
+	test: one(Test, {
+		fields: [Message.testId],
+		references: [Test.id],
+	}),
+}))
+
+export const ResearchResultRelations = relations(ResearchResult, ({ one }) => ({
+	research: one(Research, {
+		fields: [ResearchResult.researchId],
+		references: [Research.id],
+	}),
+	dependentValue: one(DependentValue, {
+		fields: [ResearchResult.dependentValueId],
+		references: [DependentValue.id],
+	}),
+}))
+
+export const TestBatchResultRelations = relations(TestBatchResult, ({ one }) => ({
+	testBatch: one(TestBatch, {
+		fields: [TestBatchResult.testBatchId],
+		references: [TestBatch.id],
+	}),
+	dependentValue: one(DependentValue, {
+		fields: [TestBatchResult.dependentValueId],
+		references: [DependentValue.id],
+	}),
+}))
+
+export const TestModelBatchResultRelations = relations(TestModelBatchResult, ({ one }) => ({
+	testModelBatch: one(TestModelBatch, {
+		fields: [TestModelBatchResult.testModelBatchId],
+		references: [TestModelBatch.id],
+	}),
+	dependentValue: one(DependentValue, {
+		fields: [TestModelBatchResult.dependentValueId],
+		references: [DependentValue.id],
 	}),
 }))

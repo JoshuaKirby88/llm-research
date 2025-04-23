@@ -28,19 +28,6 @@ export class ResearchRepo {
 		return updatedResearch
 	}
 
-	static async queryFromVector(embedding: ResearchVectorT["values"], opt: { topK: number }) {
-		const env = (await getCloudflareContext({ async: true })).env
-		const result = await env.VECTORIZE.query(embedding, {
-			topK: opt.topK,
-			returnMetadata: "none",
-		})
-
-		const researchIds = Array.from(new Set(result.matches.map(match => Number.parseInt(match.id))))
-		const researches = await this.queryMany(researchIds)
-
-		return researches
-	}
-
 	static async insertVector(input: InsertResearchVectorT) {
 		const values = {
 			id: input.id.toString(),
@@ -49,6 +36,16 @@ export class ResearchRepo {
 
 		const env = (await getCloudflareContext({ async: true })).env
 		await env.VECTORIZE.upsert([values])
+	}
+
+	static async queryVector(embedding: ResearchVectorT["values"], opt: { topK: number }) {
+		const env = (await getCloudflareContext({ async: true })).env
+		const result = await env.VECTORIZE.query(embedding, {
+			topK: opt.topK,
+			returnMetadata: "none",
+		})
+
+		return Array.from(new Set(result.matches.map(match => Number.parseInt(match.id))))
 	}
 
 	static async deleteVectors(ids: ResearchT["id"][]) {

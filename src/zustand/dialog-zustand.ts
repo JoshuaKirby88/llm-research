@@ -1,4 +1,5 @@
 import { ButtonProps } from "@/components/ui/button"
+import { DialogContent } from "@/components/ui/dialog"
 import { ReactNode, useEffect } from "react"
 import { create } from "zustand"
 
@@ -17,6 +18,7 @@ type States = {
 	xButton?: boolean
 	children?: ReactNode
 	triggerButton?: ReactNode
+	contentProps?: React.ComponentProps<typeof DialogContent>
 }
 
 export type ZustandDialogStates = States
@@ -47,6 +49,7 @@ const initialStates: States = {
 	xButton: undefined,
 	children: undefined,
 	triggerButton: undefined,
+	contentProps: undefined,
 }
 
 export const useDialogZustand = create<States & Actions & InternalActions>(set => ({

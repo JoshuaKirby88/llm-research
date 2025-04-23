@@ -31,8 +31,9 @@ export const buttonVariants = cva(
 		variants: {
 			variant: buttonVariantClasses,
 			size: {
-				default: "h-9 px-4 py-2",
+				xs: "h-7 rounded-md px-2 gap-1",
 				sm: "h-8 rounded-md gap-1.5 px-3",
+				md: "h-9 px-4 py-2",
 				lg: "h-10 rounded-md px-6",
 				iconSm: "size-8 rounded-full",
 				icon: "size-9 rounded-full",
@@ -40,7 +41,7 @@ export const buttonVariants = cva(
 		},
 		defaultVariants: {
 			variant: "default",
-			size: "default",
+			size: "md",
 		},
 	},
 )

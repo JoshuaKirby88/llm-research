@@ -1,11 +1,12 @@
 "use server"
 
 import { db } from "@/drizzle/db"
-import { Research } from "@/drizzle/schema"
-import { BlockingValueT, BlockingVariableT, researchSchema } from "@/src/schemas"
+import { Research, TestBatch } from "@/drizzle/schema"
+import { researchSchema } from "@/src/schemas"
+import { ClerkService } from "@/src/services/clerk.service"
 import { createAction } from "@/utils/actions/create-action"
-import { eq } from "drizzle-orm"
-import omit from "lodash.omit"
+import { destructureArray } from "@/utils/destructure-array"
+import { desc, eq } from "drizzle-orm"
 import { z } from "zod"
 
 export const queryResearchAction = createAction(
@@ -28,6 +29,24 @@ export const queryResearchAction = createAction(
 			},
 			messagePrompts: true,
 			evalPrompt: true,
+			dependentValues: true,
+			testBatches: {
+				with: {
+					testModelBatches: {
+						with: {
+							tests: {
+								with: {
+									messages: true,
+									testToBlockingValues: true,
+								},
+							},
+							testModelBatchResults: true,
+						},
+					},
+					testBatchResults: true,
+				},
+				orderBy: desc(TestBatch.id),
+			},
 		},
 	})
 
@@ -35,14 +54,27 @@ export const queryResearchAction = createAction(
 		return
 	}
 
-	const { contributors, independentVariable: _independentVariable, blockingVariables: _blockingVariables, messagePrompts, evalPrompt, ...research } = result
+	const {
+		contributors,
+		independentVariable: _independentVariable,
+		blockingVariables: _blockingVariables,
+		messagePrompts,
+		evalPrompt,
+		dependentValues,
+		testBatches: _testBatches,
+		...research
+	} = result
 	const { independentValues, ...independentVariable } = _independentVariable!
-	const { blockingVariables, blockingValues } = _blockingVariables.reduce(
-		(acc, curr) => ({ blockingVariables: [...acc.blockingVariables, omit(curr, ["blockingValues"])], blockingValues: [...acc.blockingValues, ...curr.blockingValues] }),
-		{ blockingVariables: [] as BlockingVariableT[], blockingValues: [] as BlockingValueT[] },
-	)
+	const [blockingVariables, { blockingValues }] = destructureArray(_blockingVariables, { blockingValues: true })
+	const [testBatches, { testBatchResults, testModelBatches, testModelBatchResults, tests, messages, testToBlockingValues }] = destructureArray(_testBatches, {
+		testModelBatches: { tests: { messages: true, testToBlockingValues: true }, testModelBatchResults: true },
+		testBatchResults: true,
+	})
+
+	const users = await ClerkService.getUsers(contributors.map(c => c.userId))
 
 	return {
+		users,
 		research,
 		contributors,
 		independentVariable,
@@ -51,5 +83,13 @@ export const queryResearchAction = createAction(
 		blockingValues,
 		messagePrompts,
 		evalPrompt: evalPrompt!,
+		dependentValues,
+		testBatches,
+		testModelBatches,
+		tests,
+		testToBlockingValues,
+		messages,
+		testBatchResults,
+		testModelBatchResults,
 	}
 })

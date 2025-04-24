@@ -1,6 +1,5 @@
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Visually mark replaced variables when showing messages
-- [ ] Show total iterations in run test form
 - [ ] Implement transaction with a callback that fires on error
 - [ ] Check if deleting non-existant vector errors
 - [ ] Use test model batch result and test batch result

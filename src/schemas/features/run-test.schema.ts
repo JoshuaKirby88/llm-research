@@ -13,3 +13,7 @@ export const runTestISchema = z.object({
 })
 
 export type RunTestI = z.infer<typeof runTestISchema>
+
+export const runTestFormSchema = runTestISchema.pick({ models: true, iterations: true })
+
+export type RunTestForm = z.infer<typeof runTestFormSchema>

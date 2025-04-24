@@ -1,11 +1,11 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
+import { APIKeyRepo } from "@/src/repos"
 import { APIKeyTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
 import { CircleUserRoundIcon, KeyIcon } from "lucide-react"
 import { AccountPage } from "./_components/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
-import { APIKeyRepo } from "@/src/repos"
 
 const config = {
 	tabs: [

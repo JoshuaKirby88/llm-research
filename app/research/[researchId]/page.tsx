@@ -64,7 +64,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	const {
 		contributors,
 		independentVariable: _independentVariable,
-		blockingVariables: _blockingVariables,
+		blockingVariables: blockingVariablesWithValues,
 		messagePrompts,
 		evalPrompt,
 		dependentValues,
@@ -72,7 +72,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 		...research
 	} = result
 	const { independentValues, ...independentVariable } = _independentVariable!
-	const [blockingVariables, { blockingValues }] = destructureArray(_blockingVariables, { blockingValues: true })
+	const [blockingVariables, { blockingValues }] = destructureArray(blockingVariablesWithValues, { blockingValues: true })
 	const [testBatches, { testBatchResults, testModelBatches, testModelBatchResults, tests, messages, testToBlockingValues }] = destructureArray(_testBatches, {
 		testModelBatches: { tests: { messages: true, testToBlockingValues: true }, testModelBatchResults: true },
 		testBatchResults: true,
@@ -105,7 +105,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 						Fork Research
 					</Link>
 
-					<RunTestSheet>
+					<RunTestSheet user={user} independentValues={independentValues} blockingVariablesWithValues={blockingVariablesWithValues}>
 						<Button variant="green">
 							<RocketIcon />
 							Run Tests

@@ -11,17 +11,16 @@ type Props = {
 	dependentValues: DependentValueT[]
 	messagePrompts: MessagePromptT[]
 	evalPrompt: EvalPromptT
-	testModelBatchTests: TestT[]
+	testsByIndependentValue: TestT[]
 	testToBlockingValues: TestToBlockingValueT[]
 	messages: MessageT[]
 	evals: EvalT[]
 }
 
 export const BlockingVariableCombinationCollapsible = (props: Props) => {
-	const testsByIndependentValue = props.testModelBatchTests.filter(test => test.independentValueId === props.independentValue.id)
-	const testsByIndependentValueTestIds = testsByIndependentValue.map(test => test.id)
+	const testsByIndependentValueTestIds = props.testsByIndependentValue.map(test => test.id)
 	const testToBlockingValuesByIndependentValue = props.testToBlockingValues.filter(ttbv => testsByIndependentValueTestIds.includes(ttbv.testId))
-	const testsByBlockingVariableCombination = TestTable.byCombination(testsByIndependentValue, testToBlockingValuesByIndependentValue, props.blockingVariableCombination)
+	const testsByBlockingVariableCombination = TestTable.byCombination(props.testsByIndependentValue, testToBlockingValuesByIndependentValue, props.blockingVariableCombination)
 
 	return (
 		<Collapsible className="rounded-none border-b last:border-none">

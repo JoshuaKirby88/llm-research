@@ -30,6 +30,8 @@ type Props = {
 }
 
 export const IndependentValueCollapsible = (props: Props) => {
+	const testsByIndependentValue = props.testModelBatchTests.filter(test => test.independentValueId === props.independentValue.id)
+
 	return (
 		<Collapsible key={props.independentValue.id} className="border">
 			<CollapsibleTrigger>
@@ -39,7 +41,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 				</div>
 
 				<Badge size="roundSm" variant="outline">
-					{props.blockingVariableCombinations.length}
+					{testsByIndependentValue.length}
 				</Badge>
 			</CollapsibleTrigger>
 
@@ -53,7 +55,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 						dependentValues={props.dependentValues}
 						messagePrompts={props.messagePrompts}
 						evalPrompt={props.evalPrompt}
-						testModelBatchTests={props.testModelBatchTests}
+						testsByIndependentValue={testsByIndependentValue}
 						testToBlockingValues={props.testToBlockingValues}
 						messages={props.messages}
 						evals={props.evals}

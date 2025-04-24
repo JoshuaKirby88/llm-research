@@ -6,13 +6,13 @@ export class TestTable {
 		const groupedTestToBlockingValues = tests.map(test => testToBlockingValues.filter(ttbv => ttbv.testId === test.id))
 
 		// Only keep the blocking combination ids
-		const blockingValueCombinationIds = blockingVariableCombination.map(bvc => bvc.blockingValue.id)
-		// Find the testToBlockingValues for the current combination
-		const groupedTestToBlockingValue = groupedTestToBlockingValues.find(gttbv => gttbv.every(ttbv => blockingValueCombinationIds.includes(ttbv.blockingValueId)))!
-		// Only keep the test id
-		const groupedTestToBlockingValueTestId = groupedTestToBlockingValue[0].testId
+		const blockingVariableCombinationValueIds = blockingVariableCombination.map(bvc => bvc.blockingValue.id)
+
+		// Get test to blocking values for this blocking variable combination
+		const testToBlockingValuesForCombination = groupedTestToBlockingValues.filter(gttbv => gttbv.every(ttbv => blockingVariableCombinationValueIds.includes(ttbv.blockingValueId)))
+
 		// Get tests for this blocking value combination
-		const combinationTests = tests.filter(test => groupedTestToBlockingValueTestId === test.id)
+		const combinationTests = testToBlockingValuesForCombination.map(testToBlockingValue => tests.find(test => test.id === testToBlockingValue[0].testId)!)
 
 		return combinationTests
 	}

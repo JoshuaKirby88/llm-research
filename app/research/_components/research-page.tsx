@@ -5,7 +5,7 @@ import { Research, UserToStarredResearch } from "@/drizzle/schema"
 import { DrizzleService } from "@/src/services/drizzle.service"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 export const ResearchPage = Suspense(async (props: { tab: "all" | "complete" | "researching" | "archived" }) => {
 	const user = await authProcedure("signedIn")
@@ -21,6 +21,7 @@ export const ResearchPage = Suspense(async (props: { tab: "all" | "complete" | "
 				where: eq(UserToStarredResearch.userId, user.userId),
 			},
 		},
+		orderBy: desc(Research.id),
 	})
 
 	const [researches, { userToStarredResearches }] = destructureArray(result, { userToStarredResearches: true })

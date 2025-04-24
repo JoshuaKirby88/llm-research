@@ -1,4 +1,3 @@
-- [ ] Generated messages is wrong
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Visually mark replaced variables when showing messages
 - [ ] Show total iterations in run test form

@@ -1,16 +1,13 @@
-- [ ] What if a research doesn't have any blocking variables
 - [ ] Visually mark replaced variables when showing messages
 - [ ] Check if deleting non-existant vector errors
-- [ ] Use test model batch result and test batch result
-- [ ] Handle security for users viewing other people's data
 - [ ] Show more data in test batch page
     - Results
 - [ ] Fix ai model select
-- [ ] Indicate enter to add variable for tag input
+- [ ] Support research without blocking variables
+- [ ] Show charts
 
 # New research form
 
-- [ ] Make sure strings in new research form has min value
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Generate variable values with llm
 - [ ] "/" to select variables and generated prompts

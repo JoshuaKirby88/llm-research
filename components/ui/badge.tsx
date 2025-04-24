@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn"
 import { type VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
-const badgeVariants = cva("inline-flex items-center border transition-colors focus:outline-none", {
+export const badgeVariants = cva("inline-flex items-center border transition-colors focus:outline-none", {
 	variants: {
 		variant: {
 			default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
@@ -30,4 +30,4 @@ function Badge({ className, variant, size, ...props }: BadgeProps) {
 	return <div className={cn(badgeVariants({ variant, size }), className)} {...props} />
 }
 
-export { Badge, badgeVariants }
+export { Badge }

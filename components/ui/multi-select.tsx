@@ -272,7 +272,6 @@ export const MultiSelect = ({
 		const Item = (
 			<CommandItem
 				value={inputValue}
-				className="cursor-pointer"
 				onMouseDown={e => {
 					e.preventDefault()
 					e.stopPropagation()

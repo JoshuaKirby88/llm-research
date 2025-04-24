@@ -1,4 +1,5 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research, TestBatch } from "@/drizzle/schema"
@@ -6,21 +7,13 @@ import { ClerkService } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
 import { desc, eq } from "drizzle-orm"
-import { CogIcon, FlaskConicalIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import { CogIcon, FlaskConicalIcon, GitBranchIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
+import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
-import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
-
-const config = {
-	tabs: [
-		{ key: "overview", title: "Overview", icon: FlaskConicalIcon },
-		{ key: "testRuns", title: "Test Runs", icon: SquareStackIcon },
-		{ key: "result", title: "Result", icon: ShapesIcon },
-		{ key: "settings", title: "Settings", icon: CogIcon },
-	],
-} as const
 
 const Page = async (props: { params: Promise<{ researchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
@@ -92,13 +85,32 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 		notFound()
 	}
 
+	const config = {
+		tabs: [
+			{ key: "overview", title: "Overview", icon: FlaskConicalIcon },
+			{ key: "testRuns", title: "Test Runs", icon: SquareStackIcon },
+			{ key: "result", title: "Result", icon: ShapesIcon },
+			...(research.userId === user.userId ? [{ key: "settings", title: "Settings", icon: CogIcon }] : []),
+		],
+	}
+
 	return (
 		<div className="mx-auto w-full max-w-4xl">
 			<PageTabs tabs={config.tabs} searchParams={searchParams}>
 				<div className="mb-10 flex items-center gap-5">
 					<PageTabsList tabs={config.tabs} className="mb-0" />
 
-					<RunTestSheet />
+					<Link href={`/new/${research.id}`} className={buttonVariants({ variant: "blue" })}>
+						<GitBranchIcon />
+						Fork Research
+					</Link>
+
+					<RunTestSheet>
+						<Button variant="green">
+							<RocketIcon />
+							Run Tests
+						</Button>
+					</RunTestSheet>
 				</div>
 
 				<TabsContent value="overview">
@@ -109,6 +121,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 					<TestRunPage searchParams={searchParams} user={user} users={users} contributors={contributors} testBatches={testBatches} testModelBatches={testModelBatches} />
 				</TabsContent>
 
+				{/* TODO: Should I also not mount this too, or does it not matter? */}
 				<TabsContent value="settings">
 					<ResearchSettingsPage research={research} />
 				</TabsContent>

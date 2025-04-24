@@ -1,6 +1,6 @@
 "use server"
 
-import { runTestISchema } from "@/src/schemas/features/run-test.schema"
+import { runTestISchema } from "@/src/schemas"
 import { RunTestService } from "@/src/services/run-test.service"
 import { createAction } from "@/utils/actions/create-action"
 import { redirect } from "next/navigation"

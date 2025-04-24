@@ -17,8 +17,6 @@ import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIc
 import React from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 
-const defaultValues: Partial<CreateResearchI> = { blockingVariables: [{ name: "", values: [] }] }
-
 const exampleValues: CreateResearchI = {
 	research: { name: "Does using multiple language affect LLM?" },
 	independentVariable: { name: "Language", values: ["English", "Japanese"] },
@@ -32,10 +30,10 @@ const exampleValues: CreateResearchI = {
 	dependentValues: ["Correct", "Incorrect"],
 }
 
-export const CreateResearchForm = () => {
+export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearchI> }) => {
 	const form = useForm<CreateResearchI>({
 		resolver: zodResolver(createResearchISchema),
-		defaultValues,
+		defaultValues: props.defaultValues,
 	})
 
 	const blockingVariableFields = useFieldArray({
@@ -55,7 +53,7 @@ export const CreateResearchForm = () => {
 					View Example Research
 				</Button>
 
-				<Button type="button" variant="link" onClick={() => form.reset(defaultValues)}>
+				<Button type="button" variant="link" onClick={() => form.reset(props.defaultValues)}>
 					Reset
 				</Button>
 			</div>

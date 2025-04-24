@@ -13,7 +13,6 @@ import {
 	TestT,
 	TestToBlockingValueT,
 } from "@/src/schemas"
-import { TestTable } from "@/src/tables/test.table"
 import { BlockingVariableCombinationCollapsible } from "./blocking-variable-combination-collapsible"
 
 type Props = {
@@ -31,11 +30,6 @@ type Props = {
 }
 
 export const IndependentValueCollapsible = (props: Props) => {
-	const testsByIndependentValue = props.testModelBatchTests.filter(test => test.independentValueId === props.independentValue.id)
-	const testsByIndependentValueTestIds = testsByIndependentValue.map(test => test.id)
-	const testToBlockingValuesByIndependentValue = props.testToBlockingValues.filter(ttbv => testsByIndependentValueTestIds.includes(ttbv.testId))
-	const testsByBlockingVariableCombinations = TestTable.byCombination(testsByIndependentValue, testToBlockingValuesByIndependentValue, props.blockingVariableCombinations)
-
 	return (
 		<Collapsible key={props.independentValue.id} className="border">
 			<CollapsibleTrigger>
@@ -45,7 +39,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 				</div>
 
 				<Badge size="roundSm" variant="outline">
-					{props.testModelBatch.testCount}
+					{props.blockingVariableCombinations.length}
 				</Badge>
 			</CollapsibleTrigger>
 
@@ -59,7 +53,8 @@ export const IndependentValueCollapsible = (props: Props) => {
 						dependentValues={props.dependentValues}
 						messagePrompts={props.messagePrompts}
 						evalPrompt={props.evalPrompt}
-						testsByBlockingVariableCombinations={testsByBlockingVariableCombinations}
+						testModelBatchTests={props.testModelBatchTests}
+						testToBlockingValues={props.testToBlockingValues}
 						messages={props.messages}
 						evals={props.evals}
 					/>

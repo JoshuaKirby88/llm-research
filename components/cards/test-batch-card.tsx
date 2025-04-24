@@ -17,6 +17,7 @@ export const TestBatchCard = (props: { user: User | undefined; children?: React.
 					<p className="text-muted-foreground">{props.testBatch.createdAt.toLocaleDateString()}</p>
 					<p>Models: {props.testModelBatches.map(tmb => tmb.model).join(", ")}</p>
 					<p>Iterations: {props.testBatch.iterations}</p>
+					<p>Total iterations: {props.testBatch.testCount}</p>
 				</CardHeader>
 				Show results, copying Luma cards
 				{props.children}

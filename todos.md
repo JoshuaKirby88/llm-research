@@ -1,4 +1,4 @@
-- [ ] Replace completion variable
+- [ ] Generated messages is wrong
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Instruct LLM to only respond with the prompt when generating messages
 - [ ] Visually mark replaced variables when showing messages

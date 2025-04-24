@@ -1,6 +1,5 @@
-import { CoreMessage } from "ai"
 import omit from "lodash.omit"
-import { BlockingVariableCombinationT, BlockingVariableWithValueT, IndependentValueT, IndependentVariableT } from "../schemas"
+import { BlockingVariableCombinationT, BlockingVariableWithValueT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
 
 export class VariableTable {
 	static createCombination(blockingVariables: BlockingVariableWithValueT[]) {
@@ -11,22 +10,32 @@ export class VariableTable {
 	}
 
 	static toVar(name: string) {
-		return `{${name}}`
+		return `{${name.toLowerCase()}}`
 	}
 
-	static roleToVar(role: CoreMessage["role"]) {
-		return this.toVar(`${role}Prompt`)
+	static messageToVar(message: Pick<MessageT, "role" | "isCompletion">) {
+		// return this.toVar(`internal_${role}_prompt`)
+		return this.toVar(message.isCompletion ? "completion" : message.role)
 	}
 
 	static replaceVariables(
 		text: string,
-		variables: { independentVariable: IndependentVariableT; independentValue: IndependentValueT; blockingVariableCombination: BlockingVariableCombinationT; messages: CoreMessage[] },
+		variables: {
+			independentVariable: IndependentVariableT
+			independentValue: IndependentValueT
+			blockingVariableCombination: BlockingVariableCombinationT
+			messages: Pick<MessageT, "role" | "content" | "isCompletion">[]
+		},
 	) {
+		let replacedText = ""
+
 		// Independent variable
-		let replacedText = text.replaceAll(this.toVar(variables.independentVariable.name), variables.independentValue.value)
+		replacedText = text.replaceAll(this.toVar(variables.independentVariable.name), variables.independentValue.value)
 		// Blocking variable
-		replacedText = variables.blockingVariableCombination.reduce((acc, curr) => acc.replaceAll(`{${curr.name}}`, curr.blockingValue.value), replacedText)
+		replacedText = variables.blockingVariableCombination.reduce((acc, curr) => acc.replaceAll(this.toVar(curr.name), curr.blockingValue.value), replacedText)
 		// Messages
-		return variables.messages.reduce((acc, curr) => acc.replaceAll(this.roleToVar(curr.role), curr.content as string), replacedText)
+		replacedText = variables.messages.reduce((acc, curr) => acc.replaceAll(this.messageToVar(curr), curr.content), replacedText)
+
+		return replacedText
 	}
 }

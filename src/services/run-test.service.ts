@@ -21,7 +21,6 @@ import {
 	MessagePromptT,
 	ResearchT,
 } from "@/src/schemas"
-import { CoreMessage } from "ai"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
@@ -45,7 +44,7 @@ type EvaluateInput = {
 	independentVariable: IndependentVariableWithValueT
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
-	messages: CoreMessage[]
+	messages: Omit<InsertMessageT, "testId">[]
 	completion: string
 	evalPrompt: EvalPromptT
 	dependentValues: DependentValueT[]

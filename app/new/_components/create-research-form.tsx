@@ -23,9 +23,9 @@ const exampleValues: CreateResearchI = {
 	research: { name: "Does using multiple language affect LLM?" },
 	independentVariable: { name: "Language", values: ["English", "Japanese"] },
 	blockingVariables: [{ name: "Topic", values: ["Toy Store A", "Car Maker B"] }],
-	systemMessagePrompt: { text: "Generate made up information about {Topic}." },
-	userMessagePrompt: { text: "Based on this information:\n{systemPrompt}\n\nAsk a question that can be answered." },
-	evalPrompt: { text: "Based on this information:\n{systemPrompt}\n\nIs this answer correct?\nQuestion:\n{userPrompt}\nAnswer:\n{completion}" },
+	systemMessagePrompt: { text: "Generate made up information about {topic} in {language}." },
+	userMessagePrompt: { text: '"""\n{system}\n"""\n\nAsk a question that can only be answered, given the above information, in English.' },
+	evalPrompt: { text: 'Based on this information:\n"""\n{system}\n"""\n\nIs this answer correct?\nQuestion:\n{user}\nAnswer:\n{completion}' },
 	dependentValues: ["Correct", "Incorrect"],
 }
 

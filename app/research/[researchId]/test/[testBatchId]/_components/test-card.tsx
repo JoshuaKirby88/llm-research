@@ -18,7 +18,7 @@ type Props = {
 export const TestCard = (props: Props) => {
 	const testMessages = props.messages.filter(m => m.testId === props.test.id)
 	const evaluation = props.evals.find(evaluation => evaluation.testId === props.test.id)!
-	const dependentValue = props.dependentValues.find(dv => dv.id === props.test.dependentValueId)!
+	const dependentValue = props.dependentValues.find(dVal => dVal.id === props.test.dependentValueId)!
 	const totalInputTokens = testMessages.reduce((acc, curr) => acc + curr.promptTokens, evaluation.promptTokens)
 	const totalOutputTokens = testMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
 

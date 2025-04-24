@@ -182,7 +182,7 @@ export class RunTestService {
 			schema: z.object({ evaluation: z.enum(input.dependentValues.map(dp => dp.value) as [string, ...string[]]) }),
 		})
 
-		const dependentValue = input.dependentValues.find(dv => dv.value === evalResult.completion.evaluation)
+		const dependentValue = input.dependentValues.find(dVal => dVal.value === evalResult.completion.evaluation)
 
 		return {
 			evalResult,

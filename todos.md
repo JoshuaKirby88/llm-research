@@ -4,7 +4,6 @@
 - [ ] Implement transaction with a callback that fires on error
 - [ ] Check if deleting non-existant vector errors
 - [ ] Use test model batch result and test batch result
-- [ ] bVar and bVal > bv and bv
 - [ ] Handle security for users viewing other people's data
 
 # New research form

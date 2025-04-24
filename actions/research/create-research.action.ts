@@ -10,40 +10,42 @@ export const createResearchAction = createAction(
 	"signedIn",
 	createResearchISchema,
 )(async ({ user, input }) => {
-	return await transaction(async tx => {
-		const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name }, tx)
+	const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name })
 
-		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name }, tx)
+	return await transaction(async () => {
+		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name })
 		const independentValuesToInsert: InsertIndependentValueT[] = input.independentVariable.values.map(value => ({
 			independentVariableId: newIndependentVariable.id,
 			value,
 		}))
-		const newIndependentValues = await IndependentValueRepo.insertMany(independentValuesToInsert, tx)
+		const newIndependentValues = await IndependentValueRepo.insertMany(independentValuesToInsert)
 
 		const blockingVariablesToInsert: InsertBlockingVariableT[] = input.blockingVariables.map(blockingVariable => ({
 			researchId: newResearch.id,
 			name: blockingVariable.name,
 		}))
-		const newBlockingVariables = await BlockingVariableRepo.insertMany(blockingVariablesToInsert, tx)
+		const newBlockingVariables = await BlockingVariableRepo.insertMany(blockingVariablesToInsert)
 		const blockingValesToInsert: InsertBlockingValueT[] = input.blockingVariables.flatMap((blockingVariable, i) =>
 			blockingVariable.values.map(value => ({
 				blockingVariableId: newBlockingVariables[i].id,
 				value,
 			})),
 		)
-		const newBlockingValues = await BlockingValueRepo.insertMany(blockingValesToInsert, tx)
+		const newBlockingValues = await BlockingValueRepo.insertMany(blockingValesToInsert)
 
 		const messagePromptsToInsert: InsertMessagePromptT[] = [
 			{ researchId: newResearch.id, role: "system", text: input.systemMessagePrompt.text },
 			{ researchId: newResearch.id, role: "user", text: input.userMessagePrompt.text },
 		]
-		const newMessagePrompts = await MessagePromptRepo.insertMany(messagePromptsToInsert, tx)
+		const newMessagePrompts = await MessagePromptRepo.insertMany(messagePromptsToInsert)
 
-		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: input.evalPrompt.text }, tx)
+		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: input.evalPrompt.text })
 
 		const dependentValuesToInsert: InsertDependentValueT[] = input.dependentValues.map(value => ({ researchId: newResearch.id, value }))
-		const newDependentValues = await DependentValueRepo.insertMany(dependentValuesToInsert, tx)
+		const newDependentValues = await DependentValueRepo.insertMany(dependentValuesToInsert)
 
 		redirect(`/research/${newResearch.id}`)
+	}).onError(async () => {
+		await ResearchRepo.delete(newResearch.id)
 	})
 })

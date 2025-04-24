@@ -1,6 +1,5 @@
 import { db } from "@/drizzle/db"
 import { Contributor, Research } from "@/drizzle/schema"
-import { TX } from "@/drizzle/transaction"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, eq, inArray } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
@@ -8,8 +7,8 @@ import { TableSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
 
 export class ResearchRepo {
-	static async insert(input: InsertResearchT, tx?: TX) {
-		const [newResearch] = await (tx ?? db).insert(Research).values(input).returning()
+	static async insert(input: InsertResearchT) {
+		const [newResearch] = await db.insert(Research).values(input).returning()
 
 		return newResearch
 	}
@@ -22,10 +21,14 @@ export class ResearchRepo {
 		return researches
 	}
 
-	static async update(id: ResearchT["id"], input: Omit<UpdateResearchT, "id"> | TableSQLUpdate<typeof Research>, tx?: TX) {
-		const [updatedResearch] = await (tx ?? db).update(Research).set(input).where(eq(Research.id, id)).returning()
+	static async update(id: ResearchT["id"], input: Omit<UpdateResearchT, "id"> | TableSQLUpdate<typeof Research>) {
+		const [updatedResearch] = await db.update(Research).set(input).where(eq(Research.id, id)).returning()
 
 		return updatedResearch
+	}
+
+	static async delete(id: ResearchT["id"]) {
+		await db.delete(Research).where(eq(Research.id, id))
 	}
 
 	static async insertVector(input: InsertResearchVectorT) {

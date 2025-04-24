@@ -1,6 +1,5 @@
 - [ ] What if a research doesn't have any blocking variables
 - [ ] Visually mark replaced variables when showing messages
-- [ ] Implement transaction with a callback that fires on error
 - [ ] Check if deleting non-existant vector errors
 - [ ] Use test model batch result and test batch result
 - [ ] Handle security for users viewing other people's data
@@ -20,3 +19,7 @@
 - Does language consistency affect accurancy?
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?
+
+# Others
+
+- Post my transaction implementation on D1 transaction github discussions

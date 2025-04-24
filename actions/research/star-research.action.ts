@@ -14,10 +14,12 @@ export const starResearchAction = createAction(
 	"signedIn",
 	z.object({ researchId: researchSchema.shape.id }),
 )(async ({ user, input }) => {
-	await transaction(async tx => {
-		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId }, tx)
+	await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, 1) })
 
-		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, 1) }, tx)
+	await transaction(async () => {
+		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })
+	}).onError(async () => {
+		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, -1) })
 	})
 
 	revalidatePath("/")
@@ -27,10 +29,12 @@ export const unstarResearchAction = createAction(
 	"signedIn",
 	z.object({ researchId: researchSchema.shape.id }),
 )(async ({ user, input }) => {
-	await transaction(async tx => {
-		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId }, tx)
+	await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, -1) })
 
-		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, -1) }, tx)
+	await transaction(async () => {
+		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
+	}).onError(async () => {
+		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, 1) })
 	})
 
 	revalidatePath("/")

@@ -191,86 +191,95 @@ export class RunTestService {
 	}
 
 	static async insertTestBatch(input: RunTestI, research: Research, testModelBatchResults: TestResult[][]) {
-		return await transaction(async tx => {
-			const totalTestsCount = testModelBatchResults.flat().length
+		const totalTestsCount = testModelBatchResults.flat().length
 
-			const contributor = await ContributorRepo.incrementCount({ userId: input.userId, researchId: input.researchId, count: totalTestsCount }, tx)
+		const contributor = await ContributorRepo.incrementCount({ userId: input.userId, researchId: input.researchId, count: totalTestsCount })
 
-			const newTestBatch = await TestBatchRepo.insert(
-				{ researchId: input.researchId, contributorId: contributor.id, testCount: totalTestsCount, model: AIFeature.promptModel, iterations: input.iterations },
-				tx,
-			)
+		return await transaction(async () => {
+			const newTestBatch = await TestBatchRepo.insert({
+				researchId: input.researchId,
+				contributorId: contributor.id,
+				testCount: totalTestsCount,
+				model: AIFeature.promptModel,
+				iterations: input.iterations,
+			})
 
-			const testModelBatchesToInsert: InsertTestModelBatchT[] = testModelBatchResults.map(testResults => ({
-				testCount: testResults.length,
-				model: testResults[0].model,
-				testBatchId: newTestBatch.id,
-			}))
-			const newTestModelBatches = await TestModelBatchRepo.insertMany(testModelBatchesToInsert, tx)
+			return await transaction(async () => {
+				const testModelBatchesToInsert: InsertTestModelBatchT[] = testModelBatchResults.map(testResults => ({
+					testCount: testResults.length,
+					model: testResults[0].model,
+					testBatchId: newTestBatch.id,
+				}))
+				const newTestModelBatches = await TestModelBatchRepo.insertMany(testModelBatchesToInsert)
 
-			const testsToInsert: InsertTestT[] = testModelBatchResults.flatMap((testResults, i) =>
-				testResults.map(testResult => ({
-					testModelBatchId: newTestModelBatches[i].id,
-					independentValueId: testResult.independentValue.id,
-					dependentValueId: testResult.dependentValue.id,
-				})),
-			)
-			const newTests = await TestRepo.insertMany(testsToInsert, tx)
-
-			const testToBlockingValuesToInsert: InsertTestToBlockingValueT[] = testModelBatchResults.flatMap((testResults, i) =>
-				testResults.flatMap((testResult, j) =>
-					testResult.blockingValues.map(blockingValue => ({
-						testId: newTests[i * testResults.length + j].id,
-						blockingValueId: blockingValue.id,
+				const testsToInsert: InsertTestT[] = testModelBatchResults.flatMap((testResults, i) =>
+					testResults.map(testResult => ({
+						testModelBatchId: newTestModelBatches[i].id,
+						independentValueId: testResult.independentValue.id,
+						dependentValueId: testResult.dependentValue.id,
 					})),
-				),
-			)
-			const newTestToBlockingValues = await TestToBlockingValueRepo.insertMany(testToBlockingValuesToInsert, tx)
+				)
+				const newTests = await TestRepo.insertMany(testsToInsert)
 
-			const messagesToInsert: InsertMessageT[] = testModelBatchResults.flatMap((testResults, i) =>
-				testResults.flatMap((testResult, j) =>
-					testResult.messages.map(message => ({
+				const testToBlockingValuesToInsert: InsertTestToBlockingValueT[] = testModelBatchResults.flatMap((testResults, i) =>
+					testResults.flatMap((testResult, j) =>
+						testResult.blockingValues.map(blockingValue => ({
+							testId: newTests[i * testResults.length + j].id,
+							blockingValueId: blockingValue.id,
+						})),
+					),
+				)
+				const newTestToBlockingValues = await TestToBlockingValueRepo.insertMany(testToBlockingValuesToInsert)
+
+				const messagesToInsert: InsertMessageT[] = testModelBatchResults.flatMap((testResults, i) =>
+					testResults.flatMap((testResult, j) =>
+						testResult.messages.map(message => ({
+							testId: newTests[i * testResults.length + j].id,
+							...message,
+						})),
+					),
+				)
+				const newMessages = await MessageRepo.insertMany(messagesToInsert)
+
+				const evalsToInsert: InsertEvalT[] = testModelBatchResults.flatMap((testResults, i) =>
+					testResults.flatMap((testResult, j) => ({
 						testId: newTests[i * testResults.length + j].id,
-						...message,
+						...testResult.evaluation,
 					})),
-				),
-			)
-			const newMessages = await MessageRepo.insertMany(messagesToInsert, tx)
+				)
+				const newEvals = await EvalRepo.insertMany(evalsToInsert)
 
-			const evalsToInsert: InsertEvalT[] = testModelBatchResults.flatMap((testResults, i) =>
-				testResults.flatMap((testResult, j) => ({
-					testId: newTests[i * testResults.length + j].id,
-					...testResult.evaluation,
-				})),
-			)
-			const newEvals = await EvalRepo.insertMany(evalsToInsert, tx)
+				const testModelBatchResultsToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testResults, i) =>
+					research.dependentValues.map(dependentValue => ({
+						count: testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id).length,
+						testModelBatchId: newTestModelBatches[i].id,
+						dependentValueId: dependentValue.id,
+					})),
+				)
+				await TestModelBatchResultRepo.insertMany(testModelBatchResultsToInsert)
 
-			const testModelBatchResultsToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testResults, i) =>
-				research.dependentValues.map(dependentValue => ({
-					count: testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id).length,
-					testModelBatchId: newTestModelBatches[i].id,
+				const testBatchResultsToInsert: InsertTestBatchResultT[] = research.dependentValues.map(dependentValue => ({
+					count: testModelBatchResults.flatMap(testResults => testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id)).length,
 					dependentValueId: dependentValue.id,
-				})),
-			)
-			await TestModelBatchResultRepo.insertMany(testModelBatchResultsToInsert, tx)
+					testBatchId: newTestBatch.id,
+				}))
+				const newTestBatchResults = await TestBatchResultRepo.insertMany(testBatchResultsToInsert)
 
-			const testBatchResultsToInsert: InsertTestBatchResultT[] = research.dependentValues.map(dependentValue => ({
-				count: testModelBatchResults.flatMap(testResults => testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id)).length,
-				dependentValueId: dependentValue.id,
-				testBatchId: newTestBatch.id,
-			}))
-			const newTestBatchResults = await TestBatchResultRepo.insertMany(testBatchResultsToInsert, tx)
-
-			return {
-				contributor,
-				newTestBatch,
-				newTestModelBatches,
-				newTests,
-				newTestToBlockingValues,
-				newMessages,
-				newEvals,
-				newTestBatchResults,
-			}
+				return {
+					contributor,
+					newTestBatch,
+					newTestModelBatches,
+					newTests,
+					newTestToBlockingValues,
+					newMessages,
+					newEvals,
+					newTestBatchResults,
+				}
+			}).onError(async () => {
+				await TestBatchRepo.delete(newTestBatch.id)
+			})
+		}).onError(async () => {
+			await ContributorRepo.undoIncrementCount({ count: totalTestsCount }, contributor)
 		})
 	}
 }

@@ -9,3 +9,5 @@ type NextSearchParams = Promise<{ [key: string]: string | undefined }>
 type Pretty<T> = {
 	[K in keyof T]: T[K]
 } & {}
+
+type Return<T extends (...args: any[]) => any> = NonNullable<Awaited<ReturnType<T>>>

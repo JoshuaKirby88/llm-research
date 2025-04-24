@@ -1,22 +1,21 @@
 import { db } from "@/drizzle/db"
 import { TestBatchResult } from "@/drizzle/schema"
-import { TX } from "@/drizzle/transaction"
 import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
 import { InsertTestBatchResultT, TestBatchResultT, UpdateTestBatchResultT } from "../schemas"
 
 export class TestBatchResultRepo {
-	static async insertMany(input: InsertTestBatchResultT[], tx?: TX) {
-		const newTestBatchResults = await DrizzleService.batchInsert(input, items => (tx ?? db).insert(TestBatchResult).values(items).returning())
+	static async insertMany(input: InsertTestBatchResultT[]) {
+		const newTestBatchResults = await DrizzleService.batchInsert(input, items => db.insert(TestBatchResult).values(items).returning())
 		return newTestBatchResults
 	}
 
-	static async update(id: TestBatchResultT["id"], input: Omit<UpdateTestBatchResultT, "id">, tx?: TX) {
-		const [updatedTestBatchResult] = await (tx ?? db).update(TestBatchResult).set(input).where(eq(TestBatchResult.id, id)).returning()
+	static async update(id: TestBatchResultT["id"], input: Omit<UpdateTestBatchResultT, "id">) {
+		const [updatedTestBatchResult] = await db.update(TestBatchResult).set(input).where(eq(TestBatchResult.id, id)).returning()
 		return updatedTestBatchResult
 	}
 
-	static async delete(id: TestBatchResultT["id"], tx?: TX) {
-		await (tx ?? db).delete(TestBatchResult).where(eq(TestBatchResult.id, id))
+	static async delete(id: TestBatchResultT["id"]) {
+		await db.delete(TestBatchResult).where(eq(TestBatchResult.id, id))
 	}
 }

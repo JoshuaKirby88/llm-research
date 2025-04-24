@@ -3,7 +3,11 @@ import { createInsertSchema, createSelectSchema, createUpdateSchema } from "driz
 import { z } from "zod"
 import { independentValueSchema } from "./independent-value.schema"
 
-export const independentVariableSchema = createSelectSchema(IndependentVariable)
+export const rawIndependentVariableSchema = createSelectSchema(IndependentVariable)
+
+export const independentVariableSchema = rawIndependentVariableSchema.extend({
+	name: rawIndependentVariableSchema.shape.name.min(1),
+})
 
 export type IndependentVariableT = z.infer<typeof independentVariableSchema>
 

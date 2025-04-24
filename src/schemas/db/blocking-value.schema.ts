@@ -2,7 +2,11 @@ import { BlockingValue } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const blockingValueSchema = createSelectSchema(BlockingValue)
+export const rawBlockingValueSchema = createSelectSchema(BlockingValue)
+
+export const blockingValueSchema = rawBlockingValueSchema.extend({
+	value: rawBlockingValueSchema.shape.value.min(1),
+})
 
 export type BlockingValueT = z.infer<typeof blockingValueSchema>
 

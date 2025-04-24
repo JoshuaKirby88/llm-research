@@ -6,7 +6,7 @@ export const FormButton = ({ className, children, ...props }: ButtonProps) => {
 	const { formState } = useFormContext()
 
 	return (
-		<Button type="submit" className={cn("mt-1 w-full", className)} disabled={!formState.isDirty} isLoading={formState.isSubmitting} {...props}>
+		<Button type="submit" className={cn("mt-1 w-full", className)} disabled={!formState.isValid} isLoading={formState.isSubmitting} {...props}>
 			{children}
 		</Button>
 	)

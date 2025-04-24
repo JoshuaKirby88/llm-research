@@ -6,26 +6,25 @@ import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Separator } from "@/components/ui/separator"
-import { BlockingVariableWithValueT, IndependentValueT, MaskedAPIKeyT } from "@/src/schemas"
+import { BlockingVariableWithValueT, IndependentValueT, MaskedAPIKeyT, RunTestFormS } from "@/src/schemas"
 import { runTestFormSchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HashIcon, RocketIcon } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { AIModelSelect } from "./ai-model-select"
 import { RunTestFormCard } from "./run-test-form-card"
 
 export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentValues: IndependentValueT[]; blockingVariablesWithValues: BlockingVariableWithValueT[] }) => {
 	const params = useParams<{ researchId: string }>()
 
-	const form = useForm<z.infer<typeof runTestFormSchema>>({
+	const form = useForm<RunTestFormS>({
 		resolver: zodResolver(runTestFormSchema),
 		defaultValues: { models: [], iterations: 1 },
 	})
 
-	const onSubmit = async (input: z.infer<typeof runTestFormSchema>) => {
+	const onSubmit = async (input: RunTestFormS) => {
 		const result = await runTestAction({ ...input, researchId: Number.parseInt(params.researchId) })
 		isResultValid(result)
 	}

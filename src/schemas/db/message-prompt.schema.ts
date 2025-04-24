@@ -2,7 +2,11 @@ import { MessagePrompt } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const messagePromptSchema = createSelectSchema(MessagePrompt)
+export const rawMessagePromptSchema = createSelectSchema(MessagePrompt)
+
+export const messagePromptSchema = rawMessagePromptSchema.extend({
+	text: rawMessagePromptSchema.shape.text.min(1),
+})
 
 export type MessagePromptT = z.infer<typeof messagePromptSchema>
 

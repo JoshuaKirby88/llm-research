@@ -2,7 +2,11 @@ import { Research } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const researchSchema = createSelectSchema(Research)
+const rawResearchSchema = createSelectSchema(Research)
+
+export const researchSchema = rawResearchSchema.extend({
+	name: rawResearchSchema.shape.name.min(1),
+})
 
 export type ResearchT = z.infer<typeof researchSchema>
 

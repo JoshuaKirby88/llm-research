@@ -2,7 +2,11 @@ import { IndependentValue } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const independentValueSchema = createSelectSchema(IndependentValue)
+export const rawIndependentValueSchema = createSelectSchema(IndependentValue)
+
+export const independentValueSchema = rawIndependentValueSchema.extend({
+	value: rawIndependentValueSchema.shape.value.min(1),
+})
 
 export type IndependentValueT = z.infer<typeof independentValueSchema>
 

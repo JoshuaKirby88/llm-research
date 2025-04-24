@@ -2,7 +2,11 @@ import { EvalPrompt } from "@/drizzle/schema"
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 import { z } from "zod"
 
-export const evalPromptSchema = createSelectSchema(EvalPrompt)
+export const rawEvalPromptSchema = createSelectSchema(EvalPrompt)
+
+export const evalPromptSchema = rawEvalPromptSchema.extend({
+	text: rawEvalPromptSchema.shape.text.min(1),
+})
 
 export type EvalPromptT = z.infer<typeof evalPromptSchema>
 

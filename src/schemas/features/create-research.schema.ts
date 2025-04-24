@@ -11,11 +11,15 @@ import { researchSchema } from "../db/research.schema"
 export const createResearchISchema = z.object({
 	research: researchSchema.pick({ name: true }),
 	independentVariable: independentVariableSchema.pick({ name: true }).extend({ values: independentValueSchema.shape.value.array() }),
-	blockingVariables: blockingVariableSchema.pick({ name: true }).extend({ values: blockingValueSchema.shape.value.array() }).array(),
+	blockingVariables: blockingVariableSchema
+		.pick({ name: true })
+		.extend({ values: blockingValueSchema.shape.value.array().min(1) })
+		.array()
+		.min(1),
 	systemMessagePrompt: messagePromptSchema.pick({ text: true }),
 	userMessagePrompt: messagePromptSchema.pick({ text: true }),
 	evalPrompt: evalPromptSchema.pick({ text: true }),
-	dependentValues: dependentValueSchema.shape.value.array(),
+	dependentValues: dependentValueSchema.shape.value.array().min(1),
 })
 
 export type CreateResearchI = z.infer<typeof createResearchISchema>

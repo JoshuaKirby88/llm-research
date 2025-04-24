@@ -34,6 +34,8 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 	const form = useForm<CreateResearchI>({
 		resolver: zodResolver(createResearchISchema),
 		defaultValues: props.defaultValues,
+		reValidateMode: "onChange",
+		mode: "onChange",
 	})
 
 	const blockingVariableFields = useFieldArray({
@@ -97,7 +99,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 					<Button type="button" className="w-full" variant="red" onClick={() => blockingVariableFields.remove(i)}>
 						Delete Blocking Variable
 					</Button>
-					<Separator className="" />
+					<Separator />
 				</React.Fragment>
 			))}
 			<Button type="button" className="w-full" variant="secondary" onClick={() => blockingVariableFields.append({ name: "", values: [] })}>

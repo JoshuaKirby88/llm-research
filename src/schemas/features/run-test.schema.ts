@@ -16,4 +16,4 @@ export type RunTestI = z.infer<typeof runTestISchema>
 
 export const runTestFormSchema = runTestISchema.pick({ models: true, iterations: true })
 
-export type RunTestForm = z.infer<typeof runTestFormSchema>
+export type RunTestFormS = z.infer<typeof runTestFormSchema>

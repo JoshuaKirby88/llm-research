@@ -3,7 +3,11 @@ import { createInsertSchema, createSelectSchema, createUpdateSchema } from "driz
 import { z } from "zod"
 import { blockingValueSchema } from "./blocking-value.schema"
 
-export const blockingVariableSchema = createSelectSchema(BlockingVariable)
+export const rawBlockingVariableSchema = createSelectSchema(BlockingVariable)
+
+export const blockingVariableSchema = rawBlockingVariableSchema.extend({
+	name: rawBlockingVariableSchema.shape.name.min(1),
+})
 
 export type BlockingVariableT = z.infer<typeof blockingVariableSchema>
 

@@ -6,6 +6,7 @@
 - [ ] Show more data in test batch page
     - Results
 - [ ] Fix ai model select
+- [ ] Indicate enter to add variable for tag input
 
 # New research form
 

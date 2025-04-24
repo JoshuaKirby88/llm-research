@@ -1,19 +1,17 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
-import { buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research, TestBatch } from "@/drizzle/schema"
 import { ClerkService } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
-import { cn } from "@/utils/cn"
 import { destructureArray } from "@/utils/destructure-array"
 import { desc, eq } from "drizzle-orm"
-import { CogIcon, FlaskConicalIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
-import Link from "next/link"
+import { CogIcon, FlaskConicalIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
+import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
 
 const config = {
 	tabs: [
@@ -100,10 +98,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 				<div className="mb-10 flex items-center gap-5">
 					<PageTabsList tabs={config.tabs} className="mb-0" />
 
-					<Link className={cn(buttonVariants({ variant: "green" }))} href={`/test/${research.id}`}>
-						<RocketIcon />
-						Run Tests
-					</Link>
+					<RunTestSheet />
 				</div>
 
 				<TabsContent value="overview">

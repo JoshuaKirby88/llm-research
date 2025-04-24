@@ -3,11 +3,12 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research, TestBatch } from "@/drizzle/schema"
+import { ResearchRepo } from "@/src/repos"
 import { ClerkService } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
-import { desc, eq } from "drizzle-orm"
-import { CogIcon, FlaskConicalIcon, GitBranchIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import { and, desc, eq } from "drizzle-orm"
+import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
@@ -21,7 +22,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	const user = await authProcedure("signedIn")
 
 	const result = await db.query.Research.findFirst({
-		where: eq(Research.id, Number.parseInt(params.researchId)),
+		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
 		with: {
 			contributors: true,
 			independentVariable: {
@@ -58,7 +59,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	})
 
 	if (!result) {
-		return
+		notFound()
 	}
 
 	const {
@@ -81,10 +82,6 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	const users = await ClerkService.getUsers(contributors.map(c => c.userId))
 	const researchUser = users.find(user => research.userId === user.id)!
 
-	if (!result) {
-		notFound()
-	}
-
 	const config = {
 		tabs: [
 			{ key: "overview", title: "Overview", icon: FlaskConicalIcon },
@@ -101,7 +98,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 					<PageTabsList tabs={config.tabs} className="mb-0" />
 
 					<Link href={`/new/${research.id}`} className={buttonVariants({ variant: "blue" })}>
-						<GitBranchIcon />
+						<GitForkIcon />
 						Fork Research
 					</Link>
 

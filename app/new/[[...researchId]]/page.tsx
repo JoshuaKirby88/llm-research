@@ -1,17 +1,20 @@
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
+import { ResearchRepo } from "@/src/repos"
 import { CreateResearchI } from "@/src/schemas"
-import { eq } from "drizzle-orm"
+import { authProcedure } from "@/utils/auth-procedure"
+import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { CreateResearchForm } from "./_components/create-research-form"
 
 const Page = async (props: { params: Promise<{ researchId: string | string[] | undefined }> }) => {
 	const params = await props.params
+	const user = await authProcedure("signedIn")
 
 	const defaultValues: Partial<CreateResearchI> = await (async () => {
 		if (typeof params.researchId === "string") {
 			const research = await db.query.Research.findFirst({
-				where: eq(Research.id, Number.parseInt(params.researchId)),
+				where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
 				with: {
 					independentVariable: { with: { independentValues: true } },
 					blockingVariables: { with: { blockingValues: true } },

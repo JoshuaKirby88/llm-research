@@ -1,12 +1,18 @@
 import { db } from "@/drizzle/db"
-import { Contributor, Research } from "@/drizzle/schema"
+import { Contributor } from "@/drizzle/schema"
+import { Research } from "@/drizzle/schema"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
-import { count, eq, inArray } from "drizzle-orm"
+import { count, inArray } from "drizzle-orm"
+import { and, eq, or } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
 import { TableSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
 
 export class ResearchRepo {
+	static getPublicWhere(input: Pick<ResearchT, "userId">) {
+		return or(eq(Research.userId, input.userId), and(eq(Research.isComplete, true), eq(Research.isArchived, false)))
+	}
+
 	static async insert(input: InsertResearchT) {
 		const [newResearch] = await db.insert(Research).values(input).returning()
 

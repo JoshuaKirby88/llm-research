@@ -4,20 +4,21 @@ import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research, TestBatch } from "@/drizzle/schema"
 import { AIFeature } from "@/src/features"
+import { ResearchRepo } from "@/src/repos"
 import { VariableTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-content"
 
 const Page = async (props: { params: Promise<{ researchId: string; testBatchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
-	await authProcedure("signedIn")
+	const user = await authProcedure("signedIn")
 
 	const result = await db.query.Research.findFirst({
-		where: eq(Research.id, Number.parseInt(params.researchId)),
+		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
 		with: {
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },

@@ -4,7 +4,7 @@ import { ClerkUser } from "@/src/services/clerk.service"
 import { User } from "@clerk/nextjs/server"
 
 type Props = {
-	tab: "all" | "yours" | "external"
+	tab: "all" | "yours" | "contributions"
 	user: ClerkUser
 	users: User[]
 	contributors: ContributorT[]
@@ -15,7 +15,7 @@ type Props = {
 export const TestRunTabPage = async (props: Props) => {
 	const userContributor = props.contributors.find(c => c.userId === props.user.userId)
 	const testBatches = props.testBatches.filter(
-		tb => props.tab === "all" || (props.tab === "yours" && tb.contributorId === userContributor?.id) || (props.tab === "external" && tb.contributorId !== userContributor?.id),
+		tb => props.tab === "all" || (props.tab === "yours" && tb.contributorId === userContributor?.id) || (props.tab === "contributions" && tb.contributorId !== userContributor?.id),
 	)
 
 	return testBatches.map(testBatch => {

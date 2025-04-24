@@ -4,12 +4,12 @@ import { HomePageResearchCard } from "@/components/cards/research-card"
 import { EmptyState } from "@/components/empty-state"
 import { Suspense } from "@/components/suspense"
 import { Button } from "@/components/ui/button"
-import { actionIsValid } from "@/utils/actions/action-is-valid"
+import { resultIsValid } from "@/utils/actions/result-is-valid"
 import { FlaskConicalIcon, TestTubeDiagonalIcon } from "lucide-react"
 
 export const ResearchesSearchResult = Suspense(async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
-	const { users, researches, userToStarredResearches } = await actionIsValid(searchResearchAction({ search: searchParams.search }))
+	const { users, researches, userToStarredResearches } = await resultIsValid(searchResearchAction({ search: searchParams.search }))
 
 	if (researches.length) {
 		return (

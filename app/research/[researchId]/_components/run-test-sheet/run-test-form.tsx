@@ -7,6 +7,7 @@ import { FormInput } from "@/components/form/client/form-input"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { MaskedAPIKeyT } from "@/src/schemas"
 import { runTestISchema } from "@/src/schemas"
+import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HashIcon } from "lucide-react"
 import { useParams } from "next/navigation"
@@ -24,6 +25,7 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT }) => {
 
 	const onSubmit = async (input: z.infer<typeof schema>) => {
 		const result = await runTestAction({ ...input, researchId: Number.parseInt(params.researchId) })
+		isResultValid(result)
 	}
 
 	return (

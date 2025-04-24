@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { AIFeature, AIProvider } from "@/src/features"
 import { MaskedAPIKeyT, apiKeySchema } from "@/src/schemas"
 import { APIKeyTable } from "@/src/tables"
-import { isActionValid } from "@/utils/actions/is-action-valid"
+import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRef } from "react"
 import { useForm } from "react-hook-form"
@@ -41,7 +41,7 @@ export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 
 		const result = await saveAPIKeyAction(filteredAPIKey)
 
-		if (isActionValid(result)) {
+		if (isResultValid(result)) {
 			form.reset(result.maskedUpdatedAPIKey)
 			defaultAPIKeyRef.current = result.maskedUpdatedAPIKey
 		}

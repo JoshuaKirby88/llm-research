@@ -1,6 +1,6 @@
 import { ExternalToast, toast } from "sonner"
 
-export const isActionValid = <T>(result: T | { error: string }, options?: { noToast?: boolean } & ExternalToast): result is T => {
+export const isResultValid = <T>(result: T | { error: string }, options?: { noToast?: boolean } & ExternalToast): result is T => {
 	const toastMessageExists = result && typeof result === "object" && ("success" in result || "info" in result || "error" in result)
 
 	const isNotValid = toastMessageExists && "error" in result

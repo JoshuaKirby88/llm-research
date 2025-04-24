@@ -7,14 +7,14 @@ import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { CreateResearchForm } from "./_components/create-research-form"
 
-const Page = async (props: { params: Promise<{ researchId: string | string[] | undefined }> }) => {
+const Page = async (props: { params: Promise<{ researchIds: string[] | undefined }> }) => {
 	const params = await props.params
 	const user = await authProcedure("signedIn")
 
 	const defaultValues: Partial<CreateResearchI> = await (async () => {
-		if (typeof params.researchId === "string") {
+		if (Array.isArray(params.researchIds)) {
 			const research = await db.query.Research.findFirst({
-				where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
+				where: and(eq(Research.id, Number.parseInt(params.researchIds[0])), ResearchRepo.getPublicWhere({ userId: user.userId })),
 				with: {
 					independentVariable: { with: { independentValues: true } },
 					blockingVariables: { with: { blockingValues: true } },

@@ -1,6 +1,5 @@
 - [ ] Generated messages is wrong
 - [ ] What if a research doesn't have any blocking variables
-- [ ] Instruct LLM to only respond with the prompt when generating messages
 - [ ] Visually mark replaced variables when showing messages
 - [ ] Show total iterations in run test form
 - [ ] Implement transaction with a callback that fires on error

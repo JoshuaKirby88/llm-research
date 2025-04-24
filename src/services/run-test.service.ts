@@ -163,12 +163,13 @@ export class RunTestService {
 		const generatedMessage: Omit<InsertGeneratedMessageT, "testId">[] = []
 
 		for (const messagePrompt of input.messagePrompts) {
-			const result = await AIService.getCompletion({
+			const result = await AIService.getStructuredCompletion({
 				model: AIFeature.promptModel,
 				messages: [{ role: "user", content: VariableTable.replaceVariables(messagePrompt.text, { ...input, messages: generatedMessage }) }],
+				schema: z.object({ answer: z.string().describe("Just the generated text.") }),
 			})
 
-			generatedMessage.push({ role: messagePrompt.role, content: result.completion, isCompletion: false, messagePromptId: messagePrompt.id, ...result.tokens })
+			generatedMessage.push({ role: messagePrompt.role, content: result.completion.answer, isCompletion: false, messagePromptId: messagePrompt.id, ...result.tokens })
 		}
 
 		return generatedMessage

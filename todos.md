@@ -5,6 +5,7 @@
 - [ ] Handle security for users viewing other people's data
 - [ ] Show more data in test batch page
     - Results
+- [ ] Fix ai model select
 
 # New research form
 

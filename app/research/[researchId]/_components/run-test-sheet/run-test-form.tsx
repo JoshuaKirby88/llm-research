@@ -5,11 +5,12 @@ import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
+import { Separator } from "@/components/ui/separator"
 import { BlockingVariableWithValueT, IndependentValueT, MaskedAPIKeyT } from "@/src/schemas"
 import { runTestFormSchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { HashIcon } from "lucide-react"
+import { HashIcon, RocketIcon } from "lucide-react"
 import { useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -30,18 +31,31 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentVal
 	}
 
 	return (
-		<Form {...form} onSubmit={onSubmit}>
-			<RunTestFormCard independentValues={props.independentValues} blockingVariablesWithValues={props.blockingVariablesWithValues} />
+		<Form {...form} onSubmit={onSubmit} className="flex h-full flex-col justify-between">
+			<div className="space-y-10">
+				<div className="space-y-2">
+					<LabelWithTooltip>Select AI Models to run the tests on</LabelWithTooltip>
+					<AIModelSelect maskedAPIKey={props.maskedAPIKey} name="models" />
+				</div>
 
-			<LabelWithTooltip>Select AI Models to run the tests on</LabelWithTooltip>
-			<AIModelSelect maskedAPIKey={props.maskedAPIKey} name="models" />
+				<div className="space-y-2">
+					<LabelWithTooltip icon={<HashIcon />} title="Number of tests to run" description="Run multiple tests per all combination of models, independent variables, and blocking variables.">
+						Iterations per combination
+					</LabelWithTooltip>
+					<FormInput name="iterations" type="number" />
+				</div>
+			</div>
 
-			<LabelWithTooltip icon={<HashIcon />} title="Number of tests to run" description="Run multiple tests per all combination of models, independent variables, and blocking variables.">
-				Iterations per combination
-			</LabelWithTooltip>
-			<FormInput name="iterations" type="number" />
+			<div className="space-y-5">
+				<RunTestFormCard independentValues={props.independentValues} blockingVariablesWithValues={props.blockingVariablesWithValues} />
 
-			<FormButton>Run Tests</FormButton>
+				<Separator />
+
+				<FormButton variant="green">
+					<RocketIcon />
+					Run Tests
+				</FormButton>
+			</div>
 		</Form>
 	)
 }

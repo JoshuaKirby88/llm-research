@@ -102,7 +102,7 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 						Fork Research
 					</Link>
 
-					<RunTestSheet user={user} independentValues={independentValues} blockingVariablesWithValues={blockingVariablesWithValues}>
+					<RunTestSheet user={user} research={research} independentValues={independentValues} blockingVariablesWithValues={blockingVariablesWithValues}>
 						<Button variant="green">
 							<RocketIcon />
 							Run Tests

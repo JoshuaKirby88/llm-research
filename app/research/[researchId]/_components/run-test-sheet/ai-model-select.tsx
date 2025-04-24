@@ -9,7 +9,7 @@ export const AIModelSelect = (props: { name: string; maskedAPIKey: MaskedAPIKeyT
 
 	const options: Option[] = providers.flatMap(provider =>
 		AIFeature.providerMap[provider].models.map(model => ({
-			provider,
+			provider: AIFeature.providerMap[provider].title,
 			value: model,
 			label: model,
 		})),

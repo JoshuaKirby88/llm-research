@@ -1,3 +1,4 @@
+import { env } from "@/utils/env"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
@@ -12,7 +13,7 @@ type EmbeddingModel = Parameters<(typeof AIServiceInstance)["prototype"]["models
 export class AIServiceInstance {
 	private models
 
-	constructor(apiKey?: APIKeyT) {
+	constructor(apiKey?: Partial<APIKeyT>) {
 		const openai = createOpenAI({ apiKey: apiKey?.openai ?? "" })
 		const google = createGoogleGenerativeAI({ apiKey: apiKey?.google ?? "" })
 		const anthropic = createAnthropic({ apiKey: apiKey?.anthropic ?? "" })
@@ -84,4 +85,4 @@ export class AIServiceInstance {
 	}
 }
 
-export const AIService = new AIServiceInstance()
+export const AIService = new AIServiceInstance({ openai: env.OPENAI_API_KEY })

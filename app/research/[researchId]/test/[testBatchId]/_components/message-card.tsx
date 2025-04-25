@@ -30,7 +30,7 @@ export const MessageCard = (props: Props) => {
 			key={messageOrEval.id}
 			className={cn(
 				"w-full space-y-3 rounded-xl border p-3",
-				"role" in messageOrEval ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "bg-green-950",
+				"role" in messageOrEval ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "bg-green-50 dark:bg-green-950",
 			)}
 		>
 			<div className="flex items-center justify-between">

@@ -5,35 +5,50 @@ import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { FormTagInput } from "@/components/form/client/form-tag-input"
-import { FormTextarea } from "@/components/form/client/form-textarea"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
 import { CreateResearchI, createResearchISchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import React from "react"
 import { useFieldArray, useForm } from "react-hook-form"
+import { VariableSlashEditor } from "./variable-slash-editor"
 
-const exampleValues: CreateResearchI = {
-	research: { name: "Does using multiple language affect LLM?" },
-	independentVariable: { name: "Language", values: ["English", "Japanese"] },
-	blockingVariables: [
-		{ name: "Sub language", values: ["English", "Japanese"] },
-		{ name: "Topic", values: ["Toy Store A", "Car Maker B"] },
-	],
-	systemMessagePrompt: { text: "Generate made up information about {topic} in {language}." },
-	userMessagePrompt: { text: '"""\n{system}\n"""\n\nAsk a question that can only be answered, given the above information, in English.' },
-	evalPrompt: { text: 'Based on this information:\n"""\n{system}\n"""\n\nIs this answer correct?\nQuestion:\n{user}\nAnswer:\n{completion}' },
-	dependentValues: ["Correct", "Incorrect"],
+const config = {
+	exampleValues: {
+		research: { name: "Does using multiple language affect LLM?" },
+		independentVariable: { name: "Language", values: ["English", "Japanese"] },
+		blockingVariables: [
+			{ name: "Sub Language", values: ["English", "Japanese"] },
+			{ name: "Topic", values: ["Toy Store A", "Car Maker B"] },
+		],
+		systemMessagePrompt: {
+			text: "Generate made up information about {{Topic}} in {{Language}}.",
+		},
+		userMessagePrompt: {
+			text: '"""\n{{System Prompt}}\n"""\n\nAsk a question that can only be answered, given the above information, in {{Sub Language}}.',
+		},
+		evalPrompt: {
+			text: 'Based on this information:\n"""\n{{System Prompt}}\n"""\n\nIs this answer correct?\nQuestion:\n{{User Prompt}}\nAnswer:\n{{Completion}}',
+		},
+		dependentValues: ["Correct", "Incorrect"],
+	} satisfies CreateResearchI,
+	formatDefaultValues: (values: Partial<CreateResearchI>) => ({
+		...values,
+		systemMessagePrompt: values.systemMessagePrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.systemMessagePrompt.text) } : undefined,
+		userMessagePrompt: values.userMessagePrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.userMessagePrompt.text) } : undefined,
+		evalPrompt: values.evalPrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.evalPrompt.text) } : undefined,
+	}),
 }
 
 export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearchI> }) => {
 	const form = useForm<CreateResearchI>({
 		resolver: zodResolver(createResearchISchema),
-		defaultValues: props.defaultValues,
+		defaultValues: config.formatDefaultValues(props.defaultValues),
 		reValidateMode: "onChange",
 		mode: "onChange",
 	})
@@ -43,6 +58,14 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 		name: "blockingVariables",
 	})
 
+	const resetForm = () => {
+		form.reset(config.formatDefaultValues(props.defaultValues))
+	}
+
+	const resetToExampleForm = () => {
+		form.reset(config.formatDefaultValues(config.exampleValues))
+	}
+
 	const onSubmit = async (input: CreateResearchI) => {
 		const result = await createResearchAction(input)
 		isResultValid(result)
@@ -51,11 +74,11 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 	return (
 		<Form {...form} onSubmit={onSubmit}>
 			<div className="mb-10 flex items-center gap-10">
-				<Button type="button" onClick={() => form.reset(exampleValues)} variant="link">
+				<Button type="button" onClick={resetToExampleForm} variant="link">
 					View Example Research
 				</Button>
 
-				<Button type="button" variant="link" onClick={() => form.reset(props.defaultValues)}>
+				<Button type="button" variant="link" onClick={resetForm}>
 					Reset
 				</Button>
 			</div>
@@ -117,15 +140,15 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 			</LabelWithTooltip>
 
 			<Label>System</Label>
-			<FormTextarea name="systemMessagePrompt.text" />
+			<VariableSlashEditor name="systemMessagePrompt.text" type="systemMessagePrompt" />
 			<Label>User</Label>
-			<FormTextarea name="userMessagePrompt.text" />
+			<VariableSlashEditor name="userMessagePrompt.text" type="userMessagePrompt" />
 
 			<LabelWithTooltip className="mt-10" size="2xl" icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt.">
 				Evaluation prompt
 			</LabelWithTooltip>
 
-			<FormTextarea name="evalPrompt.text" />
+			<VariableSlashEditor name="evalPrompt.text" type="evalPrompt" />
 
 			<LabelWithTooltip className="mt-10" size="2xl" icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined.">
 				Dependent Variable

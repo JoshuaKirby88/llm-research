@@ -1,3 +1,4 @@
+import { capitalize } from "@/utils/capitalize"
 import omit from "lodash.omit"
 import { BlockingVariableCombinationT, BlockingVariableWithValueT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
 
@@ -10,12 +11,15 @@ export class VariableTable {
 	}
 
 	static toVar(name: string) {
-		return `{${name.toLowerCase()}}`
+		return `{{${name}}}`
+	}
+
+	static messageToVarName(message: Pick<MessageT, "role" | "isCompletion">) {
+		return message.isCompletion ? "Completion" : `${capitalize(message.role)} Prompt`
 	}
 
 	static messageToVar(message: Pick<MessageT, "role" | "isCompletion">) {
-		// return this.toVar(`internal_${role}_prompt`)
-		return this.toVar(message.isCompletion ? "completion" : message.role)
+		return this.toVar(this.messageToVarName(message))
 	}
 
 	static replaceVariables(

@@ -20,10 +20,10 @@ export const TagInput = ({ tags, onTagAdd, onTagRemove, ...props }: Props) => {
 				onTagAdd={onTagAdd}
 				onTagRemove={onTagRemove}
 				styleClasses={{
-					tagList: {
-						container: cn("mt-2 flex-wrap gap-1"),
-					},
 					input: inputVariants(),
+					tagList: {
+						container: cn("flex-wrap gap-1"),
+					},
 					tag: {
 						body: cn("relative h-8 w-fit whitespace-nowrap rounded-md border border-input bg-background ps-2 pe-7 font-medium text-sm hover:bg-background"),
 						closeButton: cn("-inset-y-px -end-px absolute flex size-8 rounded-s-none rounded-e-lg p-0 text-muted-foreground/80 outline-0 transition-colors hover:text-foreground"),

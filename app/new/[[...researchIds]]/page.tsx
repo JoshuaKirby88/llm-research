@@ -11,7 +11,7 @@ const Page = async (props: { params: Promise<{ researchIds: string[] | undefined
 	const params = await props.params
 	const user = await authProcedure("signedIn")
 
-	const defaultValues: Partial<CreateResearchI> = await (async () => {
+	const defaultValues: CreateResearchI = await (async () => {
 		if (Array.isArray(params.researchIds)) {
 			const research = await db.query.Research.findFirst({
 				where: and(eq(Research.id, Number.parseInt(params.researchIds[0])), ResearchRepo.getPublicWhere({ userId: user.userId })),
@@ -36,9 +36,17 @@ const Page = async (props: { params: Promise<{ researchIds: string[] | undefined
 				userMessagePrompt: { text: research.messagePrompts.find(mp => mp.role === "user")!.text },
 				evalPrompt: { text: research.evalPrompt.text },
 				dependentValues: research.dependentValues.map(dVal => dVal.value),
-			} satisfies CreateResearchI
+			}
 		} else {
-			return { blockingVariables: [{ name: "", values: [] }] }
+			return {
+				research: { name: "" },
+				independentVariable: { name: "", values: [] },
+				blockingVariables: [{ name: "", values: [] }],
+				systemMessagePrompt: { text: "" },
+				userMessagePrompt: { text: "" },
+				evalPrompt: { text: "" },
+				dependentValues: [],
+			}
 		}
 	})()
 

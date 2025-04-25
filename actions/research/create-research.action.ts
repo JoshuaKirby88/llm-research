@@ -1,6 +1,7 @@
 "use server"
 
 import { transaction } from "@/drizzle/transaction"
+import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
 import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
 import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
 import { createAction } from "@/utils/actions/create-action"
@@ -10,9 +11,13 @@ export const createResearchAction = createAction(
 	"signedIn",
 	createResearchISchema,
 )(async ({ user, input }) => {
+	const systemMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.systemMessagePrompt.text)
+	const userMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.userMessagePrompt.text)
+	const evalPrompt = SlashEditorFeature.tiptapStringToCustomString(input.evalPrompt.text)
+
 	const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name })
 
-	return await transaction(async () => {
+	await transaction(async () => {
 		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name })
 		const independentValuesToInsert: InsertIndependentValueT[] = input.independentVariable.values.map(value => ({
 			independentVariableId: newIndependentVariable.id,
@@ -34,18 +39,18 @@ export const createResearchAction = createAction(
 		const newBlockingValues = await BlockingValueRepo.insertMany(blockingValesToInsert)
 
 		const messagePromptsToInsert: InsertMessagePromptT[] = [
-			{ researchId: newResearch.id, role: "system", text: input.systemMessagePrompt.text },
-			{ researchId: newResearch.id, role: "user", text: input.userMessagePrompt.text },
+			{ researchId: newResearch.id, role: "system", text: systemMessagePrompt },
+			{ researchId: newResearch.id, role: "user", text: userMessagePrompt },
 		]
 		const newMessagePrompts = await MessagePromptRepo.insertMany(messagePromptsToInsert)
 
-		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: input.evalPrompt.text })
+		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: evalPrompt })
 
 		const dependentValuesToInsert: InsertDependentValueT[] = input.dependentValues.map(value => ({ researchId: newResearch.id, value }))
 		const newDependentValues = await DependentValueRepo.insertMany(dependentValuesToInsert)
-
-		redirect(`/research/${newResearch.id}`)
 	}).onError(async () => {
 		await ResearchRepo.delete(newResearch.id)
 	})
+
+	redirect(`/research/${newResearch.id}`)
 })

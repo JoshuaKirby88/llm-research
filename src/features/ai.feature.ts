@@ -12,7 +12,7 @@ export class AIFeature {
 		},
 		google: {
 			title: "Google",
-			models: ["Gemini 2.5 Pro"],
+			models: ["Gemini 2.5 Pro", "Gemini 2.5 Flash"],
 		},
 		anthropic: {
 			title: "Anthropic",

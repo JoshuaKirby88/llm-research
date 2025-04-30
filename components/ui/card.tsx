@@ -5,6 +5,7 @@ import * as React from "react"
 export const cardVariants = cva("flex flex-col gap-6 rounded-3xl border bg-card text-card-foreground", {
 	variants: {
 		padding: {
+			xs: "px-3 py-2 rounded-2xl",
 			sm: "p-4",
 			default: "p-6",
 		},

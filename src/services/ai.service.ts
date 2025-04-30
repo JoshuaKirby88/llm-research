@@ -27,6 +27,7 @@ export class AIServiceInstance {
 				"GPT-4.1 Mini": openai("gpt-4.1-mini"),
 				"GPT-4.1 Nano": openai("gpt-4.1-nano"),
 				"Gemini 2.5 Pro": google("gemini-2.5-pro-exp-03-25"),
+				"Gemini 2.5 Flash": google("gemini-2.5-flash-preview-04-17"),
 				"Claude 3.7 Sonnet": anthropic("claude-3-7-sonnet-20250219"),
 			} satisfies Record<AIModel, any>,
 			textEmbeddingModels: {

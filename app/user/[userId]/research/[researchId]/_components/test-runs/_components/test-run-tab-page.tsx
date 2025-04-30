@@ -1,5 +1,5 @@
 import { TestBatchCard } from "@/components/cards/test-batch-card"
-import { ContributorT, TestBatchT, TestModelBatchT } from "@/src/schemas"
+import { ContributorT, DependentValueT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkUser } from "@/src/services/clerk.service"
 import { User } from "@clerk/nextjs/server"
 import { testRunPageConfig } from "../test-run-page"
@@ -11,6 +11,8 @@ type Props = {
 	contributors: ContributorT[]
 	testBatches: TestBatchT[]
 	testModelBatches: TestModelBatchT[]
+	dependentValues: DependentValueT[]
+	testBatchResults: TestBatchResultT[]
 }
 
 export const TestRunTabPage = async (props: Props) => {
@@ -24,6 +26,8 @@ export const TestRunTabPage = async (props: Props) => {
 		const user = props.users.find(user => user.id === contributor?.userId)
 		const testModelBatches = props.testModelBatches.filter(tmb => tmb.testBatchId === testBatch.id)
 
-		return <TestBatchCard key={testBatch.id} user={user} testBatch={testBatch} testModelBatches={testModelBatches} />
+		return (
+			<TestBatchCard key={testBatch.id} user={user} testBatch={testBatch} testModelBatches={testModelBatches} dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} />
+		)
 	})
 }

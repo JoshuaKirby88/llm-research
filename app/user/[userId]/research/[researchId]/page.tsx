@@ -112,11 +112,20 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 				</div>
 
 				<TabsContent value="Overview">
-					<ResearchOverviewPage researchUser={researchUser} research={research} contributors={contributors} />
+					<ResearchOverviewPage researchUser={researchUser} research={research} contributors={contributors} dependentValues={dependentValues} testBatchResults={testBatchResults} />
 				</TabsContent>
 
 				<TabsContent value="Test Runs">
-					<TestRunPage searchParams={searchParams} user={user} users={users} contributors={contributors} testBatches={testBatches} testModelBatches={testModelBatches} />
+					<TestRunPage
+						searchParams={searchParams}
+						user={user}
+						users={users}
+						contributors={contributors}
+						testBatches={testBatches}
+						testModelBatches={testModelBatches}
+						dependentValues={dependentValues}
+						testBatchResults={testBatchResults}
+					/>
 				</TabsContent>
 
 				{/* TODO: Should I also not mount this too, or does it not matter? */}

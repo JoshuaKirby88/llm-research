@@ -1,6 +1,6 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
-import { ContributorT, TestBatchT, TestModelBatchT } from "@/src/schemas"
+import { ContributorT, DependentValueT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkUser } from "@/src/services/clerk.service"
 import { User } from "@clerk/nextjs/server"
 import { BeanOffIcon, UserIcon, UsersIcon } from "lucide-react"
@@ -13,6 +13,8 @@ type Props = {
 	contributors: ContributorT[]
 	testBatches: TestBatchT[]
 	testModelBatches: TestModelBatchT[]
+	dependentValues: DependentValueT[]
+	testBatchResults: TestBatchResultT[]
 }
 
 const config = {
@@ -40,6 +42,8 @@ export const TestRunPage = (props: Props) => {
 							contributors={props.contributors}
 							testBatches={props.testBatches}
 							testModelBatches={props.testModelBatches}
+							dependentValues={props.dependentValues}
+							testBatchResults={props.testBatchResults}
 						/>
 					</TabsContent>
 				))}

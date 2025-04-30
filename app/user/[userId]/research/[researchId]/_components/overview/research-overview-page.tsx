@@ -1,21 +1,22 @@
-import { ContributorT, ResearchT } from "@/src/schemas"
+import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { cn } from "@/utils/cn"
 import { User } from "@clerk/nextjs/server"
 import omit from "lodash.omit"
 import { CalendarIcon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
+import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader } from "./research-chart"
 
-export const ResearchOverviewPage = (props: { researchUser: User; research: ResearchT; contributors: ContributorT[] }) => {
+export const ResearchOverviewPage = (props: { researchUser: User; research: ResearchT; contributors: ContributorT[]; dependentValues: DependentValueT[]; testBatchResults: TestBatchResultT[] }) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>
 
 			<div className="flex gap-4">
-				<div className="size-[20rem] border">
-					[Result in large text]
-					<br /> Some pie chart...?
-					<br /> If is not complete, user can click button here to write conclusion and complete it.
-				</div>
+				<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults}>
+					<ResearchChartHeader />
+					<ResearchChart />
+					<ResearchChartFooter />
+				</ResearchChartCard>
 
 				<div className="flex flex-col gap-2">
 					<BulletItem icon={CalendarIcon}>{props.research.createdAt.toLocaleDateString()}</BulletItem>

@@ -1,3 +1,4 @@
+- [ ] Mark research as complete
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Populate research overview page with all info
 - [ ] Visually mark replaced variables when showing messages
@@ -6,7 +7,8 @@
     - Results
 - [ ] Fix ai model select
 - [ ] Support research without blocking variables
-- [ ] Show charts
+- [ ] Assign colors to each dependent value in research settings
+- [ ] Add forkedResearchId to research
 
 # New research form
 

@@ -9,8 +9,8 @@ import { APIKeyPage } from "./_components/api-key-page"
 
 const config = {
 	tabs: [
-		{ key: "account", title: "Account", icon: CircleUserRoundIcon },
-		{ key: "apiKey", title: "API Key", icon: KeyIcon },
+		{ value: "Account", icon: CircleUserRoundIcon },
+		{ value: "API Key", icon: KeyIcon },
 	],
 } as const
 
@@ -25,11 +25,11 @@ const Page = async (props: { searchParams: NextSearchParams }) => {
 			<PageTabs tabs={config.tabs} searchParams={searchParams}>
 				<PageTabsList tabs={config.tabs} />
 
-				<TabsContent value="account">
+				<TabsContent value="Account">
 					<AccountPage />
 				</TabsContent>
 
-				<TabsContent value="apiKey">
+				<TabsContent value="API Key">
 					<APIKeyPage maskedAPIKey={maskedAPIKey} />
 				</TabsContent>
 			</PageTabs>

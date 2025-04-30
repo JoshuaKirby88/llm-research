@@ -2,9 +2,10 @@ import { TestBatchCard } from "@/components/cards/test-batch-card"
 import { ContributorT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkUser } from "@/src/services/clerk.service"
 import { User } from "@clerk/nextjs/server"
+import { testRunPageConfig } from "../test-run-page"
 
 type Props = {
-	tab: "all" | "yours" | "contributions"
+	tab: (typeof testRunPageConfig)["tabs"][number]["value"]
 	user: ClerkUser
 	users: User[]
 	contributors: ContributorT[]
@@ -15,7 +16,7 @@ type Props = {
 export const TestRunTabPage = async (props: Props) => {
 	const userContributor = props.contributors.find(c => c.userId === props.user.userId)
 	const testBatches = props.testBatches.filter(
-		tb => props.tab === "all" || (props.tab === "yours" && tb.contributorId === userContributor?.id) || (props.tab === "contributions" && tb.contributorId !== userContributor?.id),
+		tb => props.tab === "All" || (props.tab === "Yours" && tb.contributorId === userContributor?.id) || (props.tab === "Contributions" && tb.contributorId !== userContributor?.id),
 	)
 
 	return testBatches.map(testBatch => {

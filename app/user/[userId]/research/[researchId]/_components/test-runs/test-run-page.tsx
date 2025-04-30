@@ -18,11 +18,12 @@ type Props = {
 const config = {
 	tabName: "tests",
 	tabs: [
-		{ key: "all", title: "All", icon: BeanOffIcon },
-		{ key: "yours", title: "Yours", icon: UserIcon },
-		{ key: "contributions", title: "Contributions", icon: UsersIcon },
+		{ value: "All", icon: BeanOffIcon },
+		{ value: "Yours", icon: UserIcon },
+		{ value: "Contributions", icon: UsersIcon },
 	],
 } as const
+export const testRunPageConfig = config
 
 export const TestRunPage = (props: Props) => {
 	return (
@@ -31,9 +32,9 @@ export const TestRunPage = (props: Props) => {
 				<PageTabsList name={config.tabName} tabs={config.tabs} />
 
 				{config.tabs.map(tab => (
-					<TabsContent key={tab.key} value={tab.key} className="w-full space-y-10">
+					<TabsContent key={tab.value} value={tab.value} className="w-full space-y-10">
 						<TestRunTabPage
-							tab={tab.key}
+							tab={tab.value}
 							user={props.user}
 							users={props.users}
 							contributors={props.contributors}

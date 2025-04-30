@@ -5,9 +5,9 @@ import { UserResearchPage } from "./_components/user-research/user-research-page
 
 const config = {
 	tabs: [
-		{ key: "user", title: "User", icon: UserIcon },
-		{ key: "research", title: "Research", icon: FlaskConicalIcon },
-		{ key: "contributions", title: "Contributions", icon: GiftIcon },
+		{ value: "User", icon: UserIcon },
+		{ value: "Research", icon: FlaskConicalIcon },
+		{ value: "Contributions", icon: GiftIcon },
 	],
 } as const
 
@@ -19,13 +19,13 @@ const Page = async (props: { params: Promise<{ userId: string }>; searchParams: 
 			<PageTabs tabs={config.tabs} searchParams={searchParams}>
 				<PageTabsList tabs={config.tabs} />
 
-				<TabsContent value="user"></TabsContent>
+				<TabsContent value="User"></TabsContent>
 
-				<TabsContent value="research">
+				<TabsContent value="Research">
 					<UserResearchPage searchParams={props.searchParams} />
 				</TabsContent>
 
-				<TabsContent value="contributions"></TabsContent>
+				<TabsContent value="Contributions"></TabsContent>
 			</PageTabs>
 		</div>
 	)

@@ -5,12 +5,13 @@ import { ResearchPage } from "./research-page"
 
 const config = {
 	tabs: [
-		{ key: "all", title: "All", icon: FlaskConicalIcon },
-		{ key: "complete", title: "Complete", icon: CheckCircle2Icon },
-		{ key: "researching", title: "Researching", icon: NotebookPenIcon },
-		{ key: "archived", title: "Archived", icon: ArchiveIcon },
+		{ value: "All", icon: FlaskConicalIcon },
+		{ value: "Complete", icon: CheckCircle2Icon },
+		{ value: "Researching", icon: NotebookPenIcon },
+		{ value: "Archived", icon: ArchiveIcon },
 	],
 } as const
+export const userResearchPageConfig = config
 
 export const UserResearchPage = async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
@@ -21,8 +22,8 @@ export const UserResearchPage = async (props: { searchParams: NextSearchParams }
 				<PageTabsList tabs={config.tabs} />
 
 				{config.tabs.map(tab => (
-					<TabsContent key={tab.key} value={tab.key} className="space-y-10">
-						<ResearchPage tab={tab.key} />
+					<TabsContent key={tab.value} value={tab.value} className="space-y-10">
+						<ResearchPage tab={tab.value} />
 					</TabsContent>
 				))}
 			</PageTabs>

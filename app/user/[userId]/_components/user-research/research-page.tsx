@@ -6,15 +6,16 @@ import { DrizzleService } from "@/src/services/drizzle.service"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
 import { desc, eq } from "drizzle-orm"
+import { userResearchPageConfig } from "./user-research-page"
 
-export const ResearchPage = Suspense(async (props: { tab: "all" | "complete" | "researching" | "archived" }) => {
+export const ResearchPage = Suspense(async (props: { tab: (typeof userResearchPageConfig)["tabs"][number]["value"] }) => {
 	const user = await authProcedure("signedIn")
 
 	const result = await db.query.Research.findMany({
 		where: DrizzleService.where(Research, {
 			userId: user.userId,
 			isArchived: false,
-			...(props.tab === "all" ? {} : props.tab === "archived" ? { isArchived: true } : { isComplete: props.tab === "complete" }),
+			...(props.tab === "All" ? {} : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
 		}),
 		with: {
 			userToStarredResearches: {

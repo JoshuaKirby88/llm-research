@@ -58,8 +58,7 @@ const Page = async (props: { params: Promise<{ researchId: string; testBatchId: 
 	const blockingVariableCombinations = VariableTable.createCombination(blockingVariablesWithValues)
 
 	const tabs = testModelBatches.map(testModelBatch => ({
-		key: testModelBatch.model,
-		title: testModelBatch.model,
+		value: testModelBatch.model,
 		iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(testModelBatch.model)} className="size-4.5" />,
 	}))
 

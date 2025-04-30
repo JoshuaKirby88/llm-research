@@ -4,7 +4,8 @@ import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research, TestBatch } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
-import { ClerkService } from "@/src/services/clerk.service"
+import { ResearchT } from "@/src/schemas"
+import { ClerkService, ClerkUser } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, desc, eq } from "drizzle-orm"
@@ -15,6 +16,15 @@ import { ResearchOverviewPage } from "./_components/overview/research-overview-p
 import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
+
+const config = {
+	tabs: (input: { research: ResearchT; user: ClerkUser }) => [
+		{ value: "Overview", icon: FlaskConicalIcon },
+		{ value: "Test Runs", icon: SquareStackIcon },
+		{ value: "Result", icon: ShapesIcon },
+		...(input.research.userId === input.user.userId ? [{ value: "Settings", icon: CogIcon }] : []),
+	],
+} as const
 
 const Page = async (props: { params: Promise<{ researchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
@@ -82,20 +92,11 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 	const users = await ClerkService.getUsers(contributors.map(c => c.userId))
 	const researchUser = users.find(user => research.userId === user.id)!
 
-	const config = {
-		tabs: [
-			{ key: "overview", title: "Overview", icon: FlaskConicalIcon },
-			{ key: "testRuns", title: "Test Runs", icon: SquareStackIcon },
-			{ key: "result", title: "Result", icon: ShapesIcon },
-			...(research.userId === user.userId ? [{ key: "settings", title: "Settings", icon: CogIcon }] : []),
-		],
-	}
-
 	return (
 		<div className="mx-auto w-full max-w-4xl">
-			<PageTabs tabs={config.tabs} searchParams={searchParams}>
+			<PageTabs tabs={config.tabs({ research, user })} searchParams={searchParams}>
 				<div className="mb-10 flex items-center gap-5">
-					<PageTabsList tabs={config.tabs} className="mb-0" />
+					<PageTabsList tabs={config.tabs({ research, user })} className="mb-0" />
 
 					<Link href={`/new/${research.id}`} className={buttonVariants({ variant: "blue" })}>
 						<GitForkIcon />
@@ -110,16 +111,16 @@ const Page = async (props: { params: Promise<{ researchId: string }>; searchPara
 					</RunTestSheet>
 				</div>
 
-				<TabsContent value="overview">
+				<TabsContent value="Overview">
 					<ResearchOverviewPage researchUser={researchUser} research={research} contributors={contributors} />
 				</TabsContent>
 
-				<TabsContent value="testRuns">
+				<TabsContent value="Test Runs">
 					<TestRunPage searchParams={searchParams} user={user} users={users} contributors={contributors} testBatches={testBatches} testModelBatches={testModelBatches} />
 				</TabsContent>
 
 				{/* TODO: Should I also not mount this too, or does it not matter? */}
-				<TabsContent value="settings">
+				<TabsContent value="Settings">
 					<ResearchSettingsPage research={research} />
 				</TabsContent>
 			</PageTabs>

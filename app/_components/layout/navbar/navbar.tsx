@@ -1,12 +1,15 @@
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/utils/cn"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 import { CogIcon } from "lucide-react"
 import Link from "next/link"
 import { NavbarBreadCrumb } from "./navbar-breadcrumb"
 import { ThemeDropdown } from "./theme-dropdown"
 
-export const Navbar = () => {
+export const Navbar = async () => {
+	const user = await auth()
+
 	return (
 		<header className="fixed z-10 flex w-full items-center justify-between bg-background px-4 py-2">
 			<NavbarBreadCrumb />
@@ -17,7 +20,7 @@ export const Navbar = () => {
 						New Research
 					</Link>
 
-					<Link className={cn(buttonVariants({ variant: "text", size: "sm" }))} href="/research">
+					<Link className={cn(buttonVariants({ variant: "text", size: "sm" }))} href={`/user/${user.userId}/research`}>
 						Your Research
 					</Link>
 

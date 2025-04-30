@@ -17,7 +17,7 @@ type Props = {
 
 export const HomePageResearchCard = (props: Props & { user: User | undefined }) => {
 	return (
-		<Link href={`/research/${props.research.id}`} className={cn(cardVariants(), "p-4")}>
+		<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants(), "p-4")}>
 			<CardTitle className="text-2xl">{props.research.name}</CardTitle>
 
 			<CardFooter className="mt-auto gap-5 p-0">
@@ -32,7 +32,7 @@ export const HomePageResearchCard = (props: Props & { user: User | undefined }) 
 export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 	return (
 		<div className="relative">
-			<Link href={`/research/${props.research.id}`} className={cardVariants({ padding: "sm" })}>
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ padding: "sm" })}>
 				<CardHeader>
 					<p className="text-muted-foreground">{props.research.createdAt.toLocaleDateString()}</p>
 					<CardTitle>{props.research.name}</CardTitle>

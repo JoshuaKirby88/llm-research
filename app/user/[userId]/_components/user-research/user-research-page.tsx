@@ -1,7 +1,7 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
 import { ArchiveIcon, CheckCircle2Icon, FlaskConicalIcon, NotebookPenIcon } from "lucide-react"
-import { ResearchPage } from "./_components/research-page"
+import { ResearchPage } from "./research-page"
 
 const config = {
 	tabs: [
@@ -12,12 +12,12 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { searchParams: NextSearchParams }) => {
+export const UserResearchPage = async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
 
 	return (
-		<div className="w-full max-w-2xl">
-			<PageTabs tabs={config.tabs} searchParams={searchParams}>
+		<div className="w-full">
+			<PageTabs tabs={config.tabs} searchParams={searchParams} orientation="vertical">
 				<PageTabsList tabs={config.tabs} />
 
 				{config.tabs.map(tab => (
@@ -29,5 +29,3 @@ const Page = async (props: { searchParams: NextSearchParams }) => {
 		</div>
 	)
 }
-
-export default Page

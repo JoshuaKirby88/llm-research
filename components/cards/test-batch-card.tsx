@@ -12,7 +12,7 @@ type Props = {
 export const TestBatchCard = (props: { user: User | undefined; children?: React.ReactNode } & Props) => {
 	return (
 		<div className="relative">
-			<Link href={`/research/${props.testBatch.researchId}/test/${props.testBatch.id}`} className={cardVariants({ padding: "sm" })}>
+			<Link href={`/user/${props.user?.id}/research/${props.testBatch.researchId}/test/${props.testBatch.id}`} className={cardVariants({ padding: "sm" })}>
 				<CardHeader>
 					<p className="text-muted-foreground">{props.testBatch.createdAt.toLocaleDateString()}</p>
 					<p>Models: {props.testModelBatches.map(tmb => tmb.model).join(", ")}</p>

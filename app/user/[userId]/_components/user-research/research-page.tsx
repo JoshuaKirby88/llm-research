@@ -15,7 +15,7 @@ export const ResearchPage = Suspense(async (props: { tab: (typeof userResearchPa
 		where: DrizzleService.where(Research, {
 			userId: user.userId,
 			isArchived: false,
-			...(props.tab === "All" ? {} : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
+			...(props.tab === "All" ? {} : props.tab === "Starred" ? { isStarred: true } : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
 		}),
 		with: {
 			userToStarredResearches: {

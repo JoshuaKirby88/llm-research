@@ -60,7 +60,7 @@ const ResearchCardDropdown = ({ research, userToStarredResearch, ...props }: Pro
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuFormActionItem action={(userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: research.id })}>
+				<DropdownMenuFormActionItem action={(userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: research.id, researchUserId: research.userId })}>
 					{userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
 					{userToStarredResearch ? "Unstar" : "Star"}
 				</DropdownMenuFormActionItem>

@@ -1,5 +1,4 @@
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
-- [ ] See your starred research
 - [ ] Populate research overview page with all info
 - [ ] Visually mark replaced variables when showing messages
 - [ ] Check if deleting non-existant vector errors

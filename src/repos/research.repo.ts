@@ -5,7 +5,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, inArray } from "drizzle-orm"
 import { and, eq, or } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
-import { TableSQLUpdate } from "../services/drizzle.service"
+import { TableMixedSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
 
 export class ResearchRepo {
@@ -27,7 +27,7 @@ export class ResearchRepo {
 		return researches
 	}
 
-	static async update(id: ResearchT["id"], input: Omit<UpdateResearchT, "id"> | TableSQLUpdate<typeof Research>) {
+	static async update(id: ResearchT["id"], input: TableMixedSQLUpdate<Omit<UpdateResearchT, "id">>) {
 		const [updatedResearch] = await db.update(Research).set(input).where(eq(Research.id, id)).returning()
 
 		return updatedResearch

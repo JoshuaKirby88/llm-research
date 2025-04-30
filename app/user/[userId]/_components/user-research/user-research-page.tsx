@@ -1,6 +1,6 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
-import { ArchiveIcon, CheckCircle2Icon, FlaskConicalIcon, NotebookPenIcon } from "lucide-react"
+import { ArchiveIcon, CheckCircle2Icon, FlaskConicalIcon, NotebookPenIcon, StarIcon } from "lucide-react"
 import { ResearchPage } from "./research-page"
 
 const config = {
@@ -8,6 +8,7 @@ const config = {
 		{ value: "All", icon: FlaskConicalIcon },
 		{ value: "Complete", icon: CheckCircle2Icon },
 		{ value: "Researching", icon: NotebookPenIcon },
+		{ value: "Starred", icon: StarIcon },
 		{ value: "Archived", icon: ArchiveIcon },
 	],
 } as const

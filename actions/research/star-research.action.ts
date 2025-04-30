@@ -12,14 +12,17 @@ import { z } from "zod"
 
 export const starResearchAction = createAction(
 	"signedIn",
-	z.object({ researchId: researchSchema.shape.id }),
+	z.object({ researchId: researchSchema.shape.id, researchUserId: researchSchema.shape.userId }),
 )(async ({ user, input }) => {
-	await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, 1) })
+	await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })
 
 	await transaction(async () => {
-		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })
+		await ResearchRepo.update(input.researchId, {
+			starCount: DrizzleService.increment(Research.starCount, 1),
+			isStarred: user.userId === input.researchUserId ? true : undefined,
+		})
 	}).onError(async () => {
-		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, -1) })
+		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
 	})
 
 	revalidatePath("/")
@@ -27,14 +30,17 @@ export const starResearchAction = createAction(
 
 export const unstarResearchAction = createAction(
 	"signedIn",
-	z.object({ researchId: researchSchema.shape.id }),
+	z.object({ researchId: researchSchema.shape.id, researchUserId: researchSchema.shape.userId }),
 )(async ({ user, input }) => {
-	await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, -1) })
+	await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
 
 	await transaction(async () => {
-		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
+		await ResearchRepo.update(input.researchId, {
+			starCount: DrizzleService.increment(Research.starCount, -1),
+			isStarred: user.userId === input.researchUserId ? false : undefined,
+		})
 	}).onError(async () => {
-		await ResearchRepo.update(input.researchId, { starCount: DrizzleService.increment(Research.starCount, 1) })
+		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })
 	})
 
 	revalidatePath("/")

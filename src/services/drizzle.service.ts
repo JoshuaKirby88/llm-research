@@ -4,6 +4,9 @@ type TypeSafeTable<T extends Table> = T & Record<TableKey<T>, T["_"]["columns"][
 export type TableWhere<T extends Table> = Partial<T["$inferSelect"]>
 type TableKey<T extends Table> = keyof T["_"]["columns"]
 export type TableSQLUpdate<T extends Table> = Partial<Record<TableKey<T>, SQL>>
+export type TableMixedSQLUpdate<U> = {
+	[K in keyof U]?: U[K] | SQL
+}
 
 export class DrizzleService {
 	private static batchInsertSize = 10

@@ -26,13 +26,13 @@ export const NavbarBreadCrumb = () => {
 
 				{paths.map((path, i) => (
 					<React.Fragment key={i}>
-						<BreadcrumbItem>
+						<BreadcrumbItem className="max-w-24">
 							{i < paths.length - 1 && !config.nonLinkPaths.includes(path) ? (
-								<BreadcrumbLink href={`/${paths.slice(0, i + 1).join("/")}`} className="inline-flex items-center gap-1.5 capitalize">
+								<BreadcrumbLink href={`/${paths.slice(0, i + 1).join("/")}`} className="truncate capitalize">
 									{path}
 								</BreadcrumbLink>
 							) : (
-								<BreadcrumbPage className="capitalize">{path}</BreadcrumbPage>
+								<BreadcrumbPage className="truncate capitalize">{path}</BreadcrumbPage>
 							)}
 						</BreadcrumbItem>
 

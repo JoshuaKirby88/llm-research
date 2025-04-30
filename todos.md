@@ -1,4 +1,3 @@
-- [ ] Truncate breadcrumb items that are too long (userId)
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] See your starred research
 - [ ] Populate research overview page with all info

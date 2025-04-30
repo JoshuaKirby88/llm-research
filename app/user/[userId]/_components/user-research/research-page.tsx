@@ -21,15 +21,27 @@ export const ResearchPage = Suspense(async (props: { tab: (typeof userResearchPa
 			userToStarredResearches: {
 				where: eq(UserToStarredResearch.userId, user.userId),
 			},
+			dependentValues: true,
+			testBatches: {
+				with: { testBatchResults: true },
+			},
 		},
 		orderBy: desc(Research.id),
 	})
 
-	const [researches, { userToStarredResearches }] = destructureArray(result, { userToStarredResearches: true })
+	const [researches, { userToStarredResearches, dependentValues, testBatches: testBatchesWithResults }] = destructureArray(result, {
+		userToStarredResearches: true,
+		dependentValues: true,
+		testBatches: true,
+	})
 
 	return researches.map(research => {
 		const userToStarredResearch = userToStarredResearches.find(utsr => utsr.researchId === research.id)
+		const filteredDependentValues = dependentValues.filter(dv => dv.researchId === research.id)
+		const filteredTestBatchResults = testBatchesWithResults.filter(tb => tb.researchId === research.id).flatMap(tb => tb.testBatchResults)
 
-		return <ResearchCard key={research.id} research={research} userToStarredResearch={userToStarredResearch} />
+		return (
+			<ResearchCard key={research.id} research={research} userToStarredResearch={userToStarredResearch} dependentValues={filteredDependentValues} testBatchResults={filteredTestBatchResults} />
+		)
 	})
 })

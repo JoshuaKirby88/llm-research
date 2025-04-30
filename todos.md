@@ -1,4 +1,3 @@
-- [ ] Mark research as complete
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Populate research overview page with all info
 - [ ] Visually mark replaced variables when showing messages

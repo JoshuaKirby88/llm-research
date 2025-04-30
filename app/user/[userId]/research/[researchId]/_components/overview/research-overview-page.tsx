@@ -2,9 +2,9 @@ import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/sr
 import { cn } from "@/utils/cn"
 import { User } from "@clerk/nextjs/server"
 import omit from "lodash.omit"
-import { CalendarIcon, LucideIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, CheckCircle2Icon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
-import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader } from "./research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "./research-chart"
 
 export const ResearchOverviewPage = (props: { researchUser: User; research: ResearchT; contributors: ContributorT[]; dependentValues: DependentValueT[]; testBatchResults: TestBatchResultT[] }) => {
 	return (
@@ -16,6 +16,7 @@ export const ResearchOverviewPage = (props: { researchUser: User; research: Rese
 					<ResearchChartHeader />
 					<ResearchChart />
 					<ResearchChartFooter />
+					<ResearchChartNoResultOverlay />
 				</ResearchChartCard>
 
 				<div className="flex flex-col gap-2">
@@ -26,6 +27,7 @@ export const ResearchOverviewPage = (props: { researchUser: User; research: Rese
 						</Link>
 					</BulletItem>
 					<BulletItem icon={UserIcon}>{props.contributors.map(c => c.id)}</BulletItem>
+					<BulletItem icon={CheckCircle2Icon}>Stats: {props.research.isComplete ? "Complete" : "Researching"}</BulletItem>
 				</div>
 			</div>
 		</div>

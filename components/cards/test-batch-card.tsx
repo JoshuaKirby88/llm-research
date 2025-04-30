@@ -1,4 +1,4 @@
-import { ResearchChart, ResearchChartCard } from "@/app/user/[userId]/research/[researchId]/_components/overview/research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/app/user/[userId]/research/[researchId]/_components/overview/research-chart"
 import { DependentValueT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { User } from "@clerk/nextjs/server"
 import Link from "next/link"
@@ -26,6 +26,7 @@ export const TestBatchCard = (props: { user: User | undefined; children?: React.
 
 					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
 						<ResearchChart />
+						<ResearchChartNoResultOverlay />
 					</ResearchChartCard>
 				</CardContent>
 

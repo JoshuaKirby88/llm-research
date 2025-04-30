@@ -20,8 +20,6 @@ export const ResearchChartCard = ({ dependentValues, testBatchResults, ...props 
 		<context.Provider value={{ dependentValues, testBatchResults }}>
 			<Card padding="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)}>
 				{props.children}
-
-				{!testBatchResults.length && <ResearchChartNoResultOverlay />}
 			</Card>
 		</context.Provider>
 	)
@@ -76,12 +74,16 @@ export const ResearchChartFooter = () => {
 	)
 }
 
-const ResearchChartNoResultOverlay = () => {
+export const ResearchChartNoResultOverlay = (props: { className?: string }) => {
+	const { testBatchResults } = useContext(context)!
+
 	return (
-		<div className="absolute inset-0 flex items-center justify-center bg-background/90">
-			<Card padding="xs" className="shadow">
-				Run tests to view results.
-			</Card>
-		</div>
+		!testBatchResults.length && (
+			<div className={cn("absolute inset-2 flex items-center justify-center bg-background/90", props.className)}>
+				<Card padding="xs" className="shadow">
+					Run tests to view results.
+				</Card>
+			</div>
+		)
 	)
 }

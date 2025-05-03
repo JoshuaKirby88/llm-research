@@ -34,6 +34,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 	const result = await db.query.Research.findFirst({
 		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
 		with: {
+			forkedResearch: true,
 			contributors: true,
 			independentVariable: {
 				with: {
@@ -73,6 +74,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 	}
 
 	const {
+		forkedResearch,
 		contributors,
 		independentVariable: _independentVariable,
 		blockingVariables: blockingVariablesWithValues,
@@ -112,7 +114,14 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 				</div>
 
 				<TabsContent value="Overview">
-					<ResearchOverviewPage currentUser={currentUser} research={research} contributors={contributors} dependentValues={dependentValues} testBatchResults={testBatchResults} />
+					<ResearchOverviewPage
+						currentUser={currentUser}
+						research={research}
+						forkedResearch={forkedResearch}
+						contributors={contributors}
+						dependentValues={dependentValues}
+						testBatchResults={testBatchResults}
+					/>
 				</TabsContent>
 
 				<TabsContent value="Test Runs">

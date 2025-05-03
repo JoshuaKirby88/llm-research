@@ -1,6 +1,6 @@
 import { AIFeature, AIModelArr } from "@/src/features"
 import { and, eq, isNotNull, isNull, or, relations, sql } from "drizzle-orm"
-import { check, integer, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core"
+import { AnySQLiteColumn, check, integer, primaryKey, sqliteTable, text, unique } from "drizzle-orm/sqlite-core"
 
 const defaultColumns = {
 	createdAt: integer({ mode: "timestamp_ms" })
@@ -33,6 +33,7 @@ export const Research = sqliteTable(
 		isArchived: integer({ mode: "boolean" }).notNull().default(false),
 		isUserDeleted: integer({ mode: "boolean" }).notNull().default(false),
 		userId: text().notNull(),
+		forkedResearchId: integer().references((): AnySQLiteColumn => Research.id, { onDelete: "set null" }),
 		...defaultColumns,
 	},
 	table => [check("isComplete", or(and(eq(table.isComplete, sql`false`), isNull(table.conclusion)), and(eq(table.isComplete, sql`true`), isNotNull(table.conclusion)))!)],
@@ -282,6 +283,10 @@ export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	dependentValues: many(DependentValue),
 	testBatches: many(TestBatch),
 	researchResults: many(ResearchResult),
+	forkedResearch: one(Research, {
+		fields: [Research.forkedResearchId],
+		references: [Research.id],
+	}),
 }))
 
 export const UserToStarredResearchRelations = relations(UserToStarredResearch, ({ one }) => ({

@@ -5,17 +5,24 @@ import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
 import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
 import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
 import { createAction } from "@/utils/actions/create-action"
+import { getParamsFromHeaders } from "@/utils/get-params-from-headers"
 import { redirect } from "next/navigation"
 
 export const createResearchAction = createAction(
 	"signedIn",
 	createResearchISchema,
 )(async ({ user, input }) => {
+	const forkedResearchId = await getParamsFromHeaders("/new")
+
 	const systemMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.systemMessagePrompt.text)
 	const userMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.userMessagePrompt.text)
 	const evalPrompt = SlashEditorFeature.tiptapStringToCustomString(input.evalPrompt.text)
 
-	const newResearch = await ResearchRepo.insert({ userId: user.userId, name: input.research.name })
+	const newResearch = await ResearchRepo.insert({
+		userId: user.userId,
+		name: input.research.name,
+		forkedResearchId: forkedResearchId ? Number.parseInt(forkedResearchId) : null,
+	})
 
 	await transaction(async () => {
 		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name })

@@ -2,17 +2,20 @@ import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/sr
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { cn } from "@/utils/cn"
 import omit from "lodash.omit"
-import { CalendarIcon, CheckCircle2Icon, LucideIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, CheckCircle2Icon, GitForkIcon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "./research-chart"
 
-export const ResearchOverviewPage = (props: {
+type Props = {
 	currentUser: ClerkQueriedUser
 	research: ResearchT
+	forkedResearch: ResearchT | null
 	contributors: ContributorT[]
 	dependentValues: DependentValueT[]
 	testBatchResults: TestBatchResultT[]
-}) => {
+}
+
+export const ResearchOverviewPage = (props: Props) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>
@@ -34,6 +37,14 @@ export const ResearchOverviewPage = (props: {
 					</BulletItem>
 					<BulletItem icon={UserIcon}>{props.contributors.map(c => c.id)}</BulletItem>
 					<BulletItem icon={CheckCircle2Icon}>Stats: {props.research.isComplete ? "Complete" : "Researching"}</BulletItem>
+					{props.forkedResearch && (
+						<BulletItem icon={GitForkIcon}>
+							<p className="whitespace-pre-wrap">Forked: </p>
+							<Link href={`/user/${props.forkedResearch.userId}/research/${props.forkedResearch.id}`} className="truncate text-blue-600 hover:underline">
+								{props.forkedResearch.name}
+							</Link>
+						</BulletItem>
+					)}
 				</div>
 			</div>
 		</div>

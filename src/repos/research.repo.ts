@@ -5,12 +5,17 @@ import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, inArray } from "drizzle-orm"
 import { and, eq, or } from "drizzle-orm"
 import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
+import { ClerkPublicUser } from "../services/clerk.service"
 import { TableMixedSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
 
 export class ResearchRepo {
-	static getPublicWhere(input: Pick<ResearchT, "userId">) {
-		return or(eq(Research.userId, input.userId), and(eq(Research.isComplete, true), eq(Research.isArchived, false)))
+	static getPublicWhere(input: { userId: ClerkPublicUser["userId"] }) {
+		if (input.userId) {
+			return or(eq(Research.userId, input.userId), and(eq(Research.isComplete, true), eq(Research.isArchived, false)))
+		} else {
+			return and(eq(Research.isComplete, true), eq(Research.isArchived, false))
+		}
 	}
 
 	static async insert(input: InsertResearchT) {
@@ -73,9 +78,9 @@ export class ResearchRepo {
 		const researchIdsToDelete = researches.filter(r => ResearchTable.canDelete(r)).map(r => r.id)
 		const researchIdsToKeep = researches.filter(r => !ResearchTable.canDelete(r)).map(r => r.id)
 
+		await this.deleteVectors(researchIdsToDelete)
+
 		await db.delete(Research).where(inArray(Research.id, researchIdsToDelete))
 		await db.update(Research).set({ isUserDeleted: true }).where(inArray(Research.id, researchIdsToKeep))
-
-		await this.deleteVectors(researchIdsToDelete)
 	}
 }

@@ -1,12 +1,18 @@
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/src/schemas"
+import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { cn } from "@/utils/cn"
-import { User } from "@clerk/nextjs/server"
 import omit from "lodash.omit"
 import { CalendarIcon, CheckCircle2Icon, LucideIcon, UserIcon } from "lucide-react"
 import Link from "next/link"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "./research-chart"
 
-export const ResearchOverviewPage = (props: { researchUser: User; research: ResearchT; contributors: ContributorT[]; dependentValues: DependentValueT[]; testBatchResults: TestBatchResultT[] }) => {
+export const ResearchOverviewPage = (props: {
+	currentUser: ClerkQueriedUser
+	research: ResearchT
+	contributors: ContributorT[]
+	dependentValues: DependentValueT[]
+	testBatchResults: TestBatchResultT[]
+}) => {
 	return (
 		<div className="flex flex-col gap-4">
 			<h1 className="font-semibold text-3xl">{props.research.name}</h1>
@@ -23,7 +29,7 @@ export const ResearchOverviewPage = (props: { researchUser: User; research: Rese
 					<BulletItem icon={CalendarIcon}>{props.research.createdAt.toLocaleDateString()}</BulletItem>
 					<BulletItem icon={UserIcon}>
 						<Link href={`/user/${props.research.userId}`} className="text-blue-600 hover:underline">
-							{props.researchUser.fullName}
+							{props.currentUser.fullName}
 						</Link>
 					</BulletItem>
 					<BulletItem icon={UserIcon}>{props.contributors.map(c => c.id)}</BulletItem>

@@ -45,10 +45,10 @@ export const searchResearchAction = createAction(
 			})
 		: []
 
-	const users = await ClerkService.getUsers(researches.map(r => r.userId))
+	const queriedUsers = await ClerkService.queryUsers(researches.map(r => r.userId))
 
 	return {
-		users,
+		queriedUsers,
 		researches,
 		userToStarredResearches,
 	}

@@ -1,15 +1,17 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
-import { ContributorT, DependentValueT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { ClerkUser } from "@/src/services/clerk.service"
-import { User } from "@clerk/nextjs/server"
+import { ContributorT, DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
+import { ClerkPublicUser, ClerkQueriedUser } from "@/src/services/clerk.service"
 import { BeanOffIcon, UserIcon, UsersIcon } from "lucide-react"
 import { TestRunTabPage } from "./_components/test-run-tab-page"
 
+export type TestRunTabId = "All" | "Own" | "Contributions"
+
 type Props = {
 	searchParams: Awaited<NextSearchParams>
-	user: ClerkUser
-	users: User[]
+	user: ClerkPublicUser
+	queriedUsers: ClerkQueriedUser[]
+	research: ResearchT
 	contributors: ContributorT[]
 	testBatches: TestBatchT[]
 	testModelBatches: TestModelBatchT[]
@@ -19,26 +21,27 @@ type Props = {
 
 const config = {
 	tabName: "tests",
-	tabs: [
-		{ value: "All", icon: BeanOffIcon },
-		{ value: "Yours", icon: UserIcon },
-		{ value: "Contributions", icon: UsersIcon },
-	],
-} as const
-export const testRunPageConfig = config
+	tabs: (input: { research: ResearchT; user: ClerkPublicUser }) =>
+		[
+			{ key: "All", value: "All", icon: BeanOffIcon },
+			{ key: "Own", value: input.research.userId === input.user.userId ? "Yours" : "Own", icon: UserIcon },
+			{ key: "Contributions", value: "Contributions", icon: UsersIcon },
+		] as const satisfies { key: TestRunTabId; [key: string]: any }[],
+}
 
 export const TestRunPage = (props: Props) => {
 	return (
 		<div className="flex w-full">
-			<PageTabs tabs={config.tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
-				<PageTabsList name={config.tabName} tabs={config.tabs} />
+			<PageTabs tabs={config.tabs(props)} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
+				<PageTabsList name={config.tabName} tabs={config.tabs(props)} />
 
-				{config.tabs.map(tab => (
+				{config.tabs(props).map(tab => (
 					<TabsContent key={tab.value} value={tab.value} className="w-full space-y-10">
 						<TestRunTabPage
-							tab={tab.value}
+							tab={tab.key}
 							user={props.user}
-							users={props.users}
+							queriedUsers={props.queriedUsers}
+							research={props.research}
 							contributors={props.contributors}
 							testBatches={props.testBatches}
 							testModelBatches={props.testModelBatches}

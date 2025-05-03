@@ -3,12 +3,12 @@ import { cn } from "@/utils/cn"
 import { LucideIcon } from "lucide-react"
 import { QueryStateSlot } from "./query-state-slot"
 
-type Tab = { value: string; icon?: LucideIcon; iconNode?: React.ReactNode }
+type Tab = { key?: string; value: string; icon?: LucideIcon; iconNode?: React.ReactNode }
 
 export const PageTabs = ({ tabs, name, searchParams, ...props }: { tabs: readonly Tab[]; name?: string; searchParams: Awaited<NextSearchParams> } & React.ComponentProps<typeof Tabs>) => {
 	const searchParamKey = name ?? "tab"
 	const searchParamValue = Array.isArray(searchParams[searchParamKey]) ? searchParams[searchParamKey].join(" ") : searchParams[searchParamKey]
-	const defaultTab = tabs.map(tab => tab.value).includes(searchParamValue!) ? searchParamValue : tabs[0].value
+	const defaultTab = tabs.map(tab => tab.key ?? tab.value).includes(searchParamValue!) ? searchParamValue : (tabs[0].key ?? tabs[0].value)
 
 	return <Tabs defaultValue={defaultTab} {...props} />
 }
@@ -16,15 +16,19 @@ export const PageTabs = ({ tabs, name, searchParams, ...props }: { tabs: readonl
 export const PageTabsList = ({ tabs, name, ...props }: { tabs: readonly Tab[]; name?: string } & React.ComponentProps<typeof TabsList>) => {
 	return (
 		<TabsList {...props} className={cn("mb-10 data-[orientation=vertical]:mr-5 data-[orientation=vertical]:mb-0", props.className)}>
-			{tabs.map(tab => (
-				<QueryStateSlot key={tab.value} name={name ?? "tab"} value={tab.value}>
-					<TabsTrigger value={tab.value} className={cn("gap-2")}>
-						{tab.icon && <tab.icon className="text-muted-foreground" />}
-						{tab.iconNode}
-						{tab.value}
-					</TabsTrigger>
-				</QueryStateSlot>
-			))}
+			{tabs.map(tab => {
+				const tabId = tab.key ?? tab.value
+
+				return (
+					<QueryStateSlot key={tabId} name={name ?? "tab"} value={tabId}>
+						<TabsTrigger value={tabId} className="gap-2">
+							{tab.icon && <tab.icon className="text-muted-foreground" />}
+							{tab.iconNode}
+							{tab.value}
+						</TabsTrigger>
+					</QueryStateSlot>
+				)
+			})}
 		</TabsList>
 	)
 }

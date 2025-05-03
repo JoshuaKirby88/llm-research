@@ -1,21 +1,24 @@
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/app/user/[userId]/research/[researchId]/_components/overview/research-chart"
-import { DependentValueT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { User } from "@clerk/nextjs/server"
+import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
+import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import Link from "next/link"
 import { ClerkPFP } from "../clerk/clerk-pfp"
 import { CardContent, CardFooter, cardVariants } from "../ui/card"
 
 type Props = {
+	research: ResearchT
+	currentUser: ClerkQueriedUser | undefined
 	dependentValues: DependentValueT[]
 	testBatch: TestBatchT
 	testModelBatches: TestModelBatchT[]
 	testBatchResults: TestBatchResultT[]
+	children?: React.ReactNode
 }
 
-export const TestBatchCard = (props: { user: User | undefined; children?: React.ReactNode } & Props) => {
+export const TestBatchCard = (props: Props) => {
 	return (
 		<div className="relative">
-			<Link href={`/user/${props.user?.id}/research/${props.testBatch.researchId}/test/${props.testBatch.id}`} className={cardVariants({ padding: "sm" })}>
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}/test/${props.testBatch.id}`} className={cardVariants({ padding: "sm" })}>
 				<CardContent className="flex justify-between">
 					<div>
 						<p className="text-muted-foreground">{props.testBatch.createdAt.toLocaleDateString()}</p>
@@ -33,7 +36,7 @@ export const TestBatchCard = (props: { user: User | undefined; children?: React.
 				{props.children}
 
 				<CardFooter>
-					<ClerkPFP size="sm" user={props.user} />
+					<ClerkPFP size="sm" user={props.currentUser} />
 				</CardFooter>
 			</Link>
 		</div>

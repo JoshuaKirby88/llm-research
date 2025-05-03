@@ -12,6 +12,7 @@ const config = {
 } as const
 
 const Page = async (props: { params: Promise<{ userId: string }>; searchParams: NextSearchParams }) => {
+	const params = await props.params
 	const searchParams = await props.searchParams
 
 	return (
@@ -22,7 +23,7 @@ const Page = async (props: { params: Promise<{ userId: string }>; searchParams: 
 				<TabsContent value="User"></TabsContent>
 
 				<TabsContent value="Research">
-					<UserResearchPage searchParams={props.searchParams} />
+					<UserResearchPage params={params} searchParams={searchParams} />
 				</TabsContent>
 
 				<TabsContent value="Contributions"></TabsContent>

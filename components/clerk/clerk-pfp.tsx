@@ -1,4 +1,4 @@
-import { User } from "@clerk/nextjs/server"
+import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { ComponentProps } from "react"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
 
@@ -12,7 +12,7 @@ const variants = {
 	} satisfies Record<keyof AvatarProps["size"], any>,
 }
 
-export const ClerkPFP = async ({ user, ...props }: { user: User | undefined } & PickRequired<ComponentProps<typeof Avatar>, "size">) => {
+export const ClerkPFP = async ({ user, ...props }: { user: ClerkQueriedUser | undefined } & PickRequired<ComponentProps<typeof Avatar>, "size">) => {
 	const params = new URLSearchParams()
 
 	params.set("height", variants.size[props.size].toString())

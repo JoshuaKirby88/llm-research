@@ -7,17 +7,17 @@ import { Button } from "@/components/ui/button"
 import { resultIsValid } from "@/utils/actions/result-is-valid"
 import { FlaskConicalIcon, TestTubeDiagonalIcon } from "lucide-react"
 
-export const ResearchesSearchResult = Suspense(async (props: { searchParams: NextSearchParams }) => {
+export const ResearchSearchResult = Suspense(async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
-	const { users, researches, userToStarredResearches } = await resultIsValid(searchResearchAction({ search: searchParams.search }))
+	const { queriedUsers, researches, userToStarredResearches } = await resultIsValid(searchResearchAction({ search: searchParams.search }))
 
 	if (researches.length) {
 		return (
 			<div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
 				{researches.map(research => {
-					const user = users.find(u => u.id === research.userId)
+					const currentUser = queriedUsers.find(queriedUser => queriedUser.id === research.userId)
 					const userToStarredResearch = userToStarredResearches.find(utsr => utsr.researchId === research.id)
-					return <HomePageResearchCard key={research.id} user={user!} research={research} userToStarredResearch={userToStarredResearch} />
+					return <HomePageResearchCard key={research.id} currentUser={currentUser} research={research} userToStarredResearch={userToStarredResearch} />
 				})}
 			</div>
 		)

@@ -12,14 +12,14 @@ import { z } from "zod"
 
 export const starResearchAction = createAction(
 	"signedIn",
-	z.object({ researchId: researchSchema.shape.id, researchUserId: researchSchema.shape.userId }),
+	z.object({ researchId: researchSchema.shape.id, currentUserId: researchSchema.shape.userId }),
 )(async ({ user, input }) => {
 	await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })
 
 	await transaction(async () => {
 		await ResearchRepo.update(input.researchId, {
 			starCount: DrizzleService.increment(Research.starCount, 1),
-			isStarred: user.userId === input.researchUserId ? true : undefined,
+			isStarred: user.userId === input.currentUserId ? true : undefined,
 		})
 	}).onError(async () => {
 		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
@@ -30,14 +30,14 @@ export const starResearchAction = createAction(
 
 export const unstarResearchAction = createAction(
 	"signedIn",
-	z.object({ researchId: researchSchema.shape.id, researchUserId: researchSchema.shape.userId }),
+	z.object({ researchId: researchSchema.shape.id, currentUserId: researchSchema.shape.userId }),
 )(async ({ user, input }) => {
 	await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
 
 	await transaction(async () => {
 		await ResearchRepo.update(input.researchId, {
 			starCount: DrizzleService.increment(Research.starCount, -1),
-			isStarred: user.userId === input.researchUserId ? false : undefined,
+			isStarred: user.userId === input.currentUserId ? false : undefined,
 		})
 	}).onError(async () => {
 		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })

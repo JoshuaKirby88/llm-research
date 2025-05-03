@@ -1,7 +1,7 @@
 import { Suspense } from "@/components/suspense"
 import { Input } from "@/components/ui/input"
 
-export const ResearchesSearchForm = Suspense(async (props: { searchParams: NextSearchParams }) => {
+export const ResearchSearchForm = Suspense(async (props: { searchParams: NextSearchParams }) => {
 	const searchParams = await props.searchParams
 	const { search } = searchParams
 

@@ -15,7 +15,7 @@ import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-con
 const Page = async (props: { params: Promise<{ researchId: string; testBatchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
-	const user = await authProcedure("signedIn")
+	const user = await authProcedure("public")
 
 	const result = await db.query.Research.findFirst({
 		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),

@@ -1,7 +1,7 @@
 import { newResearchAction } from "@/actions/research/new-research.action"
 import { FormActionButton } from "@/components/form/server/form-action-button"
-import { ResearchesSearchForm } from "./_components/page/researches-search-form"
-import { ResearchesSearchResult } from "./_components/page/researches-search-result"
+import { ResearchSearchForm } from "./_components/page/research-search-form"
+import { ResearchSearchResult } from "./_components/page/research-search-result"
 
 const Page = (props: { searchParams: NextSearchParams }) => (
 	<>
@@ -11,9 +11,9 @@ const Page = (props: { searchParams: NextSearchParams }) => (
 			New Research
 		</FormActionButton>
 
-		<ResearchesSearchForm searchParams={props.searchParams} />
+		<ResearchSearchForm searchParams={props.searchParams} />
 
-		<ResearchesSearchResult searchParams={props.searchParams} />
+		<ResearchSearchResult searchParams={props.searchParams} />
 	</>
 )
 

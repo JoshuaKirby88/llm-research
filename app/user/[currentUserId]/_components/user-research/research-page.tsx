@@ -37,7 +37,14 @@ export const ResearchPage = Suspense(async (props: { params: NextParam<"currentU
 		const filteredTestBatchResults = testBatchesWithResults.filter(tb => tb.researchId === research.id).flatMap(tb => tb.testBatchResults)
 
 		return (
-			<ResearchCard key={research.id} research={research} userToStarredResearch={userToStarredResearch} dependentValues={filteredDependentValues} testBatchResults={filteredTestBatchResults} />
+			<ResearchCard
+				key={research.id}
+				user={props.user}
+				research={research}
+				userToStarredResearch={userToStarredResearch}
+				dependentValues={filteredDependentValues}
+				testBatchResults={filteredTestBatchResults}
+			/>
 		)
 	})
 })

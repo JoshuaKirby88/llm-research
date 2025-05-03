@@ -4,12 +4,12 @@ import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "
 import { CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuFormActionItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkPublicUser, ClerkQueriedUser } from "@/src/services/clerk.service"
 import { cn } from "@/utils/cn"
 import { ArchiveIcon, ArchiveRestoreIcon, EllipsisIcon, StarIcon, StarOffIcon } from "lucide-react"
 import Link from "next/link"
 import { ClerkPFP } from "../clerk/clerk-pfp"
-import { Button } from "../ui/button"
+import { buttonVariants } from "../ui/button"
 
 type Props = {
 	research: ResearchT
@@ -32,7 +32,7 @@ export const HomePageResearchCard = ({ currentUser, ...props }: Pick<Props, "res
 	)
 }
 
-export const ResearchCard = ({ children, ...props }: Props & { children?: React.ReactNode }) => {
+export const ResearchCard = ({ children, user, ...props }: Props & { user: ClerkPublicUser; children?: React.ReactNode }) => {
 	return (
 		<div className="relative">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ padding: "sm" }), "relative pb-14")}>
@@ -60,39 +60,41 @@ export const ResearchCard = ({ children, ...props }: Props & { children?: React.
 
 			<CardFooter className="absolute inset-x-4 bottom-4 justify-between">
 				<ResearchCardStars {...props} />
-				<ResearchCardDropdown {...props} />
+				<ResearchCardDropdown user={user} {...props} />
 			</CardFooter>
 		</div>
 	)
 }
 
-const ResearchCardDropdown = (props: Props) => {
+const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button variant="matte" size="iconSm">
+		props.user.userId && (
+			<DropdownMenu>
+				<DropdownMenuTrigger className={buttonVariants({ variant: "matte", size: "iconSm" })}>
 					<EllipsisIcon />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent>
-				<DropdownMenuFormActionItem
-					action={(props.userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: props.research.id, currentUserId: props.research.userId })}
-				>
-					{props.userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
-					{props.userToStarredResearch ? "Unstar" : "Star"}
-				</DropdownMenuFormActionItem>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent>
+					<DropdownMenuFormActionItem
+						action={(props.userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: props.research.id, currentUserId: props.research.userId })}
+					>
+						{props.userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
+						{props.userToStarredResearch ? "Unstar" : "Star"}
+					</DropdownMenuFormActionItem>
 
-				<DropdownMenuSeparator />
+					<DropdownMenuSeparator />
 
-				<DropdownMenuFormActionItem
-					variant={props.research.isArchived ? "inverseBlue" : "inverseRed"}
-					action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
-				>
-					{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
-					{props.research.isArchived ? "Restore" : "Archive"}
-				</DropdownMenuFormActionItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+					{props.user.userId === props.research.userId && (
+						<DropdownMenuFormActionItem
+							variant={props.research.isArchived ? "inverseBlue" : "inverseRed"}
+							action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
+						>
+							{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
+							{props.research.isArchived ? "Restore" : "Archive"}
+						</DropdownMenuFormActionItem>
+					)}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		)
 	)
 }
 

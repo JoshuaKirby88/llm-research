@@ -1,5 +1,4 @@
-- [ ] Only render yellow filled star when the user has starred the research
-    - Update "Star" and "Unstar" dropdowns as well
+- [ ] Update "Star" and "Unstar" dropdowns as well
 - [ ] Hide actions like "Archive" on research card
 - [ ] When linking directly to "/user/{userId}", I should try to use queriedUser.userId or currentUser.userId, because this should link to "/user/undefined" if user is deleted.
     - If linking to "/user/{userId}/research/{researchId}", then it's better to link with research.userId.

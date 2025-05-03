@@ -36,7 +36,7 @@ export const UserResearchPage = async (props: { params: NextParam<"currentUserId
 
 				{config.tabs({ params: props.params, user }).map(tab => (
 					<TabsContent key={tab.value} value={tab.value} className="space-y-10">
-						<ResearchPage params={props.params} tab={tab.value} />
+						<ResearchPage params={props.params} tab={tab.value} user={user} />
 					</TabsContent>
 				))}
 			</PageTabs>

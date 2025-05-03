@@ -2,12 +2,13 @@ import { ResearchCard } from "@/components/cards/research-card"
 import { Suspense } from "@/components/suspense"
 import { db } from "@/drizzle/db"
 import { Research, UserToStarredResearch } from "@/drizzle/schema"
+import { ClerkPublicUser } from "@/src/services/clerk.service"
 import { DrizzleService } from "@/src/services/drizzle.service"
 import { destructureArray } from "@/utils/destructure-array"
 import { desc, eq } from "drizzle-orm"
 import { UserResearchPageTabId } from "./user-research-page"
 
-export const ResearchPage = Suspense(async (props: { params: NextParam<"currentUserId">; tab: UserResearchPageTabId }) => {
+export const ResearchPage = Suspense(async (props: { params: NextParam<"currentUserId">; tab: UserResearchPageTabId; user: ClerkPublicUser }) => {
 	const result = await db.query.Research.findMany({
 		where: DrizzleService.where(Research, {
 			userId: props.params.currentUserId,
@@ -15,9 +16,7 @@ export const ResearchPage = Suspense(async (props: { params: NextParam<"currentU
 			...(props.tab === "All" ? {} : props.tab === "Starred" ? { isStarred: true } : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
 		}),
 		with: {
-			userToStarredResearches: {
-				where: eq(UserToStarredResearch.userId, props.params.currentUserId),
-			},
+			userToStarredResearches: props.user.userId ? { where: eq(UserToStarredResearch.userId, props.user.userId) } : { limit: 0 },
 			dependentValues: true,
 			testBatches: {
 				with: { testBatchResults: true },

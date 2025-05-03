@@ -1,4 +1,3 @@
-- [ ] Rename "userId" param to "currentUserId"
 - [ ] Create NextParam type that has all possible params, and use pick
 - [ ] Hide actions like "Archive" on research card
 - [ ] When linking directly to "/user/{userId}", I should try to use queriedUser.userId or currentUser.userId, because this should link to "/user/undefined" if user is deleted.

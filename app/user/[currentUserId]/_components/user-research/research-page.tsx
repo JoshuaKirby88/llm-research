@@ -7,16 +7,16 @@ import { destructureArray } from "@/utils/destructure-array"
 import { desc, eq } from "drizzle-orm"
 import { UserResearchPageTabId } from "./user-research-page"
 
-export const ResearchPage = Suspense(async (props: { params: { userId: string }; tab: UserResearchPageTabId }) => {
+export const ResearchPage = Suspense(async (props: { params: { currentUserId: string }; tab: UserResearchPageTabId }) => {
 	const result = await db.query.Research.findMany({
 		where: DrizzleService.where(Research, {
-			userId: props.params.userId,
+			userId: props.params.currentUserId,
 			isArchived: false,
 			...(props.tab === "All" ? {} : props.tab === "Starred" ? { isStarred: true } : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
 		}),
 		with: {
 			userToStarredResearches: {
-				where: eq(UserToStarredResearch.userId, props.params.userId),
+				where: eq(UserToStarredResearch.userId, props.params.currentUserId),
 			},
 			dependentValues: true,
 			testBatches: {

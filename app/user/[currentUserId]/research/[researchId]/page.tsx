@@ -26,7 +26,7 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { params: Promise<{ userId: string; researchId: string }>; searchParams: NextSearchParams }) => {
+const Page = async (props: { params: Promise<{ currentUserId: string; researchId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")

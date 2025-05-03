@@ -11,7 +11,7 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { params: Promise<{ userId: string }>; searchParams: NextSearchParams }) => {
+const Page = async (props: { params: Promise<{ currentUserId: string }>; searchParams: NextSearchParams }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 

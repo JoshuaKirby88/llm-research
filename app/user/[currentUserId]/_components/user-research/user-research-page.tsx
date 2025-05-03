@@ -8,9 +8,9 @@ import { ResearchPage } from "./research-page"
 export type UserResearchPageTabId = "All" | "Complete" | "Researching" | "Starred" | "Archived"
 
 const config = {
-	tabs: (input: { params: { userId: string }; user: ClerkPublicUser }) => {
+	tabs: (input: { params: { currentUserId: string }; user: ClerkPublicUser }) => {
 		return (
-			input.params.userId === input.user.userId
+			input.params.currentUserId === input.user.userId
 				? [
 						{ value: "All", icon: FlaskConicalIcon },
 						{ value: "Complete", icon: CheckCircle2Icon },
@@ -26,7 +26,7 @@ const config = {
 	},
 }
 
-export const UserResearchPage = async (props: { params: { userId: string }; searchParams: Awaited<NextSearchParams> }) => {
+export const UserResearchPage = async (props: { params: { currentUserId: string }; searchParams: Awaited<NextSearchParams> }) => {
 	const user = await authProcedure("public")
 
 	return (

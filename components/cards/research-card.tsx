@@ -1,6 +1,6 @@
 import { archiveResearchAction, unarchiveResearchAction } from "@/actions/research/archive-research.action"
 import { starResearchAction, unstarResearchAction } from "@/actions/research/star-research.action"
-import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/app/user/[userId]/research/[researchId]/_components/overview/research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/app/user/[currentUserId]/research/[researchId]/_components/overview/research-chart"
 import { CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuFormActionItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } from "@/src/schemas"

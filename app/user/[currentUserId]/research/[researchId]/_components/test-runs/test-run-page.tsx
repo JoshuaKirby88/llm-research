@@ -8,7 +8,7 @@ import { TestRunTabPage } from "./_components/test-run-tab-page"
 export type TestRunTabId = "All" | "Own" | "Contributions"
 
 type Props = {
-	searchParams: Awaited<NextSearchParams>
+	searchParams: Awaited<NextSearchParam>
 	user: ClerkPublicUser
 	queriedUsers: ClerkQueriedUser[]
 	research: ResearchT

@@ -12,7 +12,7 @@ import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-content"
 
-const Page = async (props: { params: Promise<{ researchId: string; testBatchId: string }>; searchParams: NextSearchParams }) => {
+const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")

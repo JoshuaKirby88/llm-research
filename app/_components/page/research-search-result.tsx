@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { resultIsValid } from "@/utils/actions/result-is-valid"
 import { FlaskConicalIcon, TestTubeDiagonalIcon } from "lucide-react"
 
-export const ResearchSearchResult = Suspense(async (props: { searchParams: NextSearchParams }) => {
+export const ResearchSearchResult = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) => {
 	const searchParams = await props.searchParams
 	const { queriedUsers, researches, userToStarredResearches } = await resultIsValid(searchResearchAction({ search: searchParams.search }))
 

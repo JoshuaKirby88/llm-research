@@ -3,7 +3,7 @@ import { FormActionButton } from "@/components/form/server/form-action-button"
 import { ResearchSearchForm } from "./_components/page/research-search-form"
 import { ResearchSearchResult } from "./_components/page/research-search-result"
 
-const Page = (props: { searchParams: NextSearchParams }) => (
+const Page = (props: { searchParams: Promise<NextSearchParam> }) => (
 	<>
 		<h1 className="font-bold text-6xl">LLM Research</h1>
 

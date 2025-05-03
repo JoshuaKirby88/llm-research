@@ -7,7 +7,7 @@ import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { CreateResearchForm } from "./_components/create-research-form"
 
-const Page = async (props: { params: Promise<{ researchIds: string[] | undefined }> }) => {
+const Page = async (props: { params: Promise<NextParam<"researchIds">> }) => {
 	const params = await props.params
 	const user = await authProcedure("signedIn")
 

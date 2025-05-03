@@ -17,7 +17,7 @@ import { AIModelSelect } from "./ai-model-select"
 import { RunTestFormCard } from "./run-test-form-card"
 
 export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentValues: IndependentValueT[]; blockingVariablesWithValues: BlockingVariableWithValueT[] }) => {
-	const params = useParams<{ researchId: string }>()
+	const params = useParams<NextParam<"researchId">>()
 
 	const form = useForm<RunTestFormS>({
 		resolver: zodResolver(runTestFormSchema),

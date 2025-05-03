@@ -14,7 +14,7 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { searchParams: NextSearchParams }) => {
+const Page = async (props: { searchParams: Promise<NextSearchParam> }) => {
 	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
 	const apiKey = await APIKeyRepo.query(user.userId)

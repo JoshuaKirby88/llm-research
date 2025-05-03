@@ -5,7 +5,7 @@ import { QueryStateSlot } from "./query-state-slot"
 
 type Tab = { key?: string; value: string; icon?: LucideIcon; iconNode?: React.ReactNode }
 
-export const PageTabs = ({ tabs, name, searchParams, ...props }: { tabs: readonly Tab[]; name?: string; searchParams: Awaited<NextSearchParams> } & React.ComponentProps<typeof Tabs>) => {
+export const PageTabs = ({ tabs, name, searchParams, ...props }: { tabs: readonly Tab[]; name?: string; searchParams: Awaited<NextSearchParam> } & React.ComponentProps<typeof Tabs>) => {
 	const searchParamKey = name ?? "tab"
 	const searchParamValue = Array.isArray(searchParams[searchParamKey]) ? searchParams[searchParamKey].join(" ") : searchParams[searchParamKey]
 	const defaultTab = tabs.map(tab => tab.key ?? tab.value).includes(searchParamValue!) ? searchParamValue : (tabs[0].key ?? tabs[0].value)

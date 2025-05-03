@@ -8,7 +8,7 @@ import { ResearchPage } from "./research-page"
 export type UserResearchPageTabId = "All" | "Complete" | "Researching" | "Starred" | "Archived"
 
 const config = {
-	tabs: (input: { params: { currentUserId: string }; user: ClerkPublicUser }) => {
+	tabs: (input: { params: NextParam<"currentUserId">; user: ClerkPublicUser }) => {
 		return (
 			input.params.currentUserId === input.user.userId
 				? [
@@ -26,7 +26,7 @@ const config = {
 	},
 }
 
-export const UserResearchPage = async (props: { params: { currentUserId: string }; searchParams: Awaited<NextSearchParams> }) => {
+export const UserResearchPage = async (props: { params: NextParam<"currentUserId">; searchParams: Awaited<NextSearchParam> }) => {
 	const user = await authProcedure("public")
 
 	return (

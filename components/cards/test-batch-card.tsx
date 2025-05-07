@@ -1,4 +1,4 @@
-import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/app/user/[currentUserId]/research/[researchId]/_components/overview/research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import Link from "next/link"

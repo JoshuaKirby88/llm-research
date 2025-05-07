@@ -1,6 +1,8 @@
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import Link from "next/link"
 import { ComponentProps } from "react"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
+import { Badge } from "../ui/badge"
 
 const variants = {
 	size: {
@@ -12,7 +14,12 @@ const variants = {
 	} satisfies Record<keyof AvatarProps["size"], any>,
 }
 
-export const ClerkPFP = async ({ user, ...props }: { user: ClerkQueriedUser | undefined } & PickRequired<ComponentProps<typeof Avatar>, "size">) => {
+export const ClerkPFP = async ({
+	user,
+	nameAsLink,
+	badge,
+	...props
+}: { user: ClerkQueriedUser | undefined; nameAsLink?: boolean; badge?: React.ReactNode } & PickRequired<ComponentProps<typeof Avatar>, "size">) => {
 	const params = new URLSearchParams()
 
 	params.set("height", variants.size[props.size].toString())
@@ -22,12 +29,26 @@ export const ClerkPFP = async ({ user, ...props }: { user: ClerkQueriedUser | un
 
 	return (
 		<div className="flex items-center gap-2">
-			<Avatar {...props}>
-				<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
-				<AvatarFallback />
-			</Avatar>
+			<div className="relative">
+				<Avatar {...props}>
+					<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
+					<AvatarFallback />
+				</Avatar>
 
-			{user?.fullName}
+				{badge && (
+					<Badge className="-top-3 -translate-x-3 absolute left-full border-background" size="roundSm">
+						{badge}
+					</Badge>
+				)}
+			</div>
+
+			{nameAsLink ? (
+				<Link href={`/user/${user?.id}`} className="text-blue-600 hover:underline">
+					{user?.fullName}
+				</Link>
+			) : (
+				user?.fullName
+			)}
 		</div>
 	)
 }

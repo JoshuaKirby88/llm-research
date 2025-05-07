@@ -1,10 +1,9 @@
+import { ClerkPFP } from "@/components/clerk/clerk-pfp"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
-import { cn } from "@/utils/cn"
-import omit from "lodash.omit"
-import { CalendarIcon, CheckCircle2Icon, GitForkIcon, LucideIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, CheckCircle2Icon, GitForkIcon } from "lucide-react"
 import Link from "next/link"
-import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "./research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "../../../../../../../components/research-chart"
 
 type Props = {
 	currentUser: ClerkQueriedUser
@@ -29,33 +28,29 @@ export const ResearchOverviewPage = (props: Props) => {
 				</ResearchChartCard>
 
 				<div className="flex flex-col gap-2">
-					<BulletItem icon={CalendarIcon}>{props.research.createdAt.toLocaleDateString()}</BulletItem>
-					<BulletItem icon={UserIcon}>
-						<Link href={`/user/${props.research.userId}`} className="text-blue-600 hover:underline">
-							{props.currentUser.fullName}
-						</Link>
-					</BulletItem>
-					<BulletItem icon={UserIcon}>{props.contributors.map(c => c.id)}</BulletItem>
-					<BulletItem icon={CheckCircle2Icon}>Stats: {props.research.isComplete ? "Complete" : "Researching"}</BulletItem>
+					<div className="flex items-center gap-2">
+						<ClerkPFP user={props.currentUser} size="sm" badge={props.contributors.find(c => c.userId === props.currentUser.id)!.count} nameAsLink />
+					</div>
+					<div className="flex items-center gap-2">
+						<CalendarIcon />
+						Created: {props.research.createdAt.toLocaleDateString()}
+					</div>
+					<div className="flex items-center gap-2">
+						<CheckCircle2Icon />
+						Stats: {props.research.isComplete ? "Complete" : "Researching"}
+					</div>
+
 					{props.forkedResearch && (
-						<BulletItem icon={GitForkIcon}>
-							<p className="whitespace-pre-wrap">Forked: </p>
+						<div className="flex items-center gap-2">
+							<GitForkIcon />
+							<p className="whitespace-pre-wrap">Fork Of: </p>
 							<Link href={`/user/${props.forkedResearch.userId}/research/${props.forkedResearch.id}`} className="truncate text-blue-600 hover:underline">
 								{props.forkedResearch.name}
 							</Link>
-						</BulletItem>
+						</div>
 					)}
 				</div>
 			</div>
-		</div>
-	)
-}
-
-const BulletItem = (props: { icon: LucideIcon } & React.ComponentProps<"div">) => {
-	return (
-		<div {...omit(props, ["icon"])} className={cn("flex items-center gap-2", props.className)}>
-			<props.icon />
-			{props.children}
 		</div>
 	)
 }

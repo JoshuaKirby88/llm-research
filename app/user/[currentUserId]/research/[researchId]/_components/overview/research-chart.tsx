@@ -34,7 +34,7 @@ export const ResearchChart = (props: React.ComponentProps<typeof CardContent>) =
 	const chartConfig = dependentValues.reduce<ChartConfig>(
 		(acc, curr, i) => ({
 			...acc,
-			[curr.value]: { label: curr.value, color: `var(--chart-${i + 1})` },
+			[curr.value]: { label: curr.value, color: curr.color },
 		}),
 		{ count: { label: "Count" } },
 	)

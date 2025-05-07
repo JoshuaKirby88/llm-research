@@ -140,7 +140,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 
 				{/* TODO: Should I also not mount this too, or does it not matter? */}
 				<TabsContent value="Settings">
-					<ResearchSettingsPage research={research} testBatches={testBatches} />
+					<ResearchSettingsPage research={research} dependentValues={dependentValues} testBatches={testBatches} />
 				</TabsContent>
 			</PageTabs>
 		</div>

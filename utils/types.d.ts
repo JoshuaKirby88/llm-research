@@ -2,7 +2,7 @@ type RequiredObj<T> = Required<{
 	[P in keyof T]: NonNullable<T[P]>
 }>
 
-type PickRequired<T, K extends keyof T> = T & RequiredObj<Pick<T, K>>
+type PickRequired<T, K extends keyof T> = Pretty<T & RequiredObj<Pick<T, K>>>
 
 type NextSearchParam = { [key: string]: string | undefined }
 

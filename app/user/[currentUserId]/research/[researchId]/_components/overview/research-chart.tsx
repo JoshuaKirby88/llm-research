@@ -18,9 +18,7 @@ type Props = {
 export const ResearchChartCard = ({ dependentValues, testBatchResults, ...props }: Props & React.ComponentProps<typeof Card>) => {
 	return (
 		<context.Provider value={{ dependentValues, testBatchResults }}>
-			<Card padding="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)}>
-				{props.children}
-			</Card>
+			<Card padding="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)} />
 		</context.Provider>
 	)
 }

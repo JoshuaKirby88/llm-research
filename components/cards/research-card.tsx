@@ -18,21 +18,21 @@ type Props = {
 	testBatchResults: TestBatchResultT[]
 }
 
-export const HomePageResearchCard = ({ currentUser, ...props }: Pick<Props, "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
+export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
 	return (
 		<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants(), "p-4")}>
 			<CardTitle className="text-2xl">{props.research.name}</CardTitle>
 
 			<CardFooter className="mt-auto gap-5 p-0">
-				<ClerkPFP user={currentUser} size="sm" />
+				<ClerkPFP user={props.currentUser} size="sm" />
 
-				<ResearchCardStars {...props} />
+				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>
 		</Link>
 	)
 }
 
-export const ResearchCard = ({ children, user, ...props }: Props & { user: ClerkPublicUser; children?: React.ReactNode }) => {
+export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: React.ReactNode }) => {
 	return (
 		<div className="relative">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ padding: "sm" }), "relative pb-14")}>
@@ -45,13 +45,13 @@ export const ResearchCard = ({ children, user, ...props }: Props & { user: Clerk
 				</CardHeader>
 
 				<div className="!aspect-square absolute top-2 right-2 bottom-16">
-					<ResearchChartCard {...props} className="aspect-square h-full p-0">
+					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="aspect-square h-full p-0">
 						<ResearchChart />
 						<ResearchChartNoResultOverlay className="text-xs" />
 					</ResearchChartCard>
 				</div>
 
-				{children}
+				{props.children}
 
 				<CardFooter>
 					<div className="h-8" />
@@ -59,8 +59,14 @@ export const ResearchCard = ({ children, user, ...props }: Props & { user: Clerk
 			</Link>
 
 			<CardFooter className="absolute inset-x-4 bottom-4 justify-between">
-				<ResearchCardStars {...props} />
-				<ResearchCardDropdown user={user} {...props} />
+				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<ResearchCardDropdown
+					user={props.user}
+					research={props.research}
+					userToStarredResearch={props.userToStarredResearch}
+					dependentValues={props.dependentValues}
+					testBatchResults={props.testBatchResults}
+				/>
 			</CardFooter>
 		</div>
 	)
@@ -70,7 +76,7 @@ const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
 	return (
 		props.user.userId && (
 			<DropdownMenu>
-				<DropdownMenuTrigger className={buttonVariants({ variant: "matte", size: "iconSm" })}>
+				<DropdownMenuTrigger className={cn(buttonVariants({ variant: "matte", size: "iconSm" }), "rounded-full")}>
 					<EllipsisIcon />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>

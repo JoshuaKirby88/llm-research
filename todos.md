@@ -10,7 +10,6 @@
     - Results
 - [ ] Fix ai model select
 - [ ] Support research without blocking variables
-- [ ] Assign colors to each dependent value in research settings
 
 # New research form
 

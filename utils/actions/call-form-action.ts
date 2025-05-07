@@ -1,8 +1,8 @@
-export const callFormAction = <T extends any>(action: (args: T) => Promise<any>, formData: FormData, bind?: Partial<T>) => {
-	const rawFormData = Object.fromEntries(formData)
+export const callFormAction = <T extends any>(action: (args: T) => Promise<any>, form: { key?: keyof T; formData: FormData }, bind?: Partial<T>) => {
+	const rawFormData = Object.fromEntries(form.formData)
 
 	const payload = {
-		...rawFormData,
+		...(form.key ? { [form.key]: rawFormData } : rawFormData),
 		...bind,
 	} as T
 

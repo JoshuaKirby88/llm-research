@@ -127,6 +127,7 @@ export const EvalPrompt = sqliteTable("EvalPrompt", {
 export const DependentValue = sqliteTable("DependentValue", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	value: text().notNull(),
+	color: text().notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id, { onDelete: "cascade" }),

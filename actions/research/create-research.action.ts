@@ -4,6 +4,7 @@ import { transaction } from "@/drizzle/transaction"
 import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
 import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
 import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
+import { DependentValueTable } from "@/src/tables/dependent-value.table"
 import { createAction } from "@/utils/actions/create-action"
 import { getParamsFromHeaders } from "@/utils/get-params-from-headers"
 import { redirect } from "next/navigation"
@@ -53,7 +54,7 @@ export const createResearchAction = createAction(
 
 		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: evalPrompt })
 
-		const dependentValuesToInsert: InsertDependentValueT[] = input.dependentValues.map(value => ({ researchId: newResearch.id, value }))
+		const dependentValuesToInsert: InsertDependentValueT[] = DependentValueTable.assignColors(input.dependentValues.map(value => ({ researchId: newResearch.id, value })))
 		const newDependentValues = await DependentValueRepo.insertMany(dependentValuesToInsert)
 	}).onError(async () => {
 		await ResearchRepo.delete(newResearch.id)

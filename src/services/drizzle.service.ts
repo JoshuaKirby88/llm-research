@@ -42,4 +42,10 @@ export class DrizzleService {
 
 		return results.sort((a, b) => a.id - b.id)
 	}
+
+	static async updateMany<T extends Table, K extends keyof T["_"]["columns"]>(table: T, values: Array<{ id: number } & Record<K, T["$inferSelect"][K]>>, key: K) {
+		const sqlChunks: SQL[] = [sql`(case`, ...values.map(value => sql`when ${table["id" as keyof T]} = ${value.id} then ${value[key]}`), sql`end)`]
+		const updateSql: SQL = sql.join(sqlChunks, sql.raw(" "))
+		return updateSql
+	}
 }

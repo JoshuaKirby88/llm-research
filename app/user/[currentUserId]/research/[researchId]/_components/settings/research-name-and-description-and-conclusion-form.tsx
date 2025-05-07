@@ -10,7 +10,7 @@ export const ResearchNameAndDescriptionAndConclusionForm = (props: { research: R
 	const onSubmit = async (formData: FormData) => {
 		"use server"
 
-		await callFormAction(updateResearchAndVectorAction, formData, { id: props.research.id })
+		await callFormAction(updateResearchAndVectorAction, { formData }, { id: props.research.id })
 	}
 
 	return (

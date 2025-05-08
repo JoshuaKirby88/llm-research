@@ -4,6 +4,13 @@ import { ComponentProps } from "react"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 
+type Props = {
+	userId: string
+	user: ClerkQueriedUser | undefined
+	nameAsLink?: boolean
+	badge?: React.ReactNode
+} & PickRequired<ComponentProps<typeof Avatar>, "size">
+
 const variants = {
 	size: {
 		xs: 24,
@@ -14,14 +21,10 @@ const variants = {
 	} satisfies Record<keyof AvatarProps["size"], any>,
 }
 
-export const ClerkPFP = async ({
-	user,
-	nameAsLink,
-	badge,
-	...props
-}: { user: ClerkQueriedUser | undefined; nameAsLink?: boolean; badge?: React.ReactNode } & PickRequired<ComponentProps<typeof Avatar>, "size">) => {
-	const params = new URLSearchParams()
+export const ClerkPFP = async ({ userId, user, nameAsLink, badge, ...props }: Props) => {
+	const userName = user?.fullName ?? "User is deleted"
 
+	const params = new URLSearchParams()
 	params.set("height", variants.size[props.size].toString())
 	params.set("width", variants.size[props.size].toString())
 	params.set("quality", "100")
@@ -43,11 +46,11 @@ export const ClerkPFP = async ({
 			</div>
 
 			{nameAsLink ? (
-				<Link href={`/user/${user?.id}`} className="text-blue-600 hover:underline">
-					{user?.fullName}
+				<Link href={`/user/${userId}`} className="text-blue-600 hover:underline">
+					{userName}
 				</Link>
 			) : (
-				user?.fullName
+				userName
 			)}
 		</div>
 	)

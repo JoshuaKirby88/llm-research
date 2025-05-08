@@ -24,7 +24,7 @@ export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStar
 			<CardTitle className="text-2xl">{props.research.name}</CardTitle>
 
 			<CardFooter className="mt-auto gap-5 p-0">
-				<ClerkPFP user={props.currentUser} size="sm" />
+				<ClerkPFP userId={props.research.userId} user={props.currentUser} size="sm" />
 
 				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>

@@ -92,7 +92,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 	})
 
 	const queriedUsers = await ClerkService.queryUsers(contributors.map(c => c.userId))
-	const currentUser = queriedUsers.find(queriedUser => research.userId === queriedUser.id)!
+	const currentUser = queriedUsers.find(queriedUser => research.userId === queriedUser.id)
 
 	return (
 		<div className="mx-auto w-full max-w-4xl">

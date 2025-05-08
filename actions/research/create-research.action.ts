@@ -60,5 +60,5 @@ export const createResearchAction = createAction(
 		await ResearchRepo.delete(newResearch.id)
 	})
 
-	redirect(`/user/${newResearch.userId}/research/${newResearch.id}`)
+	redirect(`/user/${user.userId}/research/${newResearch.id}`)
 })

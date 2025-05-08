@@ -1,14 +1,14 @@
 import { Button, buttonVariants } from "@/components/ui/button"
 import { cn } from "@/utils/cn"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
-import { auth } from "@clerk/nextjs/server"
 import { CogIcon } from "lucide-react"
 import Link from "next/link"
 import { NavbarBreadCrumb } from "./navbar-breadcrumb"
 import { ThemeDropdown } from "./theme-dropdown"
+import { authProcedure } from "@/utils/auth-procedure"
 
 export const Navbar = async () => {
-	const user = await auth()
+	const user = await authProcedure("public")
 
 	return (
 		<header className="fixed z-10 flex w-full items-center justify-between bg-background px-4 py-2">

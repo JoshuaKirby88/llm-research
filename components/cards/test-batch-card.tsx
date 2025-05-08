@@ -36,7 +36,7 @@ export const TestBatchCard = (props: Props) => {
 				{props.children}
 
 				<CardFooter>
-					<ClerkPFP size="sm" user={props.currentUser} />
+					<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} />
 				</CardFooter>
 			</Link>
 		</div>

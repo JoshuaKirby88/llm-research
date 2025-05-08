@@ -1,12 +1,12 @@
 import { ClerkPFP } from "@/components/clerk/clerk-pfp"
+import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { CalendarIcon, CheckCircle2Icon, GitForkIcon } from "lucide-react"
 import Link from "next/link"
-import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "../../../../../../../components/research-chart"
 
 type Props = {
-	currentUser: ClerkQueriedUser
+	currentUser: ClerkQueriedUser | undefined
 	research: ResearchT
 	forkedResearch: ResearchT | null
 	contributors: ContributorT[]
@@ -29,7 +29,13 @@ export const ResearchOverviewPage = (props: Props) => {
 
 				<div className="flex flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<ClerkPFP user={props.currentUser} size="sm" badge={props.contributors.find(c => c.userId === props.currentUser.id)!.count} nameAsLink />
+						<ClerkPFP
+							userId={props.research.userId}
+							user={props.currentUser}
+							size="sm"
+							badge={props.currentUser ? props.contributors.find(c => c.userId === props.currentUser!.id)?.count : undefined}
+							nameAsLink
+						/>
 					</div>
 					<div className="flex items-center gap-2">
 						<CalendarIcon />

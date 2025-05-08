@@ -2,6 +2,7 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
 import { FlaskConicalIcon, GiftIcon, UserIcon } from "lucide-react"
 import { UserResearchPage } from "./_components/user-research/user-research-page"
+import { UserPage } from "./_components/user/user-page"
 
 const config = {
 	tabs: [
@@ -20,7 +21,9 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId">>; search
 			<PageTabs tabs={config.tabs} searchParams={searchParams}>
 				<PageTabsList tabs={config.tabs} />
 
-				<TabsContent value="User"></TabsContent>
+				<TabsContent value="User">
+					<UserPage params={params} />
+				</TabsContent>
 
 				<TabsContent value="Research">
 					<UserResearchPage params={params} searchParams={searchParams} />

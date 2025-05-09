@@ -77,7 +77,7 @@ export const ResearchChartNoResultOverlay = (props: { className?: string }) => {
 
 	return (
 		!testBatchResults.length && (
-			<div className={cn("absolute inset-2 flex items-center justify-center bg-background/90", props.className)}>
+			<div className={cn("absolute inset-0 flex items-center justify-center bg-background/90 p-2", props.className)}>
 				<Card padding="xs" className="shadow">
 					Run tests to view results.
 				</Card>

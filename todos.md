@@ -7,6 +7,7 @@
 - [ ] Always link to "user/{userId}" with a userId that exists
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 
+- [ ] Make tooltip non focussable
 - [ ] There is a possibility that a conitrbutor for the user's own research doesn't exist
 - [ ] Feel free to perform more server side queries inside individual tab content components, as they only run once on the server
 - [ ] Test deleting a user such that research still remains
@@ -26,6 +27,12 @@
 - [ ] Generate variable values with llm
 - [ ] Ability to enter example messages to generate variables and message prompts from
 - [ ] Debounce tiptap onChanges
+
+# Data analysis
+
+- Look at data that produced a specific dependent value result
+- Should be able to do everything that I can do if I had the data locally
+- Automatic AI data analysis
 
 # Research examples
 

@@ -37,40 +37,33 @@ function DropdownMenuGroup({ ...props }: React.ComponentProps<typeof DropdownMen
 	return <DropdownMenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
 }
 
-export const dropdownMenuItemVariants = cva("", {
-	variants: {
-		variant: buttonVariantClasses,
+export const dropdownMenuItemVariants = cva(
+	"[&_svg:not([class*='size-'])]:!size-4 relative flex w-full cursor-pointer select-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden transition-all data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+	{
+		variants: {
+			variant: buttonVariantClasses,
+		},
+		defaultVariants: {
+			variant: "ghost",
+		},
 	},
-	defaultVariants: {
-		variant: "ghost",
-	},
-})
+)
 
 function DropdownMenuItem({ className, inset, variant, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & VariantProps<typeof dropdownMenuItemVariants> & { inset?: boolean }) {
-	return (
-		<DropdownMenuPrimitive.Item
-			data-slot="dropdown-menu-item"
-			data-inset={inset}
-			className={cn(
-				"relative flex w-full cursor-pointer select-none items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden transition-all data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[disabled]:opacity-50",
-				"[&_svg:not([class*='size-'])]:!size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-				dropdownMenuItemVariants({ variant }),
-				className,
-			)}
-			{...props}
-		/>
-	)
+	return <DropdownMenuPrimitive.Item data-slot="dropdown-menu-item" data-inset={inset} className={cn(dropdownMenuItemVariants({ variant }), className)} {...props} />
 }
 
-function DropdownMenuFormActionItem({ action, children, ...props }: { action: (...args: any[]) => any } & React.ComponentProps<typeof DropdownMenuItem>) {
-	return (
-		<form action={action}>
-			<DropdownMenuItem {...props} asChild>
-				<button type="submit">{children}</button>
-			</DropdownMenuItem>
-		</form>
-	)
-}
+export const dropdownMenuCheckboxItemVariants = cva(
+	"relative flex cursor-pointer select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+	{
+		variants: {
+			variant: buttonVariantClasses,
+		},
+		defaultVariants: {
+			variant: "ghost",
+		},
+	},
+)
 
 function DropdownMenuCheckboxItem({
 	className,
@@ -78,18 +71,9 @@ function DropdownMenuCheckboxItem({
 	checked,
 	variant,
 	...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & VariantProps<typeof dropdownMenuItemVariants>) {
+}: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem> & VariantProps<typeof dropdownMenuCheckboxItemVariants>) {
 	return (
-		<DropdownMenuPrimitive.CheckboxItem
-			data-slot="dropdown-menu-checkbox-item"
-			className={cn(
-				"relative flex cursor-pointer select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-				dropdownMenuItemVariants({ variant }),
-				className,
-			)}
-			checked={checked}
-			{...props}
-		>
+		<DropdownMenuPrimitive.CheckboxItem data-slot="dropdown-menu-checkbox-item" className={cn(dropdownMenuCheckboxItemVariants({ variant }), className)} checked={checked} {...props}>
 			<span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuPrimitive.ItemIndicator>
 					<CheckIcon className="!size-4" />
@@ -104,17 +88,21 @@ function DropdownMenuRadioGroup({ ...props }: React.ComponentProps<typeof Dropdo
 	return <DropdownMenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} />
 }
 
-function DropdownMenuRadioItem({ className, children, variant, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem> & VariantProps<typeof dropdownMenuItemVariants>) {
+export const dropdownMenuRadioItemVariants = cva(
+	"relative flex cursor-pointer select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+	{
+		variants: {
+			variant: buttonVariantClasses,
+		},
+		defaultVariants: {
+			variant: "ghost",
+		},
+	},
+)
+
+function DropdownMenuRadioItem({ className, children, variant, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem> & VariantProps<typeof dropdownMenuRadioItemVariants>) {
 	return (
-		<DropdownMenuPrimitive.RadioItem
-			data-slot="dropdown-menu-radio-item"
-			className={cn(
-				"relative flex cursor-pointer select-none items-center gap-2 rounded-lg py-1.5 pr-2 pl-8 text-sm outline-hidden data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-				dropdownMenuItemVariants({ variant }),
-				className,
-			)}
-			{...props}
-		>
+		<DropdownMenuPrimitive.RadioItem data-slot="dropdown-menu-radio-item" className={cn(dropdownMenuRadioItemVariants({ variant }), className)} {...props}>
 			<span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
 				<DropdownMenuPrimitive.ItemIndicator>
 					<CircleIcon className="!size-2 fill-current" />
@@ -192,7 +180,6 @@ export {
 	DropdownMenuGroup,
 	DropdownMenuLabel,
 	DropdownMenuItem,
-	DropdownMenuFormActionItem,
 	DropdownMenuCheckboxItem,
 	DropdownMenuRadioGroup,
 	DropdownMenuRadioItem,

@@ -53,12 +53,6 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 				with: {
 					testModelBatches: {
 						with: {
-							tests: {
-								with: {
-									messages: true,
-									testToBlockingValues: true,
-								},
-							},
 							testModelBatchResults: true,
 						},
 					},
@@ -86,8 +80,8 @@ const Page = async (props: { params: Promise<NextParam<"researchId">>; searchPar
 	} = result
 	const { independentValues, ...independentVariable } = _independentVariable!
 	const [blockingVariables, { blockingValues }] = destructureArray(blockingVariablesWithValues, { blockingValues: true })
-	const [testBatches, { testBatchResults, testModelBatches, testModelBatchResults, tests, messages, testToBlockingValues }] = destructureArray(_testBatches, {
-		testModelBatches: { tests: { messages: true, testToBlockingValues: true }, testModelBatchResults: true },
+	const [testBatches, { testBatchResults, testModelBatches, testModelBatchResults }] = destructureArray(_testBatches, {
+		testModelBatches: { testModelBatchResults: true },
 		testBatchResults: true,
 	})
 

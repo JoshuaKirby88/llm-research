@@ -2,8 +2,8 @@ import { newResearchAction } from "@/actions/research/new-research.action"
 import { searchResearchAction } from "@/actions/research/search-research.action"
 import { HomePageResearchCard } from "@/components/cards/research-card"
 import { EmptyState } from "@/components/empty-state"
+import { FormActionButton } from "@/components/form/server/form-action-button"
 import { Suspense } from "@/components/suspense"
-import { Button } from "@/components/ui/button"
 import { resultIsValid } from "@/utils/actions/result-is-valid"
 import { FlaskConicalIcon, TestTubeDiagonalIcon } from "lucide-react"
 
@@ -28,11 +28,7 @@ export const ResearchSearchResult = Suspense(async (props: { searchParams: Promi
 					title="This research doesn't exist yet."
 					description="Perform your own research by clicking this button."
 					icons={[<TestTubeDiagonalIcon className="-scale-x-100" />, <FlaskConicalIcon />, <TestTubeDiagonalIcon />]}
-					button={
-						<form action={newResearchAction as any}>
-							<Button type="submit">New Research</Button>
-						</form>
-					}
+					button={<FormActionButton action={newResearchAction}>New Research</FormActionButton>}
 				/>
 			</div>
 		)

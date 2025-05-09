@@ -1,8 +1,15 @@
+import { downloadResearchAction } from "@/actions/research/download-research.action"
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ActionI } from "@/utils/actions/create-action"
+import { cn } from "@/utils/cn"
+import { DownloadIcon, EllipsisIcon } from "lucide-react"
 import Link from "next/link"
 import { ClerkPFP } from "../clerk/clerk-pfp"
+import { FormRouteHandler } from "../form/server/form-route-handler"
+import { buttonVariants } from "../ui/button"
 import { CardContent, CardFooter, cardVariants } from "../ui/card"
 
 type Props = {
@@ -36,9 +43,33 @@ export const TestBatchCard = (props: Props) => {
 				{props.children}
 
 				<CardFooter>
-					<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} />
+					<div className="h-8" />
 				</CardFooter>
 			</Link>
+
+			<CardFooter className="absolute inset-x-0 bottom-0 justify-between p-3">
+				<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} nameAsLink />
+				<TestBatchCardDropdown research={props.research} testBatch={props.testBatch} />
+			</CardFooter>
 		</div>
+	)
+}
+
+const TestBatchCardDropdown = (props: { research: ResearchT; testBatch: TestBatchT }) => {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger className={cn(buttonVariants({ variant: "matte", size: "iconSm" }), "rounded-full")}>
+				<EllipsisIcon />
+			</DropdownMenuTrigger>
+
+			<DropdownMenuContent>
+				<FormRouteHandler action="/api/download-research" input={{ researchId: props.research.id, testBatchId: props.testBatch.id } satisfies ActionI<typeof downloadResearchAction>}>
+					<button type="submit" className={dropdownMenuItemVariants()}>
+						<DownloadIcon />
+						Download
+					</button>
+				</FormRouteHandler>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	)
 }

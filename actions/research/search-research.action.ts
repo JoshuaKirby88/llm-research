@@ -18,7 +18,7 @@ export const searchResearchAction = createAction(
 		if (input.search) {
 			const embedding = await AIService.createEmbedding({ model: "text-embedding-3-small", text: input.search })
 
-			const researchIds = await ResearchRepo.queryVector(embedding, { topK: 10 })
+			const researchIds = await ResearchRepo.queryVector(embedding, { topK: 10, minScore: 0.3 })
 
 			const researches = await db.query.Research.findMany({
 				where: inArray(Research.id, researchIds),

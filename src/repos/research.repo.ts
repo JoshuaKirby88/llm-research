@@ -52,14 +52,16 @@ export class ResearchRepo {
 		await env.VECTORIZE.upsert([values])
 	}
 
-	static async queryVector(embedding: ResearchVectorT["values"], opt: { topK: number }) {
+	static async queryVector(embedding: ResearchVectorT["values"], opt: { topK: number; minScore: number }) {
 		const env = (await getCloudflareContext({ async: true })).env
 		const result = await env.VECTORIZE.query(embedding, {
 			topK: opt.topK,
 			returnMetadata: "none",
 		})
 
-		return Array.from(new Set(result.matches.map(match => Number.parseInt(match.id))))
+		const filteredMatches = result.matches.filter(match => match.score >= opt.minScore)
+
+		return Array.from(new Set(filteredMatches.map(match => Number.parseInt(match.id))))
 	}
 
 	static async deleteVectors(ids: ResearchT["id"][]) {

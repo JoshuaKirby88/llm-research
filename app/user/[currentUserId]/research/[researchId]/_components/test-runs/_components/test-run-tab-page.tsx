@@ -1,11 +1,8 @@
 import { TestBatchCard } from "@/components/cards/test-batch-card"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { ClerkPublicUser, ClerkQueriedUser } from "@/src/services/clerk.service"
-import { TestRunTabId } from "../test-run-page"
+import { ClerkQueriedUser } from "@/src/services/clerk.service"
 
 type Props = {
-	tab: TestRunTabId
-	user: ClerkPublicUser
 	queriedUsers: ClerkQueriedUser[]
 	research: ResearchT
 	contributors: ContributorT[]
@@ -15,13 +12,8 @@ type Props = {
 	testBatchResults: TestBatchResultT[]
 }
 
-export const TestRunTabPage = async (props: Props) => {
-	const currentContributor = props.contributors.find(c => c.userId === props.research.userId)!
-	const testBatches = props.testBatches.filter(
-		tb => props.tab === "All" || (props.tab === "Own" && tb.contributorId === currentContributor.id) || (props.tab === "Contributions" && tb.contributorId !== currentContributor.id),
-	)
-
-	return testBatches.map(testBatch => {
+export const TestRunTabPage = (props: Props) => {
+	return props.testBatches.map(testBatch => {
 		const currentTestBatchContributor = props.contributors.find(c => c.id === testBatch.contributorId)!
 		const currentUser = props.queriedUsers.find(queriedUser => queriedUser.id === currentTestBatchContributor.userId)
 		const testModelBatches = props.testModelBatches.filter(tmb => tmb.testBatchId === testBatch.id)

@@ -14,7 +14,7 @@ export const searchResearchAction = createAction(
 	"public",
 	z.object({ search: z.string().optional() }),
 )(async ({ user, input }) => {
-	const results = await (async () => {
+	const result = await (async () => {
 		if (input.search) {
 			const embedding = await AIService.createEmbedding({ model: "text-embedding-3-small", text: input.search })
 
@@ -40,9 +40,9 @@ export const searchResearchAction = createAction(
 		}
 	})()
 
-	const queriedUsers = await ClerkService.queryUsers(results.map(r => r.userId))
+	const queriedUsers = await ClerkService.queryUsers(result.map(r => r.userId))
 
-	const [researches, { userToStarredResearches }] = destructureArray(results, { userToStarredResearches: true })
+	const [researches, { userToStarredResearches }] = destructureArray(result, { userToStarredResearches: true })
 
 	return {
 		queriedUsers,

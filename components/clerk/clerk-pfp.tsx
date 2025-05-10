@@ -21,7 +21,7 @@ const variants = {
 	} satisfies Record<keyof AvatarProps["size"], any>,
 }
 
-export const ClerkPFP = async ({ userId, user, nameAsLink, badge, ...props }: Props) => {
+export const ClerkPFP = ({ userId, user, nameAsLink, badge, ...props }: Props) => {
 	const userName = user?.fullName ?? "User is deleted"
 
 	const params = new URLSearchParams()

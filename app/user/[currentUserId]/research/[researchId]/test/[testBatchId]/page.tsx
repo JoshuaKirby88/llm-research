@@ -12,6 +12,10 @@ import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-content"
 
+const config = {
+	tabName: "mdel",
+}
+
 const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
@@ -45,17 +49,37 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 		},
 	})
 
-	if (!result || !result.testBatches[0]) {
+	if (!result) {
 		notFound()
 	}
 
-	const { independentVariable: _independentVariable, blockingVariables: blockingVariablesWithValues, messagePrompts, evalPrompt, dependentValues, testBatches } = result
-	const { independentValues, ...independentVariable } = _independentVariable!
-	const [_, { testModelBatches, tests, testToBlockingValues, messages, evals }] = destructureArray(testBatches, {
-		testModelBatches: { tests: { testToBlockingValues: true, messages: true, evals: true } },
+	const [
+		research,
+		{
+			independentVariable: [independentVariable],
+			independentValues,
+			blockingVariables,
+			blockingValues,
+			messagePrompts,
+			evalPrompt: [evalPrompt],
+			dependentValues,
+			testBatches,
+			testModelBatches,
+			tests,
+			testToBlockingValues,
+			messages,
+			evals,
+		},
+	] = destructureArray([result], {
+		independentVariable: { independentValues: true },
+		blockingVariables: { blockingValues: true },
+		messagePrompts: true,
+		evalPrompt: true,
+		dependentValues: true,
+		testBatches: { testModelBatches: { tests: { testToBlockingValues: true, messages: true, evals: true } } },
 	})
 
-	const blockingVariableCombinations = VariableTable.createCombination(blockingVariablesWithValues)
+	const blockingVariableCombinations = VariableTable.createCombination({ blockingVariables, blockingValues })
 
 	const tabs = testModelBatches.map(testModelBatch => ({
 		value: testModelBatch.model,
@@ -64,8 +88,8 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 
 	return (
 		<div className="w-full">
-			<PageTabs tabs={tabs} searchParams={searchParams} name="model">
-				<PageTabsList tabs={tabs} name="model" />
+			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
+				<PageTabsList tabs={tabs} name={config.tabName} />
 
 				{testModelBatches.map(testModelBatch => (
 					<TabsContent key={testModelBatch.id} value={testModelBatch.model} className="space-y-4">

@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { DependentValueT, TestBatchResultT } from "@/src/schemas"
 import { cn } from "@/utils/cn"
-import { TrendingUp } from "lucide-react"
+import { TrendingUpIcon } from "lucide-react"
 import { createContext, useContext } from "react"
 import { LabelList, Pie, PieChart } from "recharts"
 
@@ -44,7 +44,7 @@ export const ResearchChart = (props: React.ComponentProps<typeof CardContent>) =
 			<ChartContainer config={chartConfig} className="-m-2 aspect-square [&_.recharts-text]:fill-background">
 				<PieChart>
 					<ChartTooltip content={<ChartTooltipContent nameKey="count" hideLabel />} />
-					<Pie data={chartData} dataKey="count" className="" animationDuration={500} animationEasing="ease" animationBegin={0}>
+					<Pie data={chartData} dataKey="count" animationDuration={500} animationEasing="ease" animationBegin={0}>
 						<LabelList dataKey="result" className="fill-background" stroke="none" fontSize={12} formatter={(value: keyof typeof chartConfig) => chartConfig[value]?.label} />
 					</Pie>
 				</PieChart>
@@ -65,7 +65,7 @@ export const ResearchChartFooter = () => {
 	return (
 		<CardFooter className="flex-col gap-2 text-sm">
 			<div className="flex items-center gap-2 font-medium leading-none">
-				Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+				Trending up by 5.2% this month <TrendingUpIcon className="h-4 w-4" />
 			</div>
 			<div className="text-muted-foreground leading-none">Showing total visitors for the last 6 months</div>
 		</CardFooter>

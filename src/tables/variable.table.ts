@@ -1,11 +1,13 @@
 import { capitalize } from "@/utils/capitalize"
-import omit from "lodash.omit"
-import { BlockingVariableCombinationT, BlockingVariableWithValueT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
+import { BlockingValueT, BlockingVariableCombinationT, BlockingVariableT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
 
 export class VariableTable {
-	static createCombination(blockingVariables: BlockingVariableWithValueT[]) {
-		return blockingVariables.reduce<BlockingVariableCombinationT[]>(
-			(acc, curr) => acc.flatMap(partialCombo => curr.blockingValues.map(blockingValue => [...partialCombo, { ...omit(curr, ["blockingValues"]), blockingValue }])),
+	static createCombination(input: { blockingVariables: BlockingVariableT[]; blockingValues: BlockingValueT[] }) {
+		return input.blockingVariables.reduce<BlockingVariableCombinationT[]>(
+			(acc, curr) => {
+				const blockingValues = input.blockingValues.filter(bVal => bVal.blockingVariableId === curr.id)
+				return acc.flatMap(partialCombo => blockingValues.map(blockingValue => [...partialCombo, { ...curr, blockingValue }]))
+			},
 			[[]],
 		)
 	}

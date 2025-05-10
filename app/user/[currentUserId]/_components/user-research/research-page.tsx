@@ -1,5 +1,4 @@
 import { ResearchCard } from "@/components/cards/research-card"
-import { Suspense } from "@/components/suspense"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, UserToStarredResearchT } from "@/src/schemas"
 import { ClerkPublicUser } from "@/src/services/clerk.service"
 
@@ -12,7 +11,7 @@ type Props = {
 	testBatchResults: TestBatchResultT[]
 }
 
-export const ResearchPage = Suspense(async (props: Props) => {
+export const ResearchPage = (props: Props) => {
 	return props.researches.map(research => {
 		const userToStarredResearch = props.userToStarredResearches.find(utsr => utsr.researchId === research.id)
 		const dependentValues = props.dependentValues.filter(dVal => dVal.researchId === research.id)
@@ -24,4 +23,4 @@ export const ResearchPage = Suspense(async (props: Props) => {
 			<ResearchCard key={research.id} user={props.user} research={research} userToStarredResearch={userToStarredResearch} dependentValues={dependentValues} testBatchResults={testBatchResults} />
 		)
 	})
-})
+}

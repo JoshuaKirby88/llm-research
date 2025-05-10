@@ -1,7 +1,7 @@
 import { AddAPIKeyAlertCard } from "@/components/add-api-key-alert-card"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { APIKeyRepo } from "@/src/repos"
-import { BlockingVariableWithValueT, IndependentValueT, ResearchT } from "@/src/schemas"
+import { BlockingValueT, BlockingVariableT, IndependentValueT, ResearchT } from "@/src/schemas"
 import { ClerkPublicUser } from "@/src/services/clerk.service"
 import { APIKeyTable } from "@/src/tables"
 import { RunTestForm } from "./run-test-form"
@@ -10,7 +10,8 @@ type Props = {
 	user: ClerkPublicUser
 	research: ResearchT
 	independentValues: IndependentValueT[]
-	blockingVariablesWithValues: BlockingVariableWithValueT[]
+	blockingVariables: BlockingVariableT[]
+	blockingValues: BlockingValueT[]
 	children: React.ReactNode
 }
 
@@ -23,15 +24,15 @@ export const RunTestSheet = async (props: Props) => {
 			<Sheet>
 				<SheetTrigger asChild>{props.children}</SheetTrigger>
 
-				<SheetContent className="">
+				<SheetContent>
 					<SheetHeader>
 						<SheetTitle>Run tests</SheetTitle>
-						<SheetDescription className="">{props.research.name}</SheetDescription>
+						<SheetDescription>{props.research.name}</SheetDescription>
 					</SheetHeader>
 
 					<div className="h-full px-3 py-5">
 						{APIKeyTable.keyExists(maskedAPIKey) ? (
-							<RunTestForm maskedAPIKey={maskedAPIKey} independentValues={props.independentValues} blockingVariablesWithValues={props.blockingVariablesWithValues} />
+							<RunTestForm maskedAPIKey={maskedAPIKey} independentValues={props.independentValues} blockingVariables={props.blockingVariables} blockingValues={props.blockingValues} />
 						) : (
 							<AddAPIKeyAlertCard />
 						)}

@@ -29,10 +29,6 @@ export const updateBlockingVariableSchema = blockingVariableSchema.pick({ id: tr
 
 export type UpdateBlockingVariableT = z.infer<typeof updateBlockingVariableSchema>
 
-export const blockingVariableWithValueSchema = blockingVariableSchema.extend({ blockingValues: blockingValueSchema.array() })
-
-export type BlockingVariableWithValueT = z.infer<typeof blockingVariableWithValueSchema>
-
 export const blockingVariableCombinationSchema = blockingVariableSchema.extend({ blockingValue: blockingValueSchema }).array()
 
 export type BlockingVariableCombinationT = z.infer<typeof blockingVariableCombinationSchema>

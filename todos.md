@@ -4,20 +4,19 @@
 - Usage based
 - How to track usage per model?
 
-- [ ] Always link to "user/{userId}" with a userId that exists
-- [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
+# Todos
 
+- [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Make tooltip non focussable
 - [ ] There is a possibility that a conitrbutor for the user's own research doesn't exist
 - [ ] Feel free to perform more server side queries inside individual tab content components, as they only run once on the server
 - [ ] Test deleting a user such that research still remains
+- [ ] Test contributing to research
 - [ ] Create project for gemini
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Populate research overview page with all info
 - [ ] Visually mark replaced variables when showing messages
 - [ ] Check if deleting non-existant vector errors
-- [ ] Show more data in test batch page
-    - Results
 - [ ] Fix ai model select
 - [ ] Support research without blocking variables
 

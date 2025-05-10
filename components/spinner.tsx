@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn"
 import { type VariantProps, cva } from "class-variance-authority"
-import { Loader } from "lucide-react"
+import { LoaderIcon } from "lucide-react"
 
 const spinnerVariants = cva("animate-spin", {
 	variants: {
@@ -19,5 +19,5 @@ const spinnerVariants = cva("animate-spin", {
 interface SpinnerProps extends VariantProps<typeof spinnerVariants> {}
 
 export const Spinner = ({ size, className }: SpinnerProps & { className?: string }) => {
-	return <Loader className={cn(spinnerVariants({ size }), className)} />
+	return <LoaderIcon className={cn(spinnerVariants({ size }), className)} />
 }

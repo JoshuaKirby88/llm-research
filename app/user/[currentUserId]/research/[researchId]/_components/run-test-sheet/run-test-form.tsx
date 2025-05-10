@@ -6,7 +6,7 @@ import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Separator } from "@/components/ui/separator"
-import { BlockingVariableWithValueT, IndependentValueT, MaskedAPIKeyT, RunTestFormS } from "@/src/schemas"
+import { BlockingValueT, BlockingVariableT, IndependentValueT, MaskedAPIKeyT, RunTestFormS } from "@/src/schemas"
 import { runTestFormSchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form"
 import { AIModelSelect } from "./ai-model-select"
 import { RunTestFormCard } from "./run-test-form-card"
 
-export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentValues: IndependentValueT[]; blockingVariablesWithValues: BlockingVariableWithValueT[] }) => {
+export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentValues: IndependentValueT[]; blockingVariables: BlockingVariableT[]; blockingValues: BlockingValueT[] }) => {
 	const params = useParams<NextParam<"researchId">>()
 
 	const form = useForm<RunTestFormS>({
@@ -46,7 +46,7 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentVal
 			</div>
 
 			<div className="space-y-5">
-				<RunTestFormCard independentValues={props.independentValues} blockingVariablesWithValues={props.blockingVariablesWithValues} />
+				<RunTestFormCard independentValues={props.independentValues} blockingVariables={props.blockingVariables} blockingValues={props.blockingValues} />
 
 				<Separator />
 

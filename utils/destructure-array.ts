@@ -1,4 +1,4 @@
-type Elem<U> = U extends (infer I)[] ? I : U
+type Elem<U> = U extends (infer I)[] ? I : NonNullable<U>
 
 export type NestedSpec<T> = {
 	[K in keyof T]?: true | NestedSpec<Elem<T[K]>>

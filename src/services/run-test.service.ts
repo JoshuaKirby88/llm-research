@@ -8,7 +8,7 @@ import {
 	DependentValueT,
 	EvalPromptT,
 	IndependentValueT,
-	IndependentVariableWithValueT,
+	IndependentVariableT,
 	InsertCompletionMessageT,
 	InsertEvalT,
 	InsertGeneratedMessageT,
@@ -21,6 +21,7 @@ import {
 	MessagePromptT,
 	ResearchT,
 } from "@/src/schemas"
+import { destructureArray } from "@/utils/destructure-array"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
@@ -33,7 +34,7 @@ type Research = NonNullable<Awaited<ReturnType<(typeof RunTestService)["queryRes
 type TestRunInput = {
 	model: AIModel
 	messagePrompts: MessagePromptT[]
-	independentVariable: IndependentVariableWithValueT
+	independentVariable: IndependentVariableT
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
 	evalPrompt: EvalPromptT
@@ -41,7 +42,7 @@ type TestRunInput = {
 }
 
 type EvaluateInput = {
-	independentVariable: IndependentVariableWithValueT
+	independentVariable: IndependentVariableT
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
 	messages: Omit<InsertMessageT, "testId">[]
@@ -61,33 +62,32 @@ type TestResult = {
 
 export class RunTestService {
 	static async execute(input: RunTestI) {
-		const [research, apiKey] = await Promise.all([this.queryResearch(input.researchId), this.queryAPIKey(input.userId)])
-
-		if (!research?.independentVariable || !research.evalPrompt) {
-			throw new Error("No research")
-		}
+		const [{ research, independentVariable, independentValues, blockingVariables, blockingValues, dependentValues, messagePrompts, evalPrompt }, apiKey] = await Promise.all([
+			this.queryResearch(input.researchId),
+			this.queryAPIKey(input.userId),
+		])
 
 		const AIService = new AIServiceInstance(apiKey)
 
-		const blockingVariableCombinations = VariableTable.createCombination(research.blockingVariables)
+		const blockingVariableCombinations = VariableTable.createCombination({ blockingVariables, blockingValues })
 
 		const testModelBatchResultPromises: Promise<TestResult[]>[] = []
 
 		for (const model of input.models) {
 			const testResultPromises: Promise<TestResult>[] = []
 
-			for (const independentValue of research.independentVariable.independentValues) {
+			for (const independentValue of independentValues) {
 				for (const blockingVariableCombination of blockingVariableCombinations) {
 					for (let i = 0; i < input.iterations; i++) {
 						const testResultPromise = this.runTest(
 							{
 								model,
-								independentVariable: research.independentVariable,
+								independentVariable,
 								independentValue,
 								blockingVariableCombination,
-								dependentValues: research.dependentValues,
-								messagePrompts: research.messagePrompts,
-								evalPrompt: research.evalPrompt,
+								dependentValues,
+								messagePrompts,
+								evalPrompt,
 							},
 							AIService,
 						)
@@ -104,31 +104,47 @@ export class RunTestService {
 
 		return {
 			research,
+			dependentValues,
 			testModelBatchResults,
 		}
 	}
 
 	private static async queryResearch(researchId: ResearchT["id"]) {
-		const research = await db.query.Research.findFirst({
+		const result = await db.query.Research.findFirst({
 			where: eq(Research.id, researchId),
 			with: {
 				independentVariable: {
-					with: {
-						independentValues: true,
-					},
+					with: { independentValues: true },
 				},
 				blockingVariables: {
-					with: {
-						blockingValues: true,
-					},
+					with: { blockingValues: true },
 				},
+				dependentValues: true,
 				messagePrompts: true,
 				evalPrompt: true,
-				dependentValues: true,
 			},
 		})
 
-		return research
+		if (!result) {
+			throw new Error("No research")
+		}
+
+		const [
+			[research],
+			{
+				independentVariable: [independentVariable],
+				evalPrompt: [evalPrompt],
+				...rest
+			},
+		] = destructureArray([result], {
+			independentVariable: { independentValues: true },
+			blockingVariables: { blockingValues: true },
+			dependentValues: true,
+			messagePrompts: true,
+			evalPrompt: true,
+		})
+
+		return { research, independentVariable, evalPrompt, ...rest }
 	}
 
 	private static async queryAPIKey(userId: string) {
@@ -190,7 +206,7 @@ export class RunTestService {
 		}
 	}
 
-	static async insertTestBatch(input: RunTestI, research: Research, testModelBatchResults: TestResult[][]) {
+	static async insertTestBatch(input: RunTestI, research: ResearchT, dependentValues: DependentValueT[], testModelBatchResults: TestResult[][]) {
 		const totalTestsCount = testModelBatchResults.flat().length
 
 		const contributor = await ContributorRepo.incrementCount({ userId: input.userId, researchId: input.researchId, count: totalTestsCount })
@@ -250,7 +266,7 @@ export class RunTestService {
 				const newEvals = await EvalRepo.insertMany(evalsToInsert)
 
 				const testModelBatchResultsToInsert: InsertTestModelBatchResultT[] = testModelBatchResults.flatMap((testResults, i) =>
-					research.dependentValues.map(dependentValue => ({
+					dependentValues.map(dependentValue => ({
 						count: testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id).length,
 						testModelBatchId: newTestModelBatches[i].id,
 						dependentValueId: dependentValue.id,
@@ -258,7 +274,7 @@ export class RunTestService {
 				)
 				await TestModelBatchResultRepo.insertMany(testModelBatchResultsToInsert)
 
-				const testBatchResultsToInsert: InsertTestBatchResultT[] = research.dependentValues.map(dependentValue => ({
+				const testBatchResultsToInsert: InsertTestBatchResultT[] = dependentValues.map(dependentValue => ({
 					count: testModelBatchResults.flatMap(testResults => testResults.filter(testResult => testResult.dependentValue.id === dependentValue.id)).length,
 					dependentValueId: dependentValue.id,
 					testBatchId: newTestBatch.id,

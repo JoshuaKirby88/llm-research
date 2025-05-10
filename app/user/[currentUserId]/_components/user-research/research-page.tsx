@@ -1,50 +1,27 @@
 import { ResearchCard } from "@/components/cards/research-card"
 import { Suspense } from "@/components/suspense"
-import { db } from "@/drizzle/db"
-import { Research, UserToStarredResearch } from "@/drizzle/schema"
+import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, UserToStarredResearchT } from "@/src/schemas"
 import { ClerkPublicUser } from "@/src/services/clerk.service"
-import { DrizzleService } from "@/src/services/drizzle.service"
-import { destructureArray } from "@/utils/destructure-array"
-import { desc, eq } from "drizzle-orm"
-import { UserResearchPageTabId } from "./user-research-page"
 
-export const ResearchPage = Suspense(async (props: { params: NextParam<"currentUserId">; tab: UserResearchPageTabId; user: ClerkPublicUser }) => {
-	const result = await db.query.Research.findMany({
-		where: DrizzleService.where(Research, {
-			userId: props.params.currentUserId,
-			isArchived: false,
-			...(props.tab === "All" ? {} : props.tab === "Starred" ? { isStarred: true } : props.tab === "Archived" ? { isArchived: true } : { isComplete: props.tab === "Complete" }),
-		}),
-		with: {
-			userToStarredResearches: props.user.userId ? { where: eq(UserToStarredResearch.userId, props.user.userId) } : { limit: 0 },
-			dependentValues: true,
-			testBatches: {
-				with: { testBatchResults: true },
-			},
-		},
-		orderBy: desc(Research.id),
-	})
+type Props = {
+	user: ClerkPublicUser
+	researches: ResearchT[]
+	userToStarredResearches: UserToStarredResearchT[]
+	dependentValues: DependentValueT[]
+	testBatches: TestBatchT[]
+	testBatchResults: TestBatchResultT[]
+}
 
-	const [researches, { userToStarredResearches, dependentValues, testBatches: testBatchesWithResults }] = destructureArray(result, {
-		userToStarredResearches: true,
-		dependentValues: true,
-		testBatches: true,
-	})
-
-	return researches.map(research => {
-		const userToStarredResearch = userToStarredResearches.find(utsr => utsr.researchId === research.id)
-		const filteredDependentValues = dependentValues.filter(dVal => dVal.researchId === research.id)
-		const filteredTestBatchResults = testBatchesWithResults.filter(tb => tb.researchId === research.id).flatMap(tb => tb.testBatchResults)
+export const ResearchPage = Suspense(async (props: Props) => {
+	return props.researches.map(research => {
+		const userToStarredResearch = props.userToStarredResearches.find(utsr => utsr.researchId === research.id)
+		const dependentValues = props.dependentValues.filter(dVal => dVal.researchId === research.id)
+		const testBatches = props.testBatches.filter(tb => tb.researchId === research.id)
+		const testBatchIds = testBatches.map(tb => tb.id)
+		const testBatchResults = props.testBatchResults.filter(tbr => testBatchIds.includes(tbr.testBatchId))
 
 		return (
-			<ResearchCard
-				key={research.id}
-				user={props.user}
-				research={research}
-				userToStarredResearch={userToStarredResearch}
-				dependentValues={filteredDependentValues}
-				testBatchResults={filteredTestBatchResults}
-			/>
+			<ResearchCard key={research.id} user={props.user} research={research} userToStarredResearch={userToStarredResearch} dependentValues={dependentValues} testBatchResults={testBatchResults} />
 		)
 	})
 })

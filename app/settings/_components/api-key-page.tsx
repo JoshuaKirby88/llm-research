@@ -6,7 +6,7 @@ import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { AIIcons } from "@/components/icons/ai-icons"
 import { Label } from "@/components/ui/label"
-import { AIFeature, AIProvider } from "@/src/features"
+import { AIFeature } from "@/src/features"
 import { MaskedAPIKeyT, apiKeySchema } from "@/src/schemas"
 import { APIKeyTable } from "@/src/tables"
 import { isResultValid } from "@/utils/actions/is-result-valid"
@@ -14,14 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRef } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
-const config = {
-	apiKeys: [
-		{ aiProvider: "openai", title: "OpenAI" },
-		{ aiProvider: "google", title: "Google" },
-		{ aiProvider: "anthropic", title: "Anthropic" },
-	] satisfies { aiProvider: AIProvider; [key: string]: any }[],
-}
 
 export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 	const defaultAPIKeyRef = useRef(props.maskedAPIKey)
@@ -49,14 +41,14 @@ export const APIKeyPage = (props: { maskedAPIKey: MaskedAPIKeyT | null }) => {
 
 	return (
 		<Form {...form} onSubmit={onSubmit} className="space-y-5">
-			{config.apiKeys.map(apiKey => (
-				<div key={apiKey.aiProvider}>
+			{AIFeature.providers.map(provider => (
+				<div key={provider}>
 					<Label className="mb-2">
-						<AIIcons aiProvider={apiKey.aiProvider} />
-						{apiKey.title}
+						<AIIcons aiProvider={provider} />
+						{AIFeature.providerMap[provider].title}
 					</Label>
 					<div className="flex items-center gap-2">
-						<FormInput name={apiKey.aiProvider} />
+						<FormInput name={provider} />
 					</div>
 				</div>
 			))}

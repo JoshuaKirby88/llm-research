@@ -19,7 +19,7 @@ export const starResearchAction = createAction(
 	await transaction(async () => {
 		await ResearchRepo.update(input.researchId, {
 			starCount: DrizzleService.increment(Research.starCount, 1),
-			isStarred: user.userId === input.currentUserId ? true : undefined,
+			isStarredByUser: user.userId === input.currentUserId ? true : undefined,
 		})
 	}).onError(async () => {
 		await UserToStarredResearchRepo.delete({ userId: user.userId, researchId: input.researchId })
@@ -37,7 +37,7 @@ export const unstarResearchAction = createAction(
 	await transaction(async () => {
 		await ResearchRepo.update(input.researchId, {
 			starCount: DrizzleService.increment(Research.starCount, -1),
-			isStarred: user.userId === input.currentUserId ? false : undefined,
+			isStarredByUser: user.userId === input.currentUserId ? false : undefined,
 		})
 	}).onError(async () => {
 		await UserToStarredResearchRepo.insert({ userId: user.userId, researchId: input.researchId })

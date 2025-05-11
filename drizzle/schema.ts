@@ -29,7 +29,7 @@ export const Research = sqliteTable(
 		starCount: integer().notNull().default(0),
 		conclusion: text(),
 		isComplete: integer({ mode: "boolean" }).notNull().default(false),
-		isStarred: integer({ mode: "boolean" }).notNull().default(false),
+		isStarredByUser: integer({ mode: "boolean" }).notNull().default(false),
 		isArchived: integer({ mode: "boolean" }).notNull().default(false),
 		isUserDeleted: integer({ mode: "boolean" }).notNull().default(false),
 		userId: text().notNull(),

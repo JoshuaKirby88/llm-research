@@ -52,7 +52,7 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 							(tab.value === "All" && !r.isArchived) ||
 							(tab.value === "Complete" && !r.isArchived && r.isComplete) ||
 							(tab.value === "Researching" && !r.isArchived && !r.isComplete) ||
-							(tab.value === "Starred" && r.isStarred) ||
+							(tab.value === "Starred" && r.isStarredByUser) ||
 							(tab.value === "Archived" && r.isArchived),
 					)
 

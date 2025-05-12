@@ -6,8 +6,8 @@ import { MessageCard } from "./message-card"
 type Props = {
 	independentVariable: IndependentVariableT
 	independentValue: IndependentValueT
-	dependentValues: DependentValueT[]
 	blockingVariableCombination: BlockingVariableCombinationT
+	dependentValues: DependentValueT[]
 	messagePrompts: MessagePromptT[]
 	evalPrompt: EvalPromptT
 	test: TestT
@@ -41,6 +41,7 @@ export const TestCard = (props: Props) => {
 							independentVariable={props.independentVariable}
 							independentValue={props.independentValue}
 							blockingVariableCombination={props.blockingVariableCombination}
+							dependentValue={dependentValue}
 							messagePrompts={props.messagePrompts}
 							messages={testMessages}
 							message={message}
@@ -54,6 +55,7 @@ export const TestCard = (props: Props) => {
 						independentVariable={props.independentVariable}
 						independentValue={props.independentValue}
 						blockingVariableCombination={props.blockingVariableCombination}
+						dependentValue={dependentValue}
 						evalPrompt={props.evalPrompt}
 						messages={testMessages}
 						eval={evaluation}

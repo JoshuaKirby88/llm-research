@@ -1,7 +1,8 @@
 import { Dialog } from "@/components/dialog"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { BlockingVariableCombinationT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT } from "@/src/schemas"
+import { ColorFeature } from "@/src/features"
+import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT } from "@/src/schemas"
 import { VariableTable } from "@/src/tables"
 import { cn } from "@/utils/cn"
 
@@ -9,11 +10,12 @@ type Props = {
 	independentVariable: IndependentVariableT
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
+	dependentValue: DependentValueT
 	messages: MessageT[]
 } & ({ messagePrompts: MessagePromptT[]; message: MessageT } | { evalPrompt: EvalPromptT; eval: EvalT })
 
 export const MessageCard = (props: Props) => {
-	const messageOrEval = "message" in props ? props.message : props.eval
+	const messageOrEval = "message" in props ? { type: "message" as const, ...props.message } : { type: "eval" as const, ...props.eval }
 	const prompt = "messagePrompts" in props ? props.messagePrompts.find(mp => mp.id === (messageOrEval as MessageT).messagePromptId) : props.evalPrompt
 
 	const replacedPrompt =
@@ -30,11 +32,12 @@ export const MessageCard = (props: Props) => {
 			key={messageOrEval.id}
 			className={cn(
 				"w-full space-y-3 rounded-xl border p-3",
-				"role" in messageOrEval ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "bg-green-50 dark:bg-green-950",
+				messageOrEval.type === "message" ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "",
 			)}
+			style={{ backgroundColor: messageOrEval.type === "eval" ? ColorFeature.oklchWithAlpha(props.dependentValue.color, 0.1) : undefined }}
 		>
 			<div className="flex items-center justify-between">
-				<span className="font-medium capitalize">{"role" in messageOrEval ? messageOrEval.role : "Evaluation"}</span>
+				<span className="font-medium capitalize">{messageOrEval.type === "message" ? messageOrEval.role : "Evaluation"}</span>
 
 				<div className="flex items-center gap-2">
 					<div className="text-muted-foreground text-xs">
@@ -58,9 +61,11 @@ export const MessageCard = (props: Props) => {
 				</div>
 			</div>
 
-			<Separator />
+			<Separator style={{ backgroundColor: messageOrEval.type === "eval" ? ColorFeature.oklchWithAlpha(props.dependentValue.color, 0.2) : undefined }} />
 
-			<div className="whitespace-pre-wrap">{messageOrEval.content}</div>
+			<div className={cn("whitespace-pre-wrap", messageOrEval.type === "eval" && "font-bold")} style={{ color: messageOrEval.type === "eval" ? props.dependentValue.color : undefined }}>
+				{messageOrEval.content}
+			</div>
 		</div>
 	)
 }

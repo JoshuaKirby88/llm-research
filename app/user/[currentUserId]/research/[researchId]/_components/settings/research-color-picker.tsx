@@ -3,7 +3,7 @@ import { ColorPicker } from "@/components/color-picker"
 import { FormButton } from "@/components/form/server/form-button"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ColorFeature } from "@/src/features/color.feature"
+import { ColorFeature } from "@/src/features"
 import { DependentValueT } from "@/src/schemas"
 import { callFormAction } from "@/utils/actions/call-form-action"
 

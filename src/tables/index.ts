@@ -1,3 +1,5 @@
 export * from "./api-key.table"
 export * from "./research.table"
 export * from "./variable.table"
+export * from "./dependent-value.table"
+export * from "./test.table"

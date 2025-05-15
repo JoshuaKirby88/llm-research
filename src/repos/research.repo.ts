@@ -80,9 +80,10 @@ export class ResearchRepo {
 		const researchIdsToDelete = researches.filter(r => ResearchTable.canDelete(r)).map(r => r.id)
 		const researchIdsToKeep = researches.filter(r => !ResearchTable.canDelete(r)).map(r => r.id)
 
-		await this.deleteVectors(researchIdsToDelete)
-
-		await db.delete(Research).where(inArray(Research.id, researchIdsToDelete))
-		await db.update(Research).set({ isUserDeleted: true }).where(inArray(Research.id, researchIdsToKeep))
+		await Promise.all([
+			this.deleteVectors(researchIdsToDelete),
+			db.delete(Research).where(inArray(Research.id, researchIdsToDelete)),
+			db.update(Research).set({ isUserDeleted: true }).where(inArray(Research.id, researchIdsToKeep)),
+		])
 	}
 }

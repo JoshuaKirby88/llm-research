@@ -1,6 +1,6 @@
 "use client"
 
-import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
+import { SlashEditorFeature } from "@/src/features"
 import { cn } from "@/utils/cn"
 import Document from "@tiptap/extension-document"
 import Mention from "@tiptap/extension-mention"

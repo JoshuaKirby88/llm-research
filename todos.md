@@ -6,6 +6,8 @@
 
 # Todos
 
+- [ ] Rename message prompt to prompt template
+- [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Make tooltip non focussable
 - [ ] There is a possibility that a conitrbutor for the user's own research doesn't exist

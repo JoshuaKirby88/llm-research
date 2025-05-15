@@ -3,17 +3,17 @@
 import { cn } from "@/utils/cn"
 import { TagInput as EmplorTagInput, TagInputProps } from "emblor"
 import { useState } from "react"
-import { Badge } from "./ui/badge"
+import { Shortcut } from "./shortcut"
 import { inputVariants } from "./ui/input"
 
 type Props = Partial<Omit<TagInputProps, "tags" | "onTagAdd" | "onTagRemove">> & { tags: string[]; onTagAdd: (tag: string) => void; onTagRemove: (tag: string) => void }
 
-export const TagInput = ({ tags, onTagAdd, onTagRemove, ...props }: Props) => {
+export const TagInput = ({ tags, onTagAdd, onTagRemove, className, ...props }: Props) => {
 	const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
 	const emblorTags = tags.map(tag => ({ id: tag, text: tag }))
 
 	return (
-		<div className="relative">
+		<div className={cn("relative", className)}>
 			<EmplorTagInput
 				tags={emblorTags}
 				setTags={() => {}}
@@ -38,9 +38,7 @@ export const TagInput = ({ tags, onTagAdd, onTagRemove, ...props }: Props) => {
 				{...props}
 			/>
 
-			<div className="pointer-events-none absolute top-0 right-1 flex h-9 items-center">
-				<Badge variant="outline">↵</Badge>
-			</div>
+			<Shortcut shortcut="enter" className="absolute top-0 right-1" />
 		</div>
 	)
 }

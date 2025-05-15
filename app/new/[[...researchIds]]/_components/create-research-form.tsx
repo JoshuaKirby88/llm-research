@@ -1,6 +1,6 @@
 "use client"
 
-import { createResearchAction } from "@/actions/research/create-research.action"
+import { createResearchAction } from "@/actions/research/create-research/create-research.action"
 import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
@@ -9,13 +9,14 @@ import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
+import { SlashEditorFeature } from "@/src/features"
 import { CreateResearchI, createResearchISchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import React from "react"
-import { useFieldArray, useForm } from "react-hook-form"
+import { FieldPath, useFieldArray, useForm } from "react-hook-form"
+import { GenerateValueDialog } from "./generate-value-dialog"
 import { VariableSlashEditor } from "./variable-slash-editor"
 
 const config = {
@@ -58,6 +59,11 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 		name: "blockingVariables",
 	})
 
+	const onSubmit = async (input: CreateResearchI) => {
+		const result = await createResearchAction(input)
+		isResultValid(result)
+	}
+
 	const resetForm = () => {
 		form.reset(config.formatDefaultValues(props.defaultValues))
 	}
@@ -66,9 +72,10 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 		form.reset(config.formatDefaultValues(config.exampleValues))
 	}
 
-	const onSubmit = async (input: CreateResearchI) => {
-		const result = await createResearchAction(input)
-		isResultValid(result)
+	const appendIndependentValues = (input: { formKey: FieldPath<CreateResearchI>; values: string[] }) => {
+		const existing = form.getValues(input.formKey) as string[]
+		const uniqueValues = input.values.filter(value => !existing.includes(value))
+		form.setValue(input.formKey, [...existing, ...uniqueValues])
 	}
 
 	return (
@@ -101,7 +108,10 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 			<Label>Name</Label>
 			<FormInput name="independentVariable.name" />
 			<Label>Variables</Label>
-			<FormTagInput name="independentVariable.values" />
+			<div className="flex items-start gap-4">
+				<FormTagInput name="independentVariable.values" className="w-full" />
+				<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "independentVariable.values", values })} form={form} variable="independent" />
+			</div>
 
 			<LabelWithTooltip
 				size="2xl"
@@ -118,11 +128,14 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 					<Label>Name</Label>
 					<FormInput name={`blockingVariables.${i}.name`} />
 					<Label>Variables</Label>
-					<FormTagInput name={`blockingVariables.${i}.values`} />
+					<div className="flex items-start gap-4">
+						<FormTagInput name={`blockingVariables.${i}.values`} className="w-full" />
+						<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: `blockingVariables.${i}.values`, values })} blockingIndex={i} form={form} variable="blocking" />
+					</div>
 					<Button type="button" className="w-full" variant="red" onClick={() => blockingVariableFields.remove(i)}>
 						Delete Blocking Variable
 					</Button>
-					<Separator />
+					<Separator className="my-5" />
 				</React.Fragment>
 			))}
 			<Button type="button" className="w-full" variant="secondary" onClick={() => blockingVariableFields.append({ name: "", values: [] })}>
@@ -154,7 +167,10 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 				Dependent Variable
 			</LabelWithTooltip>
 
-			<FormTagInput name="dependentValues" />
+			<div className="flex items-start gap-4">
+				<FormTagInput name="dependentValues" className="w-full" />
+				<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "dependentValues", values })} form={form} variable="dependent" />
+			</div>
 
 			<FormButton className="mt-10">Submit</FormButton>
 		</Form>

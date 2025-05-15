@@ -1,4 +1,4 @@
-import { ColorFeature } from "../features/color.feature"
+import { ColorFeature } from "../features"
 import { DependentValueT } from "../schemas"
 
 export class DependentValueTable {

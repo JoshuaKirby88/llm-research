@@ -2,7 +2,7 @@
 
 import { FormSlashEditor } from "@/components/form/client/form-slash-editor"
 import { Suggestion } from "@/components/slash-editor"
-import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
+import { SlashEditorFeature } from "@/src/features"
 import { CreateResearchI } from "@/src/schemas"
 import { VariableTable } from "@/src/tables"
 import { BotMessageSquareIcon, SquareChevronRightIcon, VariableIcon } from "lucide-react"

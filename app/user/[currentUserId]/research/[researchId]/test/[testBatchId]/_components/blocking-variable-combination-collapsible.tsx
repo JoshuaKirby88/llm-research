@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleChevronIcon, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT, TestToBlockingValueT } from "@/src/schemas"
-import { TestTable } from "@/src/tables/test.table"
+import { TestTable } from "@/src/tables"
 import { TestCard } from "./test-card"
 
 type Props = {

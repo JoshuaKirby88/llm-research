@@ -25,7 +25,7 @@ import { destructureArray } from "@/utils/destructure-array"
 import { eq } from "drizzle-orm"
 import { z } from "zod"
 import { AIFeature, AIModel } from "../features"
-import { RunTestI } from "../schemas/features/run-test.schema"
+import { RunTestI } from "../schemas"
 import { APIKeyTable, VariableTable } from "../tables"
 import { AIServiceInstance } from "./ai.service"
 

@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ColorFeature } from "@/src/features/color.feature"
+import { ColorFeature } from "@/src/features"
 import { cn } from "@/utils/cn"
 
 export const ColorPicker = (props: React.ComponentProps<typeof RadioGroup>) => {

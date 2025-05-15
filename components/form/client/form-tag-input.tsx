@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form"
 
 type Props = { name: string } & Omit<ComponentProps<typeof TagInput>, "tags" | "onTagAdd" | "onTagRemove">
 
-export const FormTagInput = ({ className, ...props }: Props) => {
+export const FormTagInput = (props: Props) => {
 	const { control } = useFormContext()
 
 	return (

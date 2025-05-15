@@ -1,10 +1,10 @@
 "use server"
 
 import { transaction } from "@/drizzle/transaction"
-import { SlashEditorFeature } from "@/src/features/slash-editor.feature"
+import { SlashEditorFeature } from "@/src/features"
 import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
 import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
-import { DependentValueTable } from "@/src/tables/dependent-value.table"
+import { DependentValueTable } from "@/src/tables"
 import { createAction } from "@/utils/actions/create-action"
 import { getParamsFromHeaders } from "@/utils/get-params-from-headers"
 import { redirect } from "next/navigation"

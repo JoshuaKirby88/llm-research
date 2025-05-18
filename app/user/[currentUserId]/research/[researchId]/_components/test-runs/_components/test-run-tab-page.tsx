@@ -17,6 +17,7 @@ export const TestRunTabPage = (props: Props) => {
 		const currentTestBatchContributor = props.contributors.find(c => c.id === testBatch.contributorId)!
 		const currentUser = props.queriedUsers.find(queriedUser => queriedUser.id === currentTestBatchContributor.userId)
 		const testModelBatches = props.testModelBatches.filter(tmb => tmb.testBatchId === testBatch.id)
+		const testBatchResults = props.testBatchResults.filter(tbr => tbr.testBatchId === testBatch.id)
 
 		return (
 			<TestBatchCard
@@ -26,7 +27,7 @@ export const TestRunTabPage = (props: Props) => {
 				testBatch={testBatch}
 				testModelBatches={testModelBatches}
 				dependentValues={props.dependentValues}
-				testBatchResults={props.testBatchResults}
+				testBatchResults={testBatchResults}
 			/>
 		)
 	})

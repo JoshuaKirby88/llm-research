@@ -124,6 +124,10 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 						research={research}
 						forkedResearch={forkedResearch}
 						contributors={contributors}
+						independentVariable={independentVariable}
+						independentValues={independentValues}
+						blockingVariables={blockingVariables}
+						blockingValues={blockingValues}
 						dependentValues={dependentValues}
 						testBatchResults={testBatchResults}
 					/>

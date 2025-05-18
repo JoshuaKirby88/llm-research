@@ -1,8 +1,9 @@
 import { ClerkPFP } from "@/components/clerk/clerk-pfp"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "@/components/research-chart"
-import { ContributorT, DependentValueT, ResearchT, TestBatchResultT } from "@/src/schemas"
+import { VariableBadge } from "@/components/variable-badge"
+import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
-import { CalendarIcon, CheckCircle2Icon, GitForkIcon } from "lucide-react"
+import { CalendarIcon, CheckCircle2Icon, GitForkIcon, VariableIcon } from "lucide-react"
 import Link from "next/link"
 
 type Props = {
@@ -10,6 +11,10 @@ type Props = {
 	research: ResearchT
 	forkedResearch: ResearchT | null
 	contributors: ContributorT[]
+	independentVariable: IndependentVariableT
+	independentValues: IndependentValueT[]
+	blockingVariables: BlockingVariableT[]
+	blockingValues: BlockingValueT[]
 	dependentValues: DependentValueT[]
 	testBatchResults: TestBatchResultT[]
 }
@@ -43,7 +48,22 @@ export const ResearchOverviewPage = (props: Props) => {
 					</div>
 					<div className="flex items-center gap-2">
 						<CheckCircle2Icon />
-						Stats: {props.research.isComplete ? "Complete" : "Researching"}
+						Status: {props.research.isComplete ? "Complete" : "Researching"}
+					</div>
+					<div className="flex items-center gap-2">
+						<VariableIcon />
+						Independent Variable: <VariableBadge variable={props.independentVariable} values={props.independentValues} />
+					</div>
+					<div className="flex items-center gap-2">
+						<VariableIcon />
+						Blocking Variables:{" "}
+						{props.blockingVariables.map(bVar => (
+							<VariableBadge key={bVar.id} variable={bVar} values={props.blockingValues.filter(bVal => bVal.blockingVariableId === bVar.id)} />
+						))}
+					</div>
+					<div className="flex items-center gap-2">
+						<VariableIcon />
+						Dependent Variable: <VariableBadge variable={{ name: "Dependent Variable" }} values={props.dependentValues} />
 					</div>
 
 					{props.forkedResearch && (

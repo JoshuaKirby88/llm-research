@@ -57,6 +57,7 @@
 		"drizzle-orm": "^0.41.0",
 		"drizzle-zod": "^0.7.1",
 		"emblor": "^1.4.8",
+		"json-schema-to-zod": "^2.6.1",
 		"lodash.pick": "^4.4.0",
 		"lucide-react": "^0.483.0",
 		"next": "15.2.3",
@@ -72,6 +73,7 @@
 		"tippy.js": "^6.3.7",
 		"tw-animate-css": "^1.2.4",
 		"zod": "^3.24.2",
+		"zod-to-json-schema": "^3.24.5",
 		"zustand": "^5.0.3"
 	},
 	"devDependencies": {

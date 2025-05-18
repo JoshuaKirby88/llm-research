@@ -20,13 +20,11 @@ export const generateValueAction = createAction(
 	"signedIn",
 	schema,
 )(async ({ user, input }) => {
-	const prompts = generateValuePrompts(input)
-
 	const { completion } = await AIService.getStructuredCompletion({
 		model: "GPT-4o mini",
 		messages: [
-			{ role: "system", content: prompts.system },
-			{ role: "user", content: prompts.user },
+			{ role: "system", content: generateValuePrompts.system },
+			{ role: "user", content: generateValuePrompts.user(input) },
 		],
 		schema: z.object({ values: z.string().array().length(input.count) }),
 	})

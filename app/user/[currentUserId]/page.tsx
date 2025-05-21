@@ -3,7 +3,7 @@ import { TabsContent } from "@/components/ui/tabs"
 import { authProcedure } from "@/utils/auth-procedure"
 import { FlaskConicalIcon, GiftIcon, UserIcon } from "lucide-react"
 import { ContributionPage } from "./_components/contribution/contribution-page"
-import { UserResearchPage } from "./_components/user-research/user-research-page"
+import { UserResearchPage } from "./_components/research/user-research-page"
 import { UserPage } from "./_components/user/user-page"
 
 const config = {

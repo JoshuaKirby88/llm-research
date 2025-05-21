@@ -8,9 +8,10 @@ import { ClerkPublicUser } from "@/src/services/clerk.service"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, desc, eq } from "drizzle-orm"
 import { ArchiveIcon, CheckCircle2Icon, FlaskConicalIcon, NotebookPenIcon, StarIcon } from "lucide-react"
-import { ResearchPage } from "./research-page"
+import { UserResearchTabPage } from "./user-research-tab-page"
 
 const config = {
+	tabName: "researchTab",
 	tabs: {
 		isCurrentUser: [
 			{ value: "All", icon: FlaskConicalIcon },
@@ -43,8 +44,8 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 
 	return (
 		<div className="w-full">
-			<PageTabs tabs={tabs} searchParams={props.searchParams} orientation="vertical">
-				<PageTabsList tabs={tabs} />
+			<PageTabs tabs={tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
+				<PageTabsList tabs={tabs} name={config.tabName} />
 
 				{tabs.map(tab => {
 					const filteredResult = result.filter(
@@ -64,7 +65,7 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 
 					return (
 						<TabsContent key={tab.value} value={tab.value} className="space-y-10">
-							<ResearchPage
+							<UserResearchTabPage
 								user={props.user}
 								researches={researches}
 								userToStarredResearches={userToStarredResearches}

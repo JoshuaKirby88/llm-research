@@ -1,11 +1,11 @@
 import { Button, buttonVariants } from "@/components/ui/button"
+import { authProcedure } from "@/utils/auth-procedure"
 import { cn } from "@/utils/cn"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import { CogIcon } from "lucide-react"
 import Link from "next/link"
 import { NavbarBreadCrumb } from "./navbar-breadcrumb"
 import { ThemeDropdown } from "./theme-dropdown"
-import { authProcedure } from "@/utils/auth-procedure"
 
 export const Navbar = async () => {
 	const user = await authProcedure("public")
@@ -20,7 +20,7 @@ export const Navbar = async () => {
 						New Research
 					</Link>
 
-					<Link className={cn(buttonVariants({ variant: "text", size: "sm" }))} href={`/user/${user.userId}/research`}>
+					<Link className={cn(buttonVariants({ variant: "text", size: "sm" }))} href={`/user/${user.userId}?tab=Research`}>
 						Your Research
 					</Link>
 

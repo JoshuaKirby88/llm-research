@@ -11,7 +11,7 @@ type Props = {
 	testBatchResults: TestBatchResultT[]
 }
 
-export const ResearchPage = (props: Props) => {
+export const UserResearchTabPage = (props: Props) => {
 	return props.researches.map(research => {
 		const userToStarredResearch = props.userToStarredResearches.find(utsr => utsr.researchId === research.id)
 		const dependentValues = props.dependentValues.filter(dVal => dVal.researchId === research.id)

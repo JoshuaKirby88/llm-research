@@ -13,7 +13,7 @@ import { notFound } from "next/navigation"
 import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-content"
 
 const config = {
-	tabName: "mdel",
+	tabName: "modelTab",
 }
 
 const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {

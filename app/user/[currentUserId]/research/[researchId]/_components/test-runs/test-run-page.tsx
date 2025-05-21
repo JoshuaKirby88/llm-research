@@ -18,7 +18,7 @@ type Props = {
 }
 
 const config = {
-	tabName: "tests",
+	tabName: "testTab",
 	tabs: [
 		{ value: "All", icon: BeanOffIcon },
 		{ value: "Authored", icon: UserIcon },

@@ -1,14 +1,13 @@
-import { BatchAII } from "@/app/api/batch-ai/route"
 import { env } from "@/utils/env"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
-import { CoreMessage, LanguageModelUsage, LoadAPIKeyError, customProvider, embed, generateObject, generateText } from "ai"
+import { CoreMessage, LoadAPIKeyError, customProvider, embed, generateObject, generateText } from "ai"
 import { ZodSchema, z } from "zod"
 import { APIKeyError } from "../entities/errors"
 import { AIFeature, AIModel } from "../features"
 import { APIKeyT } from "../schemas"
-import { AIServiceSchema, AIServiceSchemaKey } from "../schemas/services/ai-service.schema"
+import { BatchAIProxyService, BatchCompletionI, BatchStructuredCompletionI } from "./batch-ai-proxy.service"
 
 type EmbeddingModel = Parameters<(typeof AIServiceInstance)["prototype"]["models"]["textEmbeddingModel"]>[0]
 
@@ -16,7 +15,7 @@ export class AIServiceInstance {
 	private apiKey
 	private models
 
-	constructor(apiKey?: Partial<APIKeyT>) {
+	constructor(apiKey: Partial<APIKeyT>) {
 		this.apiKey = apiKey
 
 		const openai = createOpenAI({ apiKey: apiKey?.openai ?? "" })
@@ -69,24 +68,31 @@ export class AIServiceInstance {
 		}
 	}
 
-	async batchCompletion(input: { model: AIModel; messages: CoreMessage[] }[]) {
-		const payload: BatchAII = { fn: "completion", input, apiKey: this.apiKey }
-
-		const response = await fetch(`${env.NEXT_PUBLIC_URL}/api/batch-ai`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
+	async batchCompletion(inputs: { model: AIModel; messages: CoreMessage[] }[]) {
+		const payload: BatchCompletionI[] = inputs.map(input => {
+			const model = this.models.languageModel(input.model)
+			return {
+				provider: model.provider,
+				modelId: model.modelId,
+				messages: input.messages,
+			}
 		})
 
-		return (await response.json()) as Return<typeof this.getCompletion>[]
+		const promise = BatchAIProxyService.batchCompletion(payload, this.apiKey)
+
+		const results = await this.handleAPIKeyError(promise, inputs[0])
+
+		return results.map(result => ({ completion: result.text, tokens: result.usage }))
 	}
 
 	async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
-		const result = await generateObject({
+		const promise = generateObject({
 			model: this.models.languageModel(input.model),
 			schema: input.schema,
 			messages: input.messages,
 		})
+
+		const result = await this.handleAPIKeyError(promise, input)
 
 		return {
 			completion: result.object as z.infer<T>,
@@ -94,16 +100,22 @@ export class AIServiceInstance {
 		}
 	}
 
-	async batchStructuredCompletion<T extends AIServiceSchema[AIServiceSchemaKey]["json"]>(input: { model: AIModel; schema: T; messages: CoreMessage[] }[]) {
-		const payload: BatchAII = { fn: "structuredCompletion", input, apiKey: this.apiKey }
-
-		const response = await fetch(`${env.NEXT_PUBLIC_URL}/api/batch-ai`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
+	async batchStructuredCompletion<T>(inputs: { model: AIModel; schema: ZodSchema<T>; messages: CoreMessage[] }[]) {
+		const payload: BatchStructuredCompletionI<T>[] = inputs.map(input => {
+			const model = this.models.languageModel(input.model)
+			return {
+				provider: model.provider,
+				modelId: model.modelId,
+				messages: input.messages,
+				schema: input.schema,
+			}
 		})
 
-		return (await response.json()) as { completion: z.infer<AIServiceSchema[T["key"]]["schema"]>; tokens: LanguageModelUsage }[]
+		const promise = BatchAIProxyService.batchStructuredCompletion(payload, this.apiKey)
+
+		const results = await this.handleAPIKeyError(promise, inputs[0])
+
+		return results.map(result => ({ completion: result.object, tokens: result.usage }))
 	}
 
 	async createEmbedding(input: { model: EmbeddingModel; text: string }) {

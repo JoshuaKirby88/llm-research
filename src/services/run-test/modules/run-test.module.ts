@@ -1,7 +1,7 @@
 import { AIFeature } from "@/src/features"
 import { APIKeyT, BlockingValueT, BlockingVariableT, DependentValueT, EvalPromptT, IndependentValueT, IndependentVariableT, InsertMessageT, MessagePromptT, RunTestI } from "@/src/schemas"
-import { AIServiceSchemas } from "@/src/schemas/services/ai-service.schema"
 import { VariableTable } from "@/src/tables"
+import { z } from "zod"
 import { AIServiceInstance } from "../../ai.service"
 
 type Input = Pick<RunTestI, "models" | "iterations"> & {
@@ -50,7 +50,7 @@ export class RunTestModule {
 							}),
 						},
 					],
-					schema: AIServiceSchemas.generateMessage().json,
+					schema: z.object({ answer: z.string().describe("Just the generated text.") }),
 				})),
 			)
 
@@ -84,7 +84,7 @@ export class RunTestModule {
 						}),
 					},
 				],
-				schema: AIServiceSchemas.evaluate(input.dependentValues.map(dVal => dVal.value)).json,
+				schema: z.object({ evaluation: z.enum(input.dependentValues.map(dVal => dVal.value) as [string, ...string[]]) }),
 			})),
 		)
 

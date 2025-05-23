@@ -69,6 +69,7 @@
 		"recharts": "^2.15.3",
 		"sonner": "^2.0.3",
 		"stripe": "^18.1.0",
+		"superjson": "^2.2.2",
 		"tailwind-merge": "^3.0.2",
 		"tippy.js": "^6.3.7",
 		"tw-animate-css": "^1.2.4",
@@ -79,6 +80,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@tailwindcss/postcss": "^4",
+		"@types/json-schema": "^7.0.15",
 		"@types/lodash.omit": "^4.5.9",
 		"@types/lodash.pick": "^4.4.9",
 		"@types/node": "^20",
@@ -88,6 +90,7 @@
 		"backend": "link:@types/@clerk/backend",
 		"better-sqlite3": "^11.9.1",
 		"drizzle-kit": "^0.30.5",
+		"json-schema": "^0.4.0",
 		"tailwindcss": "^4",
 		"typescript": "^5",
 		"wrangler": "^4.14.4"

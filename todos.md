@@ -6,6 +6,9 @@
 
 # Todos
 
+- [ ] Filter test runs in test run page
+    - Variables: Independent, Blocking combination, Dependent
+    - Choose filtering component wisely. Look at ShadCN X account
 - [ ] Rename message prompt to prompt template
 - [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown

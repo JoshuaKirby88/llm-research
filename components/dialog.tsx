@@ -1,7 +1,7 @@
 import { DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogXButton, Dialog as ShadDialog, DialogFooter as ShadDialogFooter } from "@/components/ui/dialog"
 import { ZustandDialogActions, ZustandDialogStates } from "@/src/zustand/dialog-zustand"
 import { cn } from "@/utils/cn"
-import pick from "lodash.pick"
+import { pick } from "@/utils/pick"
 import { IconWrapper } from "./icon-wrapper"
 import { Button } from "./ui/button"
 import { DialogHeader } from "./ui/dialog"

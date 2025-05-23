@@ -9,10 +9,11 @@
 - [ ] Filter test runs in test run page
     - Variables: Independent, Blocking combination, Dependent
     - Choose filtering component wisely. Look at ShadCN X account
+    - [Sad man table](https://tablecn.com/?filterFlag=advancedFilters)
+    - [Bazz UI table](https://ui.bazza.dev/docs/data-table-filter)
 - [ ] Rename message prompt to prompt template
 - [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
-- [ ] Make tooltip non focussable
 - [ ] There is a possibility that a conitrbutor for the user's own research doesn't exist
 - [ ] Feel free to perform more server side queries inside individual tab content components, as they only run once on the server
 - [ ] Test deleting a user such that research still remains

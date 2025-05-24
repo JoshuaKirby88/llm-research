@@ -1,15 +1,18 @@
+import { starResearchAction, unstarResearchAction } from "@/actions/research/star-research.action"
+import { FormActionButton } from "@/components/form/server/form-action-button"
 import { LinkButton } from "@/components/link-button"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
-import { Research, TestBatch } from "@/drizzle/schema"
+import { Research, TestBatch, UserToStarredResearch } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
 import { ClerkService } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
+import { cn } from "@/utils/cn"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, desc, eq } from "drizzle-orm"
-import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon, StarIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
 import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
@@ -43,6 +46,7 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 		with: {
 			forkedResearch: true,
 			contributors: true,
+			userToStarredResearches: user.userId ? { where: eq(UserToStarredResearch.userId, user.userId) } : { limit: 0 },
 			independentVariable: {
 				with: { independentValues: true },
 			},
@@ -73,6 +77,7 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 		{
 			forkedResearch: [forkedResearch],
 			contributors,
+			userToStarredResearches: [userToStarredResearch],
 			independentVariable: [independentVariable],
 			independentValues,
 			blockingVariables,
@@ -88,6 +93,7 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 	] = destructureArray([result], {
 		forkedResearch: true,
 		contributors: true,
+		userToStarredResearches: true,
 		independentVariable: { independentValues: true },
 		blockingVariables: { blockingValues: true },
 		messagePrompts: true,
@@ -116,6 +122,14 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 							Run Tests
 						</Button>
 					</RunTestSheet>
+
+					<FormActionButton
+						as="button"
+						action={(userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: research.id, currentUserId: research.userId })}
+						className="flex h-9 items-center gap-2"
+					>
+						<StarIcon className={cn(userToStarredResearch && "fill-yellow-400 text-yellow-400")} /> {research.starCount}
+					</FormActionButton>
 				</div>
 
 				<TabsContent value="Overview">

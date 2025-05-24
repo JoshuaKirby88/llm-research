@@ -33,15 +33,36 @@ export class VariableTable {
 			messages: Pick<MessageT, "role" | "content" | "isCompletion">[]
 		},
 	) {
-		let replacedText = ""
+		let results: Array<{ type: "text"; text: string } | { type: "variable"; name: string; text: string }> = [{ type: "text", text }]
+
+		const replaceResults = (match: string, replacement: string): typeof results => {
+			return results.flatMap(result => {
+				if (result.type === "variable") {
+					return result
+				} else {
+					return result.text.split(match).flatMap((part, i) =>
+						i === 0
+							? [{ type: "text", text: part }]
+							: [
+									{ type: "variable", name: match.substring(2, match.length - 2), text: replacement },
+									{ type: "text", text: part },
+								],
+					)
+				}
+			})
+		}
 
 		// Independent variable
-		replacedText = text.replaceAll(this.toVar(variables.independentVariable.name), variables.independentValue.value)
-		// Blocking variable
-		replacedText = variables.blockingVariableCombination.reduce((acc, curr) => acc.replaceAll(this.toVar(curr.name), curr.blockingValue.value), replacedText)
+		results = replaceResults(this.toVar(variables.independentVariable.name), variables.independentValue.value)
+		// Blocking variables
+		for (const blockingVariableCombination of variables.blockingVariableCombination) {
+			results = replaceResults(this.toVar(blockingVariableCombination.name), blockingVariableCombination.blockingValue.value)
+		}
 		// Messages
-		replacedText = variables.messages.reduce((acc, curr) => acc.replaceAll(this.messageToVar(curr), curr.content), replacedText)
+		for (const message of variables.messages) {
+			results = replaceResults(this.messageToVar(message), message.content)
+		}
 
-		return replacedText
+		return results
 	}
 }

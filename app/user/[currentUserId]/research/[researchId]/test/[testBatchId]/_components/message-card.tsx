@@ -52,9 +52,20 @@ export const MessageCard = (props: Props) => {
 								</Button>
 							}
 							contentProps={{ className: "max-w-5xl max-h-[80%] flex flex-col p-0" }}
+							xButton
 						>
 							<div className="overflow-y-auto p-4">
-								<p className="whitespace-pre-wrap">{replacedPrompt}</p>
+								<p className="whitespace-pre-wrap">
+									{replacedPrompt.map((obj, i) =>
+										obj.type === "text" ? (
+											obj.text
+										) : (
+											<div key={i} className={"inline-flex rounded-md border bg-muted px-1 "}>
+												{obj.name}: {obj.text}
+											</div>
+										),
+									)}
+								</p>
 							</div>
 						</Dialog>
 					)}

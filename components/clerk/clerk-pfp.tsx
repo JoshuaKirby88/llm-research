@@ -1,57 +1,24 @@
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
-import Link from "next/link"
+import { omit } from "@/utils/omit"
 import { ComponentProps } from "react"
-import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
-import { Badge } from "../ui/badge"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
+import { ClerkAvatar } from "./clerk-avatar"
 
-type Props = {
-	userId: string
-	user: ClerkQueriedUser | undefined
-	nameAsLink?: boolean
-	badge?: React.ReactNode
-} & PickRequired<ComponentProps<typeof Avatar>, "size">
-
-const variants = {
-	size: {
-		xs: 24,
-		sm: 28,
-		md: 32,
-		lg: 36,
-		xl: 40,
-	} satisfies Record<keyof AvatarProps["size"], any>,
-}
-
-export const ClerkPFP = ({ userId, user, nameAsLink, badge, ...props }: Props) => {
-	const userName = user?.fullName ?? "User is deleted"
-
-	const params = new URLSearchParams()
-	params.set("height", variants.size[props.size].toString())
-	params.set("width", variants.size[props.size].toString())
-	params.set("quality", "100")
-	params.set("fit", "crop")
-
+export const ClerkPFP = (props: { userId: string } & ComponentProps<typeof ClerkAvatar>) => {
 	return (
-		<div className="flex items-center gap-2">
-			<div className="relative">
-				<Avatar {...props}>
-					<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
-					<AvatarFallback />
-				</Avatar>
+		<HoverCard>
+			<HoverCardTrigger asChild>
+				<ClerkAvatar {...props} />
+			</HoverCardTrigger>
 
-				{badge && (
-					<Badge className="-top-3 -translate-x-3 absolute left-full border-background" size="roundSm">
-						{badge}
-					</Badge>
-				)}
-			</div>
+			<HoverCardContent>
+				<div className="space-y-3">
+					<ClerkAvatar {...omit(props, ["badge"])} size="lg" />
 
-			{nameAsLink ? (
-				<Link href={`/user/${userId}`} className="text-blue-600 hover:underline">
-					{userName}
-				</Link>
-			) : (
-				userName
-			)}
-		</div>
+					<p className="text-muted-foreground text-sm">
+						Designer at <strong className="font-medium text-foreground">@Origin UI</strong>. Crafting web experiences with Tailwind CSS.
+					</p>
+				</div>
+			</HoverCardContent>
+		</HoverCard>
 	)
 }

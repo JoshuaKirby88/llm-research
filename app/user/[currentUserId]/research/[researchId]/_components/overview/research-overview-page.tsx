@@ -39,7 +39,6 @@ export const ResearchOverviewPage = (props: Props) => {
 							user={props.currentUser}
 							size="sm"
 							badge={props.currentUser ? props.contributors.find(c => c.userId === props.currentUser!.id)?.count : undefined}
-							nameAsLink
 						/>
 					</div>
 					<div className="flex items-center gap-2">

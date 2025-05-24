@@ -48,7 +48,7 @@ export const TestBatchCard = (props: Props) => {
 			</Link>
 
 			<CardFooter className="absolute inset-x-0 bottom-0 justify-between p-3">
-				<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} nameAsLink />
+				<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} />
 				<TestBatchCardDropdown research={props.research} testBatch={props.testBatch} />
 			</CardFooter>
 		</div>

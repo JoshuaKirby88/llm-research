@@ -1,4 +1,3 @@
-import "dotenv/config"
 import { defineConfig } from "drizzle-kit"
 import { getLocalDB } from "./get-local-db"
 

@@ -8,7 +8,7 @@ const Page = (props: { searchParams: Promise<NextSearchParam> }) => (
 	<>
 		<div className="mb-20 flex flex-col items-center gap-5">
 			<div className="flex items-center">
-				<Image src="/thiings/exploding-triangular-beaker/black.png" width={100} height={100} alt="Exploding Beaker" />
+				<Image src="/thiings/exploding-triangular-beaker/black.webp" width={100} height={100} alt="Exploding Beaker" />
 				<h1 className="font-bold text-6xl">LLM Research</h1>
 			</div>
 

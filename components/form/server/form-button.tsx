@@ -3,8 +3,9 @@
 import { Button, ButtonProps } from "@/components/ui/button"
 import { useFormStatus } from "react-dom"
 
-export const FormButton = (props: ButtonProps) => {
+export const FormButton = ({ as, ...props }: ButtonProps & { as?: string }) => {
+	const Comp = as ?? Button
 	const { pending } = useFormStatus()
 
-	return <Button type="submit" isLoading={pending} {...props} />
+	return <Comp type="submit" isLoading={pending} {...props} />
 }

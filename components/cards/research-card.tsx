@@ -11,6 +11,7 @@ import { cn } from "@/utils/cn"
 import { ArchiveIcon, ArchiveRestoreIcon, DownloadIcon, EllipsisIcon, StarIcon, StarOffIcon } from "lucide-react"
 import Link from "next/link"
 import { ClerkPFP } from "../clerk/clerk-pfp"
+import { FormActionButton } from "../form/server/form-action-button"
 import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
 
@@ -83,29 +84,36 @@ const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
 					<EllipsisIcon />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<form action={(props.userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: props.research.id, currentUserId: props.research.userId }) as any}>
-						<button type="submit" className={dropdownMenuItemVariants()}>
-							{props.userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
-							{props.userToStarredResearch ? "Unstar" : "Star"}
-						</button>
-					</form>
+					<FormActionButton
+						as="button"
+						className={dropdownMenuItemVariants()}
+						action={(props.userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: props.research.id, currentUserId: props.research.userId })}
+					>
+						{props.userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
+						{props.userToStarredResearch ? "Unstar" : "Star"}
+					</FormActionButton>
 
-					<FormRouteHandler action="/api/download-research" input={{ researchId: props.research.id } satisfies ActionI<typeof downloadResearchAction>}>
-						<button type="submit" className={dropdownMenuItemVariants()}>
-							<DownloadIcon />
-							Download
-						</button>
+					<FormRouteHandler
+						as="button"
+						action="/api/download-research"
+						input={{ researchId: props.research.id } satisfies ActionI<typeof downloadResearchAction>}
+						className={dropdownMenuItemVariants()}
+					>
+						<DownloadIcon />
+						Download
 					</FormRouteHandler>
 
 					<DropdownMenuSeparator />
 
 					{props.user.userId === props.research.userId && (
-						<form action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id }) as any}>
-							<button type="submit" className={dropdownMenuItemVariants({ variant: props.research.isArchived ? "inverseBlue" : "inverseRed" })}>
-								{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
-								{props.research.isArchived ? "Restore" : "Archive"}
-							</button>
-						</form>
+						<FormActionButton
+							as="button"
+							action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
+							className={dropdownMenuItemVariants({ variant: props.research.isArchived ? "inverseBlue" : "inverseRed" })}
+						>
+							{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
+							{props.research.isArchived ? "Restore" : "Archive"}
+						</FormActionButton>
 					)}
 				</DropdownMenuContent>
 			</DropdownMenu>

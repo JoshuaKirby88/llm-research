@@ -63,11 +63,14 @@ const TestBatchCardDropdown = (props: { research: ResearchT; testBatch: TestBatc
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent>
-				<FormRouteHandler action="/api/download-research" input={{ researchId: props.research.id, testBatchId: props.testBatch.id } satisfies ActionI<typeof downloadResearchAction>}>
-					<button type="submit" className={dropdownMenuItemVariants()}>
-						<DownloadIcon />
-						Download
-					</button>
+				<FormRouteHandler
+					as="button"
+					action="/api/download-research"
+					input={{ researchId: props.research.id, testBatchId: props.testBatch.id } satisfies ActionI<typeof downloadResearchAction>}
+					className={dropdownMenuItemVariants()}
+				>
+					<DownloadIcon />
+					Download
 				</FormRouteHandler>
 			</DropdownMenuContent>
 		</DropdownMenu>

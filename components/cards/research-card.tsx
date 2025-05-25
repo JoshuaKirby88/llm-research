@@ -44,7 +44,7 @@ export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: 
 					<p className="text-muted-foreground">{props.research.createdAt.toLocaleDateString()}</p>
 					<CardTitle>{props.research.name}</CardTitle>
 					<CardDescription>
-						<p>Status: {props.research.isComplete ? "Complete" : "Researching"}</p>
+						<p>Status: {props.research.isPublished ? "Published" : "Researching"}</p>
 					</CardDescription>
 				</CardHeader>
 

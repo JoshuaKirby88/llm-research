@@ -47,7 +47,7 @@ export const ResearchOverviewPage = (props: Props) => {
 					</div>
 					<div className="flex items-center gap-2">
 						<CheckCircle2Icon />
-						Status: {props.research.isComplete ? "Complete" : "Researching"}
+						Status: {props.research.isPublished ? "Published" : "Researching"}
 					</div>
 					<div className="flex items-center gap-2">
 						<VariableIcon />

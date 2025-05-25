@@ -28,7 +28,7 @@ export const Research = sqliteTable(
 		description: text().notNull().default(""),
 		starCount: integer().notNull().default(0),
 		conclusion: text(),
-		isComplete: integer({ mode: "boolean" }).notNull().default(false),
+		isPublished: integer({ mode: "boolean" }).notNull().default(false),
 		isStarredByUser: integer({ mode: "boolean" }).notNull().default(false),
 		isArchived: integer({ mode: "boolean" }).notNull().default(false),
 		isUserDeleted: integer({ mode: "boolean" }).notNull().default(false),
@@ -36,7 +36,7 @@ export const Research = sqliteTable(
 		forkedResearchId: integer().references((): AnySQLiteColumn => Research.id, { onDelete: "set null" }),
 		...defaultColumns,
 	},
-	table => [check("isComplete", or(and(eq(table.isComplete, sql`false`), isNull(table.conclusion)), and(eq(table.isComplete, sql`true`), isNotNull(table.conclusion)))!)],
+	table => [check("isPublished", or(and(eq(table.isPublished, sql`false`), isNull(table.conclusion)), and(eq(table.isPublished, sql`true`), isNotNull(table.conclusion)))!)],
 )
 
 export const UserToStarredResearch = sqliteTable(

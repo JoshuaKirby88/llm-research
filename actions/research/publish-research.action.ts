@@ -8,11 +8,11 @@ import { createAction } from "@/utils/actions/create-action"
 import { revalidatePath } from "next/cache"
 import { after } from "next/server"
 
-export const completeResearchAction = createAction(
+export const publishResearchAction = createAction(
 	"signedIn",
 	researchSchema.pick({ id: true, conclusion: true }),
 )(async ({ input }) => {
-	const updatedResearch = await ResearchRepo.update(input.id, { isComplete: true, conclusion: input.conclusion })
+	const updatedResearch = await ResearchRepo.update(input.id, { isPublished: true, conclusion: input.conclusion })
 
 	if (ResearchTable.canVectorize(updatedResearch)) {
 		after(async () => {

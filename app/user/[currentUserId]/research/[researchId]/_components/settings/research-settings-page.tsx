@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator"
 import { DependentValueT, ResearchT, TestBatchT } from "@/src/schemas"
 import { ArchiveResearchCard } from "./archive-research-card"
-import { CompleteResearchCard } from "./complete-research-card"
+import { PublishResearchCard } from "./publish-research-card"
 import { ResearchColorPicker } from "./research-color-picker"
 import { ResearchNameAndDescriptionAndConclusionForm } from "./research-name-and-description-and-conclusion-form"
 
@@ -16,9 +16,9 @@ export const ResearchSettingsPage = (props: { research: ResearchT; dependentValu
 
 			<Separator />
 
-			<CompleteResearchCard research={props.research} testBatches={props.testBatches}>
+			<PublishResearchCard research={props.research} testBatches={props.testBatches}>
 				<Separator />
-			</CompleteResearchCard>
+			</PublishResearchCard>
 
 			<ArchiveResearchCard research={props.research} />
 		</div>

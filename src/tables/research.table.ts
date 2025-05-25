@@ -1,7 +1,7 @@
 import { ResearchT } from "../schemas"
 
 export class ResearchTable {
-	static vectorizedWhere = { isComplete: true, isArchived: false }
+	static vectorizedWhere = { isPublished: true, isArchived: false }
 
 	static canDelete(input: { contributorCount: number }) {
 		// Only contributor is the owner of the research
@@ -14,10 +14,10 @@ export class ResearchTable {
 	}
 
 	static canVectorize(research: ResearchT) {
-		return research.isComplete && !research.isArchived
+		return research.isPublished && !research.isArchived
 	}
 
 	static canDeleteVector(research: ResearchT) {
-		return research.isComplete
+		return research.isPublished
 	}
 }

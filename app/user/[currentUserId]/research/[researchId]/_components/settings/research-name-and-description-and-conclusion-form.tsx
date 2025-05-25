@@ -25,7 +25,7 @@ export const ResearchNameAndDescriptionAndConclusionForm = (props: { research: R
 			</Label>
 			<Textarea name="description" defaultValue={props.research.description} />
 
-			{props.research.isComplete && (
+			{props.research.isPublished && (
 				<>
 					<Label size="xl" className="mb-1">
 						Conclusion

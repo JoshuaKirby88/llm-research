@@ -1,4 +1,4 @@
-import { completeResearchAction } from "@/actions/research/complete-research.action"
+import { publishResearchAction } from "@/actions/research/publish-research.action"
 import { AlertCard, AlertCardContent } from "@/components/alert-card"
 import { Dialog, DialogFooter } from "@/components/dialog"
 import { IconWrapper } from "@/components/icon-wrapper"
@@ -9,25 +9,25 @@ import { ResearchT, TestBatchT } from "@/src/schemas"
 import { callFormAction } from "@/utils/actions/call-form-action"
 import { CheckIcon } from "lucide-react"
 
-export const CompleteResearchCard = (props: { research: ResearchT; testBatches: TestBatchT[]; children?: React.ReactNode }) => {
+export const PublishResearchCard = (props: { research: ResearchT; testBatches: TestBatchT[]; children?: React.ReactNode }) => {
 	const onSubmit = async (formData: FormData) => {
 		"use server"
 
-		await callFormAction(completeResearchAction, { formData }, { id: props.research.id })
+		await callFormAction(publishResearchAction, { formData }, { id: props.research.id })
 	}
 
-	return props.testBatches.length && !props.research.isComplete ? (
+	return props.testBatches.length && !props.research.isPublished ? (
 		<>
 			<AlertCard>
 				<IconWrapper>
 					<CheckIcon />
 				</IconWrapper>
 
-				<AlertCardContent title="Complete Research" description="Complete a research to make it public. You can still run tests.">
+				<AlertCardContent title="Publish Research" description="You can still run tests.">
 					<Dialog
-						title="Complete Research"
+						title="Publish Research"
 						description="Optionally write a conclusion. You can edit this later."
-						triggerButton={<Button>Complete Research</Button>}
+						triggerButton={<Button>Publish</Button>}
 						icon={<CheckIcon />}
 						contentProps={{ className: "max-w-lg" }}
 					>
@@ -37,7 +37,7 @@ export const CompleteResearchCard = (props: { research: ResearchT; testBatches: 
 							</Label>
 							<Textarea name="conclusion" minRows={5} className="mb-10" />
 
-							<DialogFooter confirmCloseButton={<Button type="submit">Complete</Button>} cancelProps={{ children: "Cancel" }} />
+							<DialogFooter confirmCloseButton={<Button type="submit">Publish</Button>} cancelProps={{ children: "Cancel" }} />
 						</form>
 					</Dialog>
 				</AlertCardContent>

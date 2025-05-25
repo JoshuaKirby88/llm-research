@@ -19,7 +19,7 @@ const schema = z.object({
 export const generateValueAction = createAction(
 	"signedIn",
 	schema,
-)(async ({ user, input }) => {
+)(async ({ input }) => {
 	const { completion } = await AIService.getStructuredCompletion({
 		model: "GPT-4o mini",
 		messages: [

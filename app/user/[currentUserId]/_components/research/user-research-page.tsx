@@ -15,13 +15,13 @@ const config = {
 	tabs: {
 		isCurrentUser: [
 			{ value: "All", icon: FlaskConicalIcon },
-			{ value: "Complete", icon: CheckCircle2Icon },
+			{ value: "Published", icon: CheckCircle2Icon },
 			{ value: "Researching", icon: NotebookPenIcon },
 			{ value: "Starred", icon: StarIcon },
 			{ value: "Archived", icon: ArchiveIcon },
 		],
 		isOtherUser: [
-			{ value: "Complete", icon: CheckCircle2Icon },
+			{ value: "Published", icon: CheckCircle2Icon },
 			{ value: "Starred", icon: StarIcon },
 		],
 	},
@@ -51,8 +51,8 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 					const filteredResult = result.filter(
 						r =>
 							(tab.value === "All" && !r.isArchived) ||
-							(tab.value === "Complete" && !r.isArchived && r.isComplete) ||
-							(tab.value === "Researching" && !r.isArchived && !r.isComplete) ||
+							(tab.value === "Published" && !r.isArchived && r.isPublished) ||
+							(tab.value === "Researching" && !r.isArchived && !r.isPublished) ||
 							(tab.value === "Starred" && r.isStarredByUser) ||
 							(tab.value === "Archived" && r.isArchived),
 					)

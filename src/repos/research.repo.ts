@@ -12,9 +12,9 @@ import { ResearchTable } from "../tables"
 export class ResearchRepo {
 	static getPublicWhere(input: { userId: ClerkPublicUser["userId"] }) {
 		if (input.userId) {
-			return or(eq(Research.userId, input.userId), and(eq(Research.isComplete, true), eq(Research.isArchived, false)))
+			return or(eq(Research.userId, input.userId), and(eq(Research.isPublished, true), eq(Research.isArchived, false)))
 		} else {
-			return and(eq(Research.isComplete, true), eq(Research.isArchived, false))
+			return and(eq(Research.isPublished, true), eq(Research.isArchived, false))
 		}
 	}
 

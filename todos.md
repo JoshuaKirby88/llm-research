@@ -6,7 +6,7 @@
 
 # Todos
 
-- [ ] Change complete status to public or published status
+- [ ] Use separate vector DB for local and prod
 - [ ] Filter test runs in test run page
     - Variables: Independent, Blocking combination, Dependent
     - Choose filtering component wisely. Look at ShadCN X account

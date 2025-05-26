@@ -121,7 +121,7 @@
 	}
 }
 
-.lucide {
+.lucide:not([class*="size-"]) {
 	height: 20px;
 	width: 20px;
 }

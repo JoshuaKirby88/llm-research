@@ -7,10 +7,10 @@ import { ActionI } from "@/utils/actions/create-action"
 import { cn } from "@/utils/cn"
 import { DownloadIcon, EllipsisIcon } from "lucide-react"
 import Link from "next/link"
-import { ClerkPFP } from "../clerk/clerk-pfp"
+import { ClerkProfile } from "../clerk/clerk-profile"
 import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
-import { CardContent, CardFooter, cardVariants } from "../ui/card"
+import { Card, CardContent, CardFooter, cardVariants } from "../ui/card"
 
 type Props = {
 	research: ResearchT
@@ -24,8 +24,8 @@ type Props = {
 
 export const TestBatchCard = (props: Props) => {
 	return (
-		<div className="relative">
-			<Link href={`/user/${props.research.userId}/research/${props.research.id}/test/${props.testBatch.id}`} className={cardVariants({ padding: "sm" })}>
+		<Card size="none">
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}/test/${props.testBatch.id}`} className={cardVariants({ variant: "link", size: "sm" })}>
 				<CardContent className="flex justify-between">
 					<div>
 						<p className="text-muted-foreground">{props.testBatch.createdAt.toLocaleDateString()}</p>
@@ -39,19 +39,13 @@ export const TestBatchCard = (props: Props) => {
 						<ResearchChartNoResultOverlay />
 					</ResearchChartCard>
 				</CardContent>
-
-				{props.children}
-
-				<CardFooter>
-					<div className="h-8" />
-				</CardFooter>
 			</Link>
 
-			<CardFooter className="absolute inset-x-0 bottom-0 justify-between p-3">
-				<ClerkPFP userId={props.research.userId} size="sm" user={props.currentUser} />
+			<CardFooter variant="link">
+				<ClerkProfile userId={props.research.userId} size="sm" user={props.currentUser} />
 				<TestBatchCardDropdown research={props.research} testBatch={props.testBatch} />
 			</CardFooter>
-		</div>
+		</Card>
 	)
 }
 

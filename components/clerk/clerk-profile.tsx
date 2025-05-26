@@ -3,7 +3,7 @@ import { ComponentProps } from "react"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { ClerkAvatar } from "./clerk-avatar"
 
-export const ClerkPFP = (props: { userId: string } & ComponentProps<typeof ClerkAvatar>) => {
+export const ClerkProfile = (props: { userId: string } & ComponentProps<typeof ClerkAvatar>) => {
 	return (
 		<HoverCard>
 			<HoverCardTrigger asChild>

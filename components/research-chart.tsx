@@ -18,7 +18,7 @@ type Props = {
 export const ResearchChartCard = ({ dependentValues, testBatchResults, ...props }: Props & React.ComponentProps<typeof Card>) => {
 	return (
 		<context.Provider value={{ dependentValues, testBatchResults }}>
-			<Card padding="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)} />
+			<Card size="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)} />
 		</context.Provider>
 	)
 }
@@ -78,7 +78,7 @@ export const ResearchChartNoResultOverlay = (props: { className?: string }) => {
 	return (
 		!testBatchResults.length && (
 			<div className={cn("absolute inset-0 flex items-center justify-center bg-background/90 p-2", props.className)}>
-				<Card padding="xs" className="shadow">
+				<Card size="xs" className="shadow">
 					Run tests to view results.
 				</Card>
 			</div>

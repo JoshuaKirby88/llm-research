@@ -1,4 +1,4 @@
-import { ClerkPFP } from "@/components/clerk/clerk-pfp"
+import { ClerkProfile } from "@/components/clerk/clerk-profile"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { VariableBadge } from "@/components/variable-badge"
 import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
@@ -34,7 +34,7 @@ export const ResearchOverviewPage = (props: Props) => {
 
 				<div className="flex flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<ClerkPFP
+						<ClerkProfile
 							userId={props.research.userId}
 							user={props.currentUser}
 							size="sm"

@@ -2,21 +2,27 @@ import { cn } from "@/utils/cn"
 import { VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
-export const cardVariants = cva("flex flex-col gap-6 rounded-3xl border bg-card text-card-foreground", {
+export const cardVariants = cva("flex flex-col gap-6 rounded-3xl text-card-foreground", {
 	variants: {
-		padding: {
+		variant: {
+			default: "border bg-card",
+			link: "rounded-b-none",
+		},
+		size: {
+			none: "gap-0 p-0",
 			xs: "px-3 py-2 rounded-2xl",
 			sm: "p-4",
 			default: "p-6",
 		},
 	},
 	defaultVariants: {
-		padding: "default",
+		variant: "default",
+		size: "default",
 	},
 })
 
-function Card({ className, padding, ...props }: React.ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
-	return <div data-slot="card" className={cn(cardVariants({ padding }), className)} {...props} />
+function Card({ className, size: padding, ...props }: React.ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
+	return <div data-slot="card" className={cn(cardVariants({ size: padding }), className)} {...props} />
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -45,8 +51,20 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 	return <div data-slot="card-content" className={cn(className)} {...props} />
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
-	return <div data-slot="card-footer" className={cn("flex items-center [.border-t]:pt-6", className)} {...props} />
+export const cardFooterVariants = cva("flex items-center [.border-t]:pt-6 justify-between", {
+	variants: {
+		variant: {
+			default: "",
+			link: "p-4 pt-0",
+		},
+	},
+	defaultVariants: {
+		variant: "default",
+	},
+})
+
+function CardFooter({ className, variant, ...props }: React.ComponentProps<"div"> & VariantProps<typeof cardFooterVariants>) {
+	return <div data-slot="card-footer" className={cn(cardFooterVariants({ variant }), className)} {...props} />
 }
 
 export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent }

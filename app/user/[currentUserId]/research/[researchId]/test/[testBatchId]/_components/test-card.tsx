@@ -23,7 +23,7 @@ export const TestCard = (props: Props) => {
 	const totalOutputTokens = testMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
 
 	return (
-		<Card className="border" padding="sm">
+		<Card size="sm">
 			<CardHeader>
 				Result: {dependentValue.value}
 				<br />

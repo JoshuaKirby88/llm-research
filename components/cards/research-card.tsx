@@ -2,7 +2,7 @@ import { archiveResearchAction, unarchiveResearchAction } from "@/actions/resear
 import { downloadResearchAction } from "@/actions/research/download-research.action"
 import { starResearchAction, unstarResearchAction } from "@/actions/research/star-research.action"
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
-import { CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } from "@/src/schemas"
 import { ClerkPublicUser, ClerkQueriedUser } from "@/src/services/clerk.service"
@@ -10,7 +10,7 @@ import { ActionI } from "@/utils/actions/create-action"
 import { cn } from "@/utils/cn"
 import { ArchiveIcon, ArchiveRestoreIcon, DownloadIcon, EllipsisIcon, StarIcon, StarOffIcon } from "lucide-react"
 import Link from "next/link"
-import { ClerkPFP } from "../clerk/clerk-pfp"
+import { ClerkProfile } from "../clerk/clerk-profile"
 import { FormActionButton } from "../form/server/form-action-button"
 import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
@@ -24,45 +24,43 @@ type Props = {
 
 export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
 	return (
-		<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants(), "p-4")}>
-			<CardTitle className="text-2xl">{props.research.name}</CardTitle>
+		<Card size="none">
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
+				<CardHeader>
+					<CardTitle className="text-2xl">{props.research.name}</CardTitle>
+				</CardHeader>
+			</Link>
 
-			<CardFooter className="mt-auto gap-5 p-0">
-				<ClerkPFP userId={props.research.userId} user={props.currentUser} size="sm" />
+			<CardFooter variant="link">
+				<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
 
 				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>
-		</Link>
+		</Card>
 	)
 }
 
 export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: React.ReactNode }) => {
 	return (
-		<div className="relative">
-			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ padding: "sm" }), "relative pb-14")}>
-				<CardHeader>
-					<p className="text-muted-foreground">{props.research.createdAt.toLocaleDateString()}</p>
-					<CardTitle>{props.research.name}</CardTitle>
-					<CardDescription>
-						<p>Status: {props.research.isPublished ? "Published" : "Researching"}</p>
-					</CardDescription>
-				</CardHeader>
+		<Card size="none">
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ size: "sm", variant: "link" }), "")}>
+				<CardContent className="flex justify-between">
+					<div>
+						<p className="text-muted-foreground">{props.research.createdAt.toLocaleDateString()}</p>
+						<CardTitle>{props.research.name}</CardTitle>
+						<CardDescription>
+							<p>Status: {props.research.isPublished ? "Published" : "Researching"}</p>
+						</CardDescription>
+					</div>
 
-				<div className="!aspect-square absolute top-2 right-2 bottom-16">
-					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="aspect-square h-full p-0">
+					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
 						<ResearchChart />
 						<ResearchChartNoResultOverlay className="text-xs" />
 					</ResearchChartCard>
-				</div>
-
-				{props.children}
-
-				<CardFooter>
-					<div className="h-8" />
-				</CardFooter>
+				</CardContent>
 			</Link>
 
-			<CardFooter className="absolute inset-x-4 bottom-4 justify-between">
+			<CardFooter variant="link">
 				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
 				<ResearchCardDropdown
 					user={props.user}
@@ -72,7 +70,7 @@ export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: 
 					testBatchResults={props.testBatchResults}
 				/>
 			</CardFooter>
-		</div>
+		</Card>
 	)
 }
 

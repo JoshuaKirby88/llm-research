@@ -1,4 +1,0 @@
-I am building a website that helps users perform research on the behaviours of LLMs by creating a workflow where they can enter prompts to generate different variables to test and to generate the messages that will be used to generate the actual response from the LLM that will be evaluated. All research will be public, so any user will be able to view and search other people's research.
-
-Use tailwind css with ShadCN components.
-Try to keep the css to the minimum.

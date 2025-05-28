@@ -1,7 +1,7 @@
 import { BlockingVariableCombinationT, TestT, TestToBlockingValueT } from "../schemas"
 
 export class TestTable {
-	static byCombination(tests: TestT[], testToBlockingValues: TestToBlockingValueT[], blockingVariableCombination: BlockingVariableCombinationT) {
+	static byBlockingVariableCombination(tests: TestT[], testToBlockingValues: TestToBlockingValueT[], blockingVariableCombination: BlockingVariableCombinationT) {
 		// Group test to blocking values by their parent test
 		const groupedTestToBlockingValues = tests.map(test => testToBlockingValues.filter(ttbv => ttbv.testId === test.id))
 

@@ -5,7 +5,7 @@ import { ClerkAvatar } from "./clerk-avatar"
 
 export const ClerkProfile = (props: { userId: string } & ComponentProps<typeof ClerkAvatar>) => {
 	return (
-		<HoverCard>
+		<HoverCard openDelay={0} closeDelay={0}>
 			<HoverCardTrigger asChild>
 				<ClerkAvatar {...props} />
 			</HoverCardTrigger>

@@ -5,10 +5,14 @@ import { QueryStateSlot } from "./query-state-slot"
 
 type Tab = { key?: string; value: string; icon?: LucideIcon; iconNode?: React.ReactNode }
 
+const config = {
+	defaultTabName: "tab",
+}
+
 export const PageTabs = ({ tabs, name, searchParams, ...props }: { tabs: readonly Tab[]; name?: string; searchParams: Awaited<NextSearchParam> } & React.ComponentProps<typeof Tabs>) => {
-	const searchParamKey = name ?? "tab"
+	const searchParamKey = name ?? config.defaultTabName
 	const searchParamValue = Array.isArray(searchParams[searchParamKey]) ? searchParams[searchParamKey].join(" ") : searchParams[searchParamKey]
-	const defaultTab = tabs.map(tab => tab.key ?? tab.value).includes(searchParamValue!) ? searchParamValue : (tabs[0].key ?? tabs[0].value)
+	const defaultTab = tabs.map(tab => tab.key ?? tab.value).includes(searchParamValue!) ? searchParamValue : tabs.length ? (tabs[0].key ?? tabs[0].value) : undefined
 
 	return <Tabs defaultValue={defaultTab} {...props} />
 }
@@ -20,7 +24,7 @@ export const PageTabsList = ({ tabs, name, ...props }: { tabs: readonly Tab[]; n
 				const tabId = tab.key ?? tab.value
 
 				return (
-					<QueryStateSlot key={tabId} name={name ?? "tab"} value={tabId}>
+					<QueryStateSlot key={tabId} name={name ?? config.defaultTabName} value={tabId}>
 						<TabsTrigger value={tabId} className="gap-2">
 							{tab.icon && <tab.icon className="text-muted-foreground" />}
 							{tab.iconNode}

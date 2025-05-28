@@ -1,6 +1,7 @@
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
-import Link from "next/link"
+import { cn } from "@/utils/cn"
 import { ComponentProps } from "react"
+import { LinkButton } from "../link-button"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 
@@ -8,15 +9,16 @@ type Props = {
 	userId: string
 	user: ClerkQueriedUser | undefined
 	badge?: React.ReactNode
+	disabled?: boolean
 } & PickRequired<ComponentProps<typeof Avatar>, "size">
 
 const config = {
 	variants: {
-		size: { xs: 24, sm: 28, md: 32, lg: 36, xl: 40 } satisfies Record<keyof AvatarProps["size"], any>,
+		size: { xxxs: 16, xxs: 20, xs: 24, sm: 28, md: 32, lg: 36, xl: 40 } satisfies Record<keyof AvatarProps["size"], any>,
 	},
 }
 
-export const ClerkAvatar = ({ userId, user, badge, ...props }: Props) => {
+export const ClerkAvatar = ({ userId, user, badge, disabled, ...props }: Props) => {
 	const userName = user?.fullName ?? "User is deleted"
 	const size = config.variants.size[props.size]
 
@@ -27,7 +29,7 @@ export const ClerkAvatar = ({ userId, user, badge, ...props }: Props) => {
 	params.set("fit", "fill")
 
 	return (
-		<Link href={`/user/${userId}`} className="group flex items-center gap-2">
+		<LinkButton href={`/user/${userId}`} className="group flex items-center gap-2 opacity-100" disabled={disabled}>
 			<div className="relative">
 				<Avatar {...props}>
 					<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
@@ -41,7 +43,7 @@ export const ClerkAvatar = ({ userId, user, badge, ...props }: Props) => {
 				)}
 			</div>
 
-			<p className="font-medium group-hover:underline">{userName}</p>
-		</Link>
+			<p className={cn("font-medium", !disabled && "group-hover:underline")}>{userName}</p>
+		</LinkButton>
 	)
 }

@@ -11,36 +11,34 @@ type Props = {
 	dependentValues: DependentValueT[]
 	messagePrompts: MessagePromptT[]
 	evalPrompt: EvalPromptT
-	testsByIndependentValue: TestT[]
+	tests: TestT[]
 	testToBlockingValues: TestToBlockingValueT[]
 	messages: MessageT[]
 	evals: EvalT[]
 }
 
 export const BlockingVariableCombinationCollapsible = (props: Props) => {
-	const testsByIndependentValueTestIds = props.testsByIndependentValue.map(test => test.id)
-	const testToBlockingValuesByIndependentValue = props.testToBlockingValues.filter(ttbv => testsByIndependentValueTestIds.includes(ttbv.testId))
-	const testsByBlockingVariableCombination = TestTable.byCombination(props.testsByIndependentValue, testToBlockingValuesByIndependentValue, props.blockingVariableCombination)
+	const filteredTests = TestTable.byBlockingVariableCombination(props.tests, props.testToBlockingValues, props.blockingVariableCombination)
 
 	return (
-		<Collapsible className="rounded-none border-b last:border-none">
+		<Collapsible className="rounded-none border-b last:border-none" disabled={!filteredTests.length}>
 			<CollapsibleTrigger className="bg-transparent">
 				<div className="flex items-center gap-2 font-medium">
 					<CollapsibleChevronIcon />
-					{props.blockingVariableCombination.map(blockingVariableCombination => (
-						<div key={blockingVariableCombination.id}>
-							{blockingVariableCombination.name}: {blockingVariableCombination.blockingValue.value}
+					{props.blockingVariableCombination.map(blockingVariableWithValue => (
+						<div key={blockingVariableWithValue.id}>
+							{blockingVariableWithValue.name}: {blockingVariableWithValue.blockingValue.value}
 						</div>
 					))}
 				</div>
 
 				<Badge size="roundSm" variant="outline">
-					{testsByBlockingVariableCombination.length}
+					{filteredTests.length}
 				</Badge>
 			</CollapsibleTrigger>
 
 			<CollapsibleContent className="space-y-5 p-2 pt-0">
-				{testsByBlockingVariableCombination.map(test => (
+				{filteredTests.map(test => (
 					<TestCard
 						key={test.id}
 						independentVariable={props.independentVariable}

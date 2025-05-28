@@ -22,18 +22,22 @@ type Props = {
 	dependentValues: DependentValueT[]
 	messagePrompts: MessagePromptT[]
 	evalPrompt: EvalPromptT
-	testModelBatch: TestModelBatchT
-	testModelBatchTests: TestT[]
+	testModelBatches: TestModelBatchT[]
+	tests: TestT[]
 	testToBlockingValues: TestToBlockingValueT[]
 	messages: MessageT[]
 	evals: EvalT[]
 }
 
 export const IndependentValueCollapsible = (props: Props) => {
-	const testsByIndependentValue = props.testModelBatchTests.filter(test => test.independentValueId === props.independentValue.id)
+	const filteredTests = props.tests.filter(test => test.independentValueId === props.independentValue.id)
+	const testIds = filteredTests.map(test => test.id)
+	const filteredTestToBlockingValues = props.testToBlockingValues.filter(ttbv => testIds.includes(ttbv.testId))
+	const filteredMessages = props.messages.filter(message => testIds.includes(message.testId))
+	const filteredEvals = props.evals.filter(evaluation => testIds.includes(evaluation.testId))
 
 	return (
-		<Collapsible key={props.independentValue.id} className="border">
+		<Collapsible className="border" defaultOpen={!!filteredTests.length} disabled={!filteredTests.length}>
 			<CollapsibleTrigger>
 				<div className="flex items-center gap-2 font-medium">
 					<CollapsibleChevronIcon />
@@ -41,7 +45,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 				</div>
 
 				<Badge size="roundSm" variant="outline">
-					{testsByIndependentValue.length}
+					{filteredTests.length}
 				</Badge>
 			</CollapsibleTrigger>
 
@@ -55,10 +59,10 @@ export const IndependentValueCollapsible = (props: Props) => {
 						dependentValues={props.dependentValues}
 						messagePrompts={props.messagePrompts}
 						evalPrompt={props.evalPrompt}
-						testsByIndependentValue={testsByIndependentValue}
-						testToBlockingValues={props.testToBlockingValues}
-						messages={props.messages}
-						evals={props.evals}
+						tests={filteredTests}
+						testToBlockingValues={filteredTestToBlockingValues}
+						messages={filteredMessages}
+						evals={filteredEvals}
 					/>
 				))}
 			</CollapsibleContent>

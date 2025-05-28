@@ -16,51 +16,44 @@ type Props = {
 }
 
 export const TestCard = (props: Props) => {
-	const testMessages = props.messages.filter(m => m.testId === props.test.id)
-	const evaluation = props.evals.find(evaluation => evaluation.testId === props.test.id)!
+	const filteredMessages = props.messages.filter(m => m.testId === props.test.id)
+	const evaluation = props.evals.find(e => e.testId === props.test.id)!
 	const dependentValue = props.dependentValues.find(dVal => dVal.id === props.test.dependentValueId)!
-	const totalInputTokens = testMessages.reduce((acc, curr) => acc + curr.promptTokens, evaluation.promptTokens)
-	const totalOutputTokens = testMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
+
+	const totalInputTokens = filteredMessages.reduce((acc, curr) => acc + curr.promptTokens, evaluation.promptTokens)
+	const totalOutputTokens = filteredMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
 
 	return (
 		<Card size="sm">
 			<CardHeader>
-				Result: {dependentValue.value}
-				<br />
-				Tokens: Input: {totalInputTokens}, Output: {totalOutputTokens}
-				<br />
-				Independent Variable: {props.independentValue.value}
-				<br />
-				Blocking Variables: {props.blockingVariableCombination.map(bvc => `${bvc.name}: ${bvc.blockingValue.value}`).join(", ")}
+				Total Input Tokens: {totalInputTokens}, Total Output Tokens: {totalOutputTokens}
 			</CardHeader>
-			<CardContent>
-				<div className="space-y-4">
-					{testMessages.map(message => (
-						<MessageCard
-							key={message.id}
-							independentVariable={props.independentVariable}
-							independentValue={props.independentValue}
-							blockingVariableCombination={props.blockingVariableCombination}
-							dependentValue={dependentValue}
-							messagePrompts={props.messagePrompts}
-							messages={testMessages}
-							message={message}
-						/>
-					))}
 
-					<Separator className="my-5" />
-
+			<CardContent className="space-y-4">
+				{filteredMessages.map(message => (
 					<MessageCard
-						key={evaluation.id}
+						key={message.id}
 						independentVariable={props.independentVariable}
 						independentValue={props.independentValue}
 						blockingVariableCombination={props.blockingVariableCombination}
 						dependentValue={dependentValue}
-						evalPrompt={props.evalPrompt}
-						messages={testMessages}
-						eval={evaluation}
+						messages={filteredMessages}
+						message={message}
+						messagePrompts={props.messagePrompts}
 					/>
-				</div>
+				))}
+
+				<Separator className="my-5" />
+
+				<MessageCard
+					independentVariable={props.independentVariable}
+					independentValue={props.independentValue}
+					blockingVariableCombination={props.blockingVariableCombination}
+					dependentValue={dependentValue}
+					messages={filteredMessages}
+					eval={evaluation}
+					evalPrompt={props.evalPrompt}
+				/>
 			</CardContent>
 		</Card>
 	)

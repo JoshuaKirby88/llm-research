@@ -2,15 +2,19 @@ import { AIIcons } from "@/components/icons/ai-icons"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
-import { Research, TestBatch } from "@/drizzle/schema"
+import { Research } from "@/drizzle/schema"
 import { AIFeature } from "@/src/features"
 import { ResearchRepo } from "@/src/repos"
+import { ClerkService } from "@/src/services/clerk.service"
 import { VariableTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
+import { deDupe } from "@/utils/de-dupe"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
-import { TestModelBatchTabContent } from "./_components/test-model-batch-tab-content"
+import { TestFilter } from "./_components/test-filter/test-filter"
+import { testFilterToDrizzle } from "./_components/test-filter/test-filter-to-drizzle"
+import { TestModelTabContent } from "./_components/test-model-tab-content"
 
 const config = {
 	tabName: "modelTab",
@@ -21,9 +25,12 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
 
+	const { testBatchFilters, testFilters } = testFilterToDrizzle({ params, searchParams })
+
 	const result = await db.query.Research.findFirst({
 		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
 		with: {
+			contributors: true,
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },
 			messagePrompts: true,
@@ -31,11 +38,12 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			dependentValues: true,
 			testBatches: {
 				columns: {},
-				where: eq(TestBatch.id, Number.parseInt(params.testBatchId)),
+				where: testBatchFilters,
 				with: {
 					testModelBatches: {
 						with: {
 							tests: {
+								where: testFilters,
 								with: {
 									testToBlockingValues: true,
 									messages: true,
@@ -56,6 +64,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	const [
 		research,
 		{
+			contributors,
 			independentVariable: [independentVariable],
 			independentValues,
 			blockingVariables,
@@ -63,7 +72,6 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			messagePrompts,
 			evalPrompt: [evalPrompt],
 			dependentValues,
-			testBatches,
 			testModelBatches,
 			tests,
 			testToBlockingValues,
@@ -71,6 +79,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			evals,
 		},
 	] = destructureArray([result], {
+		contributors: true,
 		independentVariable: { independentValues: true },
 		blockingVariables: { blockingValues: true },
 		messagePrompts: true,
@@ -81,26 +90,46 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 
 	const blockingVariableCombinations = VariableTable.createCombination({ blockingVariables, blockingValues })
 
-	const tabs = testModelBatches.map(testModelBatch => ({
-		value: testModelBatch.model,
-		iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(testModelBatch.model)} className="size-4.5" />,
+	const queriedUsers = await ClerkService.queryUsers(
+		contributors.map(c => c.userId),
+		{ serialize: true },
+	)
+
+	const models = deDupe(testModelBatches, "model").map(tmb => tmb.model)
+
+	const tabs = models.map(model => ({
+		value: model,
+		iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(model)} className="size-4.5" />,
 	}))
 
 	return (
 		<div className="w-full">
 			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
+				<div className="mb-1 flex items-start justify-between">
+					<TestFilter
+						params={params}
+						queriedUsers={queriedUsers}
+						contributors={contributors}
+						independentVariable={independentVariable}
+						independentValues={independentValues}
+						blockingValues={blockingValues}
+						dependentValues={dependentValues}
+					/>
+				</div>
+
 				<PageTabsList tabs={tabs} name={config.tabName} />
 
-				{testModelBatches.map(testModelBatch => (
-					<TabsContent key={testModelBatch.id} value={testModelBatch.model} className="space-y-4">
-						<TestModelBatchTabContent
+				{models.map(model => (
+					<TabsContent key={model} value={model}>
+						<TestModelTabContent
+							model={model}
 							independentVariable={independentVariable}
 							independentValues={independentValues}
 							blockingVariableCombinations={blockingVariableCombinations}
 							dependentValues={dependentValues}
 							messagePrompts={messagePrompts}
-							evalPrompt={evalPrompt!}
-							testModelBatch={testModelBatch}
+							evalPrompt={evalPrompt}
+							testModelBatches={testModelBatches}
 							tests={tests}
 							testToBlockingValues={testToBlockingValues}
 							messages={messages}

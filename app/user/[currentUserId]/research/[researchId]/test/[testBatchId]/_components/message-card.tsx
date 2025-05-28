@@ -5,6 +5,7 @@ import { ColorFeature } from "@/src/features"
 import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT } from "@/src/schemas"
 import { VariableTable } from "@/src/tables"
 import { cn } from "@/utils/cn"
+import { includes } from "@/utils/includes"
 
 type Props = {
 	independentVariable: IndependentVariableT
@@ -29,10 +30,9 @@ export const MessageCard = (props: Props) => {
 
 	return (
 		<div
-			key={messageOrEval.id}
 			className={cn(
 				"w-full space-y-3 rounded-xl border p-3",
-				messageOrEval.type === "message" ? (messageOrEval.role === "system" ? "" : messageOrEval.role === "user" ? "bg-background" : "bg-muted") : "",
+				messageOrEval.type === "message" && (includes(messageOrEval.role, ["system", "user"]) ? "bg-background" : messageOrEval.role === "assistant" ? "bg-muted" : ""),
 			)}
 			style={{ backgroundColor: messageOrEval.type === "eval" ? ColorFeature.oklchWithAlpha(props.dependentValue.color, 0.1) : undefined }}
 		>
@@ -44,7 +44,7 @@ export const MessageCard = (props: Props) => {
 						Input Tokens: {messageOrEval.promptTokens}, Output Tokens: {messageOrEval.completionTokens}
 					</div>
 
-					{replacedPrompt && (
+					{replacedPrompt?.length && (
 						<Dialog
 							triggerButton={
 								<Button size="xs" variant="outline">

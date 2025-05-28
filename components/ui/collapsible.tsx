@@ -8,7 +8,11 @@ function Collapsible({ ...props }: React.ComponentProps<typeof CollapsiblePrimit
 
 function CollapsibleTrigger({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>) {
 	return (
-		<CollapsiblePrimitive.CollapsibleTrigger data-slot="collapsible-trigger" {...props} className={cn("group flex w-full items-center justify-between rounded-xl bg-muted p-4", props.className)} />
+		<CollapsiblePrimitive.CollapsibleTrigger
+			data-slot="collapsible-trigger"
+			{...props}
+			className={cn("group flex w-full items-center justify-between rounded-xl bg-muted p-4", "disabled:opacity-50", props.className)}
+		/>
 	)
 }
 

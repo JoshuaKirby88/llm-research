@@ -16,6 +16,10 @@ export class VariableTable {
 		return `{{${name}}}`
 	}
 
+	static varToName(variable: string) {
+		return variable.substring(2, variable.length - 2)
+	}
+
 	static messageToVarName(message: Pick<MessageT, "role" | "isCompletion">) {
 		return message.isCompletion ? "Completion" : `${capitalize(message.role)} Prompt`
 	}
@@ -44,7 +48,7 @@ export class VariableTable {
 						i === 0
 							? [{ type: "text", text: part }]
 							: [
-									{ type: "variable", name: match.substring(2, match.length - 2), text: replacement },
+									{ type: "variable", name: this.varToName(match), text: replacement },
 									{ type: "text", text: part },
 								],
 					)
@@ -54,14 +58,19 @@ export class VariableTable {
 
 		// Independent variable
 		results = replaceResults(this.toVar(variables.independentVariable.name), variables.independentValue.value)
+
 		// Blocking variables
 		for (const blockingVariableCombination of variables.blockingVariableCombination) {
 			results = replaceResults(this.toVar(blockingVariableCombination.name), blockingVariableCombination.blockingValue.value)
 		}
+
 		// Messages
 		for (const message of variables.messages) {
 			results = replaceResults(this.messageToVar(message), message.content)
 		}
+
+		// Filter
+		results = results.filter(result => result.text)
 
 		return results
 	}

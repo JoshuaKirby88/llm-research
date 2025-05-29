@@ -1,13 +1,13 @@
 import { db } from "@/drizzle/db"
 import { Contributor } from "@/drizzle/schema"
 import { Research } from "@/drizzle/schema"
-import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { count, inArray } from "drizzle-orm"
 import { and, eq, or } from "drizzle-orm"
-import { InsertResearchT, InsertResearchVectorT, ResearchT, ResearchVectorT, UpdateResearchT } from "../schemas"
+import { InsertResearchT, ResearchT, UpdateResearchT } from "../schemas"
 import { ClerkPublicUser } from "../services/clerk.service"
 import { TableMixedSQLUpdate } from "../services/drizzle.service"
 import { ResearchTable } from "../tables"
+import { ResearchVectorRepo } from "./research-vector.repo"
 
 export class ResearchRepo {
 	static getPublicWhere(input: { userId: ClerkPublicUser["userId"] }) {
@@ -42,33 +42,6 @@ export class ResearchRepo {
 		await db.delete(Research).where(eq(Research.id, id))
 	}
 
-	static async insertVector(input: InsertResearchVectorT) {
-		const values = {
-			id: input.id.toString(),
-			values: input.values,
-		}
-
-		const env = (await getCloudflareContext({ async: true })).env
-		await env.VECTORIZE.upsert([values])
-	}
-
-	static async queryVector(embedding: ResearchVectorT["values"], opt: { topK: number; minScore: number }) {
-		const env = (await getCloudflareContext({ async: true })).env
-		const result = await env.VECTORIZE.query(embedding, {
-			topK: opt.topK,
-			returnMetadata: "none",
-		})
-
-		const filteredMatches = result.matches.filter(match => match.score >= opt.minScore)
-
-		return Array.from(new Set(filteredMatches.map(match => Number.parseInt(match.id))))
-	}
-
-	static async deleteVectors(ids: ResearchT["id"][]) {
-		const env = (await getCloudflareContext({ async: true })).env
-		await env.VECTORIZE.deleteByIds([ids.toString()])
-	}
-
 	static async deleteResearchAndVectorsByUserId(userId: ResearchT["userId"]) {
 		const researches = await db
 			.select({ id: Research.id, contributorCount: count(Contributor.id) })
@@ -81,7 +54,7 @@ export class ResearchRepo {
 		const researchIdsToKeep = researches.filter(r => !ResearchTable.canDelete(r)).map(r => r.id)
 
 		await Promise.all([
-			researchIdsToDelete.length && this.deleteVectors(researchIdsToDelete),
+			researchIdsToDelete.length && ResearchVectorRepo.delete(researchIdsToDelete),
 			researchIdsToDelete.length && db.delete(Research).where(inArray(Research.id, researchIdsToDelete)),
 			researchIdsToKeep.length && db.update(Research).set({ isUserDeleted: true }).where(inArray(Research.id, researchIdsToKeep)),
 		])

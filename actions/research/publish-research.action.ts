@@ -1,6 +1,7 @@
 "use server"
 
 import { ResearchRepo } from "@/src/repos"
+import { ResearchVectorRepo } from "@/src/repos/research-vector.repo"
 import { researchSchema } from "@/src/schemas"
 import { AIService } from "@/src/services/ai.service"
 import { ResearchTable } from "@/src/tables"
@@ -21,7 +22,7 @@ export const publishResearchAction = createAction(
 				text: ResearchTable.createEmbeddingText(updatedResearch),
 			})
 
-			await ResearchRepo.insertVector({
+			await ResearchVectorRepo.insert({
 				id: input.id,
 				values: embedding,
 			})

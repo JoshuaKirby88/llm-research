@@ -1,6 +1,7 @@
 "use server"
 
 import { ResearchRepo } from "@/src/repos"
+import { ResearchVectorRepo } from "@/src/repos/research-vector.repo"
 import { researchSchema } from "@/src/schemas"
 import { AIService } from "@/src/services/ai.service"
 import { ResearchTable } from "@/src/tables"
@@ -17,7 +18,7 @@ export const archiveResearchAction = createAction(
 
 	if (ResearchTable.canDeleteVector(updatedResearch)) {
 		after(async () => {
-			await ResearchRepo.deleteVectors([input.researchId])
+			await ResearchVectorRepo.delete([input.researchId])
 		})
 	}
 
@@ -37,7 +38,7 @@ export const unarchiveResearchAction = createAction(
 				text: ResearchTable.createEmbeddingText(updatedResearch),
 			})
 
-			await ResearchRepo.insertVector({
+			await ResearchVectorRepo.insert({
 				id: input.researchId,
 				values: embedding,
 			})

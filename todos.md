@@ -6,7 +6,7 @@
 
 # Todos
 
-- [ ] Use separate vector DB for local and prod
+- [ ] Handle blocking variable combination filters
 - [ ] Rename message prompt to prompt template
 - [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
@@ -23,7 +23,6 @@
 # New research form
 
 - [ ] Generate sample prompts for all prompt inputs
-- [ ] Generate variable values with llm
 - [ ] Ability to enter example messages to generate variables and message prompts from
 - [ ] Debounce tiptap onChanges
 
@@ -38,7 +37,3 @@
 - Does language consistency affect accurancy?
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?
-
-# Others
-
-- Post my transaction implementation on D1 transaction github discussions

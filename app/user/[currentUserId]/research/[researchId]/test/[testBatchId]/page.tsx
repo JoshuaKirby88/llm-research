@@ -26,7 +26,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
 
-	const { testBatchFilters, testFilters } = testFilterToDrizzle({ params, searchParams })
+	const { testBatchFilters, testFilters, testToBlockingValueFilters } = testFilterToDrizzle({ params, searchParams })
 
 	const result = await db.query.Research.findFirst({
 		where: and(eq(Research.id, Number.parseInt(params.researchId)), ResearchRepo.getPublicWhere({ userId: user.userId })),
@@ -45,7 +45,9 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 							tests: {
 								where: testFilters,
 								with: {
-									testToBlockingValues: true,
+									testToBlockingValues: {
+										where: testToBlockingValueFilters,
+									},
 									messages: true,
 									evals: true,
 								},
@@ -73,7 +75,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			evalPrompt: [evalPrompt],
 			dependentValues,
 			testModelBatches,
-			tests,
+			tests: _tests,
 			testToBlockingValues,
 			messages,
 			evals,
@@ -87,6 +89,9 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 		dependentValues: true,
 		testBatches: { testModelBatches: { tests: { testToBlockingValues: true, messages: true, evals: true } } },
 	})
+
+	const testToBlockingValueTestIds = testToBlockingValues.map(ttbv => ttbv.testId)
+	const tests = _tests.filter(t => testToBlockingValueTestIds.includes(t.id))
 
 	const blockingVariableCombinations = VariableTable.createCombination({ blockingVariables, blockingValues })
 
@@ -109,13 +114,14 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	return (
 		<div className="w-full">
 			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
-				<div className="mb-1 flex items-center gap-5">
+				<div className="mb-1 flex gap-5">
 					<TestFilter
 						params={params}
 						queriedUsers={queriedUsers}
 						contributors={contributors}
 						independentVariable={independentVariable}
 						independentValues={independentValues}
+						blockingVariables={blockingVariables}
 						blockingValues={blockingValues}
 						dependentValues={dependentValues}
 					/>

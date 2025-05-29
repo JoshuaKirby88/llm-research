@@ -1,14 +1,14 @@
 import { ClerkAvatar } from "@/components/clerk/clerk-avatar"
 import { createColumnConfigHelper } from "@/components/data-table-filter/core/filters"
 import { FilterModelUnion } from "@/components/data-table-filter/core/types"
-import { BlockingValueT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, TestBatchT, TestT, TestToBlockingValueT } from "@/src/schemas"
+import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, TestBatchT, TestT, TestToBlockingValueT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { CalendarIcon, GiftIcon, SquareIcon, SquareStackIcon, VariableIcon } from "lucide-react"
 
 export type TestFilterRow = {
 	contributor: ContributorT
 	testBatch: TestBatchT
-	testToBlockingValues: TestToBlockingValueT[]
+	testToBlockingValue: TestToBlockingValueT
 	test: TestT
 }
 export type TestFilterColumnsConfigProps = {
@@ -16,6 +16,7 @@ export type TestFilterColumnsConfigProps = {
 	contributors: ContributorT[]
 	independentVariable: IndependentVariableT
 	independentValues: IndependentValueT[]
+	blockingVariables: BlockingVariableT[]
 	blockingValues: BlockingValueT[]
 	dependentValues: DependentValueT[]
 }
@@ -43,8 +44,8 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 					const queriedUser = props.queriedUsers.find(user => user.id === contributor.userId)
 					return {
 						value: contributor.id,
-						label: "",
-						icon: <ClerkAvatar disabled size="xxxs" userId={contributor.userId} user={queriedUser} />,
+						icon: <ClerkAvatar disabled size="xxxs" userId={contributor.userId} user={queriedUser} hideUserName />,
+						label: queriedUser?.fullName ?? "",
 					}
 				}),
 			)
@@ -63,16 +64,24 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 			)
 			.build(),
 		row
-			.multiOption()
+			.option()
 			.id("blockingValueId")
-			.accessor(row => row.testToBlockingValues.map(ttbv => ttbv.blockingValueId))
-			.displayName("Blocking Variables")
+			.accessor(row => row.testToBlockingValue.blockingValueId)
+			.displayName("Blocking Variable")
 			.icon(VariableIcon)
 			.options(
-				props.blockingValues.map(bVal => ({
-					value: bVal.id,
-					label: bVal.value,
-				})),
+				props.blockingValues.map(bVal => {
+					const bVar = props.blockingVariables.find(bVar => bVar.id === bVal.blockingVariableId)!
+					return {
+						value: bVal.id,
+						icon: (
+							<p className="space-x-1 [&.active]:hidden">
+								<span className="rounded-sm border bg-muted px-1 text-xs ">{bVar.name}</span>
+							</p>
+						),
+						label: bVal.value,
+					}
+				}),
 			)
 			.build(),
 		row
@@ -84,8 +93,8 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 			.options(
 				props.dependentValues.map(dVal => ({
 					value: dVal.id,
-					label: dVal.value,
 					icon: <circle className="size-2.5 rounded-full" style={{ backgroundColor: dVal.color }} />,
+					label: dVal.value,
 				})),
 			)
 			.build(),

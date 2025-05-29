@@ -10,6 +10,7 @@ type Props = {
 	user: ClerkQueriedUser | undefined
 	badge?: React.ReactNode
 	disabled?: boolean
+	hideUserName?: boolean
 } & PickRequired<ComponentProps<typeof Avatar>, "size">
 
 const config = {
@@ -18,7 +19,7 @@ const config = {
 	},
 }
 
-export const ClerkAvatar = ({ userId, user, badge, disabled, ...props }: Props) => {
+export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, ...props }: Props) => {
 	const userName = user?.fullName ?? "User is deleted"
 	const size = config.variants.size[props.size]
 
@@ -43,7 +44,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, ...props }: Props) 
 				)}
 			</div>
 
-			<p className={cn("font-medium", !disabled && "group-hover:underline")}>{userName}</p>
+			{!hideUserName && <p className={cn("font-medium", !disabled && "group-hover:underline")}>{userName}</p>}
 		</LinkButton>
 	)
 }

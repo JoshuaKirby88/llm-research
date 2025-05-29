@@ -5,17 +5,17 @@ import * as React from "react"
 export const badgeVariants = cva("inline-flex items-center border transition-colors focus:outline-none", {
 	variants: {
 		variant: {
-			default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
-			secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-			destructive: "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-			outline: "text-foreground",
+			default: cn("border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80"),
+			secondary: cn("border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"),
+			destructive: cn("border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80"),
+			outline: cn("text-foreground"),
 		},
 		size: {
-			roundXs: "rounded-full justify-center font-normal size-[1.1rem] text-xs",
-			roundSm: "rounded-full justify-center font-semibold text-sm size-6 shrink-0",
-			xs: "rounded-sm justify-center font-normal h-[1.1rem] px-1 text-xs",
-			sm: "text-sm px-2 rounded-md font-semibold",
-			default: "rounded-md px-2 py-0.5 font-semibold text-sm",
+			roundXs: cn("h-[1.1rem] min-w-[1.1rem] justify-center rounded-full px-1 font-normal font-semibold text-xs"),
+			roundSm: cn("h-6 min-w-6 justify-center rounded-full px-1.5 font-semibold text-sm"),
+			xs: cn("h-[1.1rem] justify-center rounded-sm px-1 font-normal text-xs"),
+			sm: cn("rounded-md px-2 font-semibold text-sm"),
+			default: cn("rounded-md px-2 py-0.5 font-semibold text-sm"),
 		},
 	},
 	defaultVariants: {

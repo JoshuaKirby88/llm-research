@@ -1,5 +1,6 @@
 "use client"
 
+import { addClassName } from "@/components/add-className"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -11,10 +12,10 @@ import { cn } from "@/utils/cn"
 import { isEqual } from "date-fns"
 import { format } from "date-fns"
 import { EllipsisIcon } from "lucide-react"
-import { cloneElement, isValidElement, memo, useCallback, useEffect, useMemo, useState } from "react"
+import { isValidElement, memo, useCallback, useEffect, useMemo, useState } from "react"
 import type { DateRange } from "react-day-picker"
 import { numberFilterOperators } from "../core/operators"
-import type { Column, ColumnDataType, ColumnOptionExtended, DataTableFilterActions, FilterModel, FilterStrategy } from "../core/types"
+import type { Column, ColumnDataType, ColumnOption, ColumnOptionExtended, DataTableFilterActions, FilterModel, FilterStrategy } from "../core/types"
 import { useDebounceCallback } from "../hooks/use-debounce-callback"
 import { take } from "../lib/array"
 import { createNumberRange } from "../lib/helpers"
@@ -81,12 +82,10 @@ export function FilterValueOptionDisplay<TData>({ filter, column, actions, local
 	// 1) up to 3 icons of the selected options
 	// 2) the number of selected options
 	if (selected.length === 1) {
-		const { label, icon: Icon } = selected[0]
-		const hasIcon = !!Icon
+		const { value, label, icon } = selected[0]
 		return (
 			<span className="inline-flex items-center gap-1">
-				{hasIcon && (isValidElement(Icon) ? Icon : <Icon className="size-4 text-primary" />)}
-				<span>{label}</span>
+				<RenderOption value={value} icon={icon} label={label} mode="single" />
 			</span>
 		)
 	}
@@ -97,13 +96,9 @@ export function FilterValueOptionDisplay<TData>({ filter, column, actions, local
 	const hasOptionIcons = !options?.some(o => !o.icon)
 
 	return (
-		<div className="inline-flex items-center gap-0.5">
-			{hasOptionIcons &&
-				take(selected, 3).map(({ value, icon }) => {
-					const Icon = icon!
-					return isValidElement(Icon) ? Icon : <Icon key={value} className="size-4" />
-				})}
-			<span className={cn(hasOptionIcons && "ml-1.5")}>
+		<div className="inline-flex items-center gap-1.5">
+			{hasOptionIcons && take(selected, 3).map(({ value, icon, label }) => <RenderOption key={value} value={value} icon={icon} label={label} mode="multiple" />)}
+			<span>
 				{selected.length} {pluralName}
 			</span>
 		</div>
@@ -115,13 +110,10 @@ export function FilterValueMultiOptionDisplay<TData>({ filter, column, actions, 
 	const selected = options.filter(o => filter.values.includes(o.value.toString()))
 
 	if (selected.length === 1) {
-		const { label, icon: Icon } = selected[0]
-		const hasIcon = !!Icon
+		const { value, label, icon } = selected[0]
 		return (
 			<span className="inline-flex items-center gap-1.5">
-				{hasIcon && (isValidElement(Icon) ? Icon : <Icon className="size-4 text-primary" />)}
-
-				<span>{label}</span>
+				<RenderOption value={value} icon={icon} label={label} mode="single" />
 			</span>
 		)
 	}
@@ -133,17 +125,25 @@ export function FilterValueMultiOptionDisplay<TData>({ filter, column, actions, 
 	return (
 		<div className="inline-flex items-center gap-1.5">
 			{hasOptionIcons && (
-				<div key="icons" className="inline-flex items-center gap-0.5">
-					{take(selected, 3).map(({ value, icon }) => {
-						const Icon = icon!
-						return isValidElement(Icon) ? cloneElement(Icon, { key: value }) : <Icon key={value} className="size-4" />
-					})}
+				<div className="inline-flex items-center gap-0.5">
+					{take(selected, 3).map(({ value, icon, label }) => (
+						<RenderOption key={value} value={value} icon={icon} label={label} mode="multiple" />
+					))}
 				</div>
 			)}
 			<span>
 				{selected.length} {name}
 			</span>
 		</div>
+	)
+}
+
+const RenderOption = (props: Pick<ColumnOption, "icon" | "label" | "value"> & { mode: "single" | "multiple" }) => {
+	return (
+		<>
+			{props.icon && (isValidElement(props.icon) ? addClassName(props.icon, "group active") : <props.icon className="group active size-4 text-primary" />)}
+			{props.mode === "single" && <span>{props.label}</span>}
+		</>
 	)
 }
 

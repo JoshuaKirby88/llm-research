@@ -1,5 +1,5 @@
 import { dataTableFilterToDrizzle, joinDrizzleFilters } from "@/components/data-table-filter/utils/data-table-filter-to-drizzle"
-import { Test, TestBatch } from "@/drizzle/schema"
+import { Test, TestBatch, TestToBlockingValue } from "@/drizzle/schema"
 import { TestFilter } from "./test-filter-columns"
 import { testFilterConfig } from "./test-filter-config"
 
@@ -16,11 +16,9 @@ export const testFilterToDrizzle = (input: { params: NextParam<"testBatchId">; s
 		}
 	})
 
-	const testFilters = filters?.flatMap(filter => {
+	const testFilters = filters?.map(filter => {
 		if (filter.columnId === "independentValueId") {
 			return dataTableFilterToDrizzle({ table: Test, filters: [{ ...filter, columnId: "independentValueId" }] })
-		} else if (filter.columnId === "blockingValueId") {
-			// return dataTableFilterToDrizzle({ table: Test, filters: [{ ...filter, columnId: "createdAt" }] })
 		} else if (filter.columnId === "dependentValueId") {
 			return dataTableFilterToDrizzle({ table: Test, filters: [{ ...filter, columnId: "dependentValueId" }] })
 		} else if (filter.columnId === "testId") {
@@ -28,8 +26,15 @@ export const testFilterToDrizzle = (input: { params: NextParam<"testBatchId">; s
 		}
 	})
 
+	const testToBlockingValueFilters = filters?.map(filter => {
+		if (filter.columnId === "blockingValueId") {
+			return dataTableFilterToDrizzle({ table: TestToBlockingValue, filters: [{ ...filter, columnId: "blockingValueId" }] })
+		}
+	})
+
 	return {
 		testBatchFilters: joinDrizzleFilters({ filters: testBatchFilters, joinOperator: testFilterConfig.join }),
 		testFilters: joinDrizzleFilters({ filters: testFilters, joinOperator: testFilterConfig.join }),
+		testToBlockingValueFilters: joinDrizzleFilters({ filters: testToBlockingValueFilters, joinOperator: testFilterConfig.join }),
 	}
 }

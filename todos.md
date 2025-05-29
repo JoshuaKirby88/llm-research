@@ -6,7 +6,6 @@
 
 # Todos
 
-- [ ] Handle blocking variable combination filters
 - [ ] Rename message prompt to prompt template
 - [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown

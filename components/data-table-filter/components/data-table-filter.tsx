@@ -18,7 +18,7 @@ export function DataTableFilter<TData>({ columns, filters, actions, strategy, lo
 
 	if (isMobile) {
 		return (
-			<div className="flex w-full items-center justify-between gap-2">
+			<div className="flex w-full justify-between gap-2">
 				<div className="flex items-center gap-1">
 					<FilterSelector columns={columns} filters={filters} actions={actions} strategy={strategy} locale={locale} />
 					<FilterActions hasFilters={filters.length > 0} actions={actions} locale={locale} />
@@ -32,7 +32,7 @@ export function DataTableFilter<TData>({ columns, filters, actions, strategy, lo
 	}
 
 	return (
-		<div className="flex w-full items-center justify-between gap-2">
+		<div className="flex w-full justify-between gap-2">
 			<div className="flex w-full flex-1 items-center gap-2 md:flex-wrap">
 				<FilterSelector columns={columns} filters={filters} actions={actions} strategy={strategy} locale={locale} />
 				<ActiveFilters columns={columns} filters={filters} actions={actions} strategy={strategy} locale={locale} />

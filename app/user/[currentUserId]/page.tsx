@@ -1,4 +1,5 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
 import { authProcedure } from "@/utils/auth-procedure"
 import { FlaskConicalIcon, GiftIcon, UserIcon } from "lucide-react"
@@ -14,7 +15,7 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { params: Promise<NextParam<"currentUserId">>; searchParams: Promise<NextSearchParam> }) => {
+const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
@@ -38,6 +39,6 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId">>; search
 			</PageTabs>
 		</div>
 	)
-}
+})
 
 export default Page

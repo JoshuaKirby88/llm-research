@@ -1,3 +1,4 @@
+import { Suspense } from "@/components/suspense"
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
@@ -7,7 +8,7 @@ import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { CreateResearchForm } from "./_components/create-research-form"
 
-const Page = async (props: { params: Promise<NextParam<"researchIds">> }) => {
+const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> }) => {
 	const params = await props.params
 	const user = await authProcedure("signedIn")
 
@@ -55,6 +56,6 @@ const Page = async (props: { params: Promise<NextParam<"researchIds">> }) => {
 			<CreateResearchForm defaultValues={defaultValues} />
 		</div>
 	)
-}
+})
 
 export default Page

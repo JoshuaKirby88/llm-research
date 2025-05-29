@@ -1,6 +1,7 @@
 import { DownloadFileButton } from "@/components/buttons/download-file-button"
 import { AIIcons } from "@/components/icons/ai-icons"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
 import { Research } from "@/drizzle/schema"
@@ -21,7 +22,7 @@ const config = {
 	tabName: "modelTab",
 }
 
-const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {
+const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
@@ -152,6 +153,6 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			</PageTabs>
 		</div>
 	)
-}
+})
 
 export default Page

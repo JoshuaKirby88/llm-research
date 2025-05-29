@@ -1,4 +1,5 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
 import { APIKeyRepo } from "@/src/repos"
 import { APIKeyTable } from "@/src/tables"
@@ -16,7 +17,7 @@ const config = {
 	],
 } as const
 
-const Page = async (props: { searchParams: Promise<NextSearchParam> }) => {
+const Page = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) => {
 	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
 	const apiKey = await APIKeyRepo.query(user.userId)
@@ -41,6 +42,6 @@ const Page = async (props: { searchParams: Promise<NextSearchParam> }) => {
 			</PageTabs>
 		</div>
 	)
-}
+})
 
 export default Page

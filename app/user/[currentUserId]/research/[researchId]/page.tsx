@@ -1,6 +1,7 @@
 import { LinkButton } from "@/components/buttons/link-button"
 import { ResearchStarButton } from "@/components/buttons/research-star-button"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
+import { Suspense } from "@/components/suspense"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { db } from "@/drizzle/db"
@@ -33,7 +34,7 @@ const config = {
 	},
 } as const
 
-const Page = async (props: { params: Promise<NextParam<"currentUserId" | "researchId">>; searchParams: Promise<NextSearchParam> }) => {
+const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" | "researchId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
@@ -168,6 +169,6 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 			</PageTabs>
 		</div>
 	)
-}
+})
 
 export default Page

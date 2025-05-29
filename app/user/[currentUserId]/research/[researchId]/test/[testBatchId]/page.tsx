@@ -109,7 +109,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	return (
 		<div className="w-full">
 			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
-				<div className="mb-1 flex gap-5">
+				<div className="mb-1 flex items-center gap-5">
 					<TestFilter
 						params={params}
 						queriedUsers={queriedUsers}

@@ -12,7 +12,7 @@ interface FilterActionsProps {
 
 export function FilterActions({ hasFilters, actions, locale = "en" }: FilterActionsProps) {
 	return (
-		<Button className={cn("!px-2 h-7", !hasFilters && "hidden")} variant="red" onClick={actions?.removeAllFilters}>
+		<Button className={cn(!hasFilters && "hidden")} size="xs" variant="red" onClick={actions?.removeAllFilters}>
 			<FilterXIcon />
 			<span className="hidden md:block">{t("clear", locale)}</span>
 		</Button>

@@ -97,10 +97,14 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 
 	const models = deDupe(testModelBatches, "model").map(tmb => tmb.model)
 
-	const tabs = models.map(model => ({
-		value: model,
-		iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(model)} className="size-4.5" />,
-	}))
+	const tabs = models.map(model => {
+		const testModelBatchIds = testModelBatches.filter(tmb => tmb.model === model).map(tmb => tmb.id)
+		return {
+			value: model,
+			iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(model)} className="size-4.5" />,
+			badge: tests.filter(t => testModelBatchIds.includes(t.testModelBatchId)).length,
+		}
+	})
 
 	return (
 		<div className="w-full">

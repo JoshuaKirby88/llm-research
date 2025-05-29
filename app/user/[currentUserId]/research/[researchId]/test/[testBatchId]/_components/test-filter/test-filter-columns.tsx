@@ -26,13 +26,6 @@ const row = createColumnConfigHelper<TestFilterRow>()
 export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 	[
 		row
-			.number()
-			.id("testBatchId")
-			.accessor(row => row.testBatch.id)
-			.displayName("Test Batch ID")
-			.icon(SquareStackIcon)
-			.build(),
-		row
 			.date()
 			.id("testBatchCreatedAt")
 			.accessor(row => row.testBatch.createdAt)
@@ -95,6 +88,13 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 					icon: <circle className="size-2.5 rounded-full" style={{ backgroundColor: dVal.color }} />,
 				})),
 			)
+			.build(),
+		row
+			.number()
+			.id("testBatchId")
+			.accessor(row => row.testBatch.id)
+			.displayName("Test Batch ID")
+			.icon(SquareStackIcon)
 			.build(),
 		row
 			.number()

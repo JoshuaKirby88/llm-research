@@ -1,3 +1,4 @@
+import { DownloadFileButton } from "@/components/download-file-button"
 import { AIIcons } from "@/components/icons/ai-icons"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
@@ -37,7 +38,6 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 			evalPrompt: true,
 			dependentValues: true,
 			testBatches: {
-				columns: {},
 				where: testBatchFilters,
 				with: {
 					testModelBatches: {
@@ -62,7 +62,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	}
 
 	const [
-		research,
+		[research],
 		{
 			contributors,
 			independentVariable: [independentVariable],
@@ -105,7 +105,7 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 	return (
 		<div className="w-full">
 			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
-				<div className="mb-1 flex items-start justify-between">
+				<div className="mb-1 flex gap-5">
 					<TestFilter
 						params={params}
 						queriedUsers={queriedUsers}
@@ -115,6 +115,8 @@ const Page = async (props: { params: Promise<NextParam<"researchId" | "testBatch
 						blockingValues={blockingValues}
 						dependentValues={dependentValues}
 					/>
+
+					<DownloadFileButton data={JSON.stringify(result, null, 2)} fileName={`research-${research.id}_tests.json`} />
 				</div>
 
 				<PageTabsList tabs={tabs} name={config.tabName} />

@@ -7,16 +7,11 @@
 # Todos
 
 - [ ] Rename message prompt to prompt template
-- [ ] Constraint error when deleting research
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
-- [ ] There is a possibility that a conitrbutor for the user's own research doesn't exist
-- [ ] Feel free to perform more server side queries inside individual tab content components, as they only run once on the server
 - [ ] Test deleting a user such that research still remains
-- [ ] Create project for gemini
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
-- [ ] Populate research overview page with all info
 - [ ] Check if deleting non-existant vector errors
-- [ ] Fix ai model select
+- [ ] Add provider icon to ai model select
 - [ ] Support research without blocking variables
 
 # New research form

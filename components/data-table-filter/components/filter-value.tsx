@@ -1,6 +1,5 @@
 "use client"
 
-import { addClassName } from "@/components/add-className"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -8,6 +7,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { addClassName } from "@/utils/add-className"
 import { cn } from "@/utils/cn"
 import { isEqual } from "date-fns"
 import { format } from "date-fns"

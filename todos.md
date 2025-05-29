@@ -6,6 +6,10 @@
 
 # Todos
 
+- [ ] Move large queries and data transformation away from page and layout
+    - Search how other people do it
+- [ ] Add user bio
+    - Add profile table...?
 - [ ] Rename message prompt to prompt template
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Test deleting a user such that research still remains

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/utils/cn"
-import { addClassName } from "./add-className"
+import { addClassName } from "../utils/add-className"
 
 export const HintTooltip = (props: { icon?: React.ReactNode; title?: string; description?: string; className?: string }) => {
 	return (

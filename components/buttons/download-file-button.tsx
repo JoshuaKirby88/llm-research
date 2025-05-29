@@ -1,7 +1,7 @@
 "use client"
 
 import { DownloadIcon } from "lucide-react"
-import { Button, ButtonProps } from "./ui/button"
+import { Button, ButtonProps } from "../ui/button"
 
 export const DownloadFileButton = ({ data, fileName, ...props }: { data: string; fileName: string } & ButtonProps) => {
 	const onClick = () => {

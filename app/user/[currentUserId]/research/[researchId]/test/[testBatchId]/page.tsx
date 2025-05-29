@@ -1,4 +1,4 @@
-import { DownloadFileButton } from "@/components/download-file-button"
+import { DownloadFileButton } from "@/components/buttons/download-file-button"
 import { AIIcons } from "@/components/icons/ai-icons"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"

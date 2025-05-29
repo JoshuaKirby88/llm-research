@@ -1,6 +1,6 @@
 import { AlertCard, AlertCardContent } from "@/components/alert-card"
+import { LinkButton } from "@/components/buttons/link-button"
 import { IconWrapper } from "@/components/icon-wrapper"
-import { LinkButton } from "@/components/link-button"
 import { buttonVariants } from "@/components/ui/button"
 import { AtSignIcon, ExternalLinkIcon, LightbulbIcon, SendIcon } from "lucide-react"
 

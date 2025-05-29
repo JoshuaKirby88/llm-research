@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn"
 import * as React from "react"
-import { addClassName } from "./add-className"
+import { addClassName } from "../utils/add-className"
 
 type EmptyStateProps = {
 	title: string

@@ -1,6 +1,7 @@
 "use client"
+
 import { useState } from "react"
-import { Button, ButtonProps } from "./ui/button"
+import { Button, ButtonProps } from "../ui/button"
 
 export const LoadingButton = (props: ButtonProps) => {
 	const [isLoading, setIsLoading] = useState(false)

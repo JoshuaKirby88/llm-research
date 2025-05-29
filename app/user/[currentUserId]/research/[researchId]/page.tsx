@@ -1,6 +1,5 @@
-import { starResearchAction, unstarResearchAction } from "@/actions/research/star-research.action"
-import { FormActionButton } from "@/components/form/server/form-action-button"
-import { LinkButton } from "@/components/link-button"
+import { LinkButton } from "@/components/buttons/link-button"
+import { ResearchStarButton } from "@/components/buttons/research-star-button"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
@@ -9,10 +8,9 @@ import { Research, TestBatch, UserToStarredResearch } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
 import { ClerkService } from "@/src/services/clerk.service"
 import { authProcedure } from "@/utils/auth-procedure"
-import { cn } from "@/utils/cn"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, desc, eq } from "drizzle-orm"
-import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon, StarIcon } from "lucide-react"
+import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
 import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
@@ -75,9 +73,9 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 	const [
 		[research],
 		{
-			forkedResearch: [forkedResearch],
+			forkedResearch: forkedResearches,
 			contributors,
-			userToStarredResearches: [userToStarredResearch],
+			userToStarredResearches,
 			independentVariable: [independentVariable],
 			independentValues,
 			blockingVariables,
@@ -102,34 +100,33 @@ const Page = async (props: { params: Promise<NextParam<"currentUserId" | "resear
 		testBatches: { testModelBatches: { testModelBatchResults: true }, testBatchResults: true },
 	})
 
+	const forkedResearch = forkedResearches.at(0)
+	const userToStarredResearch = userToStarredResearches.at(0)
+
 	const queriedUsers = await ClerkService.queryUsers(contributors.map(c => c.userId))
 	const currentUser = queriedUsers.find(queriedUser => params.currentUserId === queriedUser.id)
 
 	return (
 		<div className="mx-auto w-full max-w-4xl">
 			<PageTabs tabs={tabs} searchParams={searchParams}>
-				<div className="flex gap-5">
+				<div className="flex items-start gap-5">
 					<PageTabsList tabs={tabs} />
 
-					<LinkButton href={`/new/${research.id}`} disabled={!user.userId} className={buttonVariants({ variant: "blue" })}>
-						<GitForkIcon />
-						Fork Research
-					</LinkButton>
+					<div className="flex items-center gap-5">
+						<LinkButton href={`/new/${research.id}`} disabled={!user.userId} className={buttonVariants({ variant: "blue" })}>
+							<GitForkIcon />
+							Fork Research
+						</LinkButton>
 
-					<RunTestSheet user={user} research={research} independentValues={independentValues} blockingVariables={blockingVariables} blockingValues={blockingValues}>
-						<Button variant="green" disabled={!user.userId}>
-							<RocketIcon />
-							Run Tests
-						</Button>
-					</RunTestSheet>
+						<RunTestSheet user={user} research={research} independentValues={independentValues} blockingVariables={blockingVariables} blockingValues={blockingValues}>
+							<Button variant="green" disabled={!user.userId}>
+								<RocketIcon />
+								Run Tests
+							</Button>
+						</RunTestSheet>
 
-					<FormActionButton
-						as="button"
-						action={(userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: research.id, currentUserId: research.userId })}
-						className="flex h-9 items-center gap-2"
-					>
-						<StarIcon className={cn(userToStarredResearch && "fill-yellow-400 text-yellow-400")} /> {research.starCount}
-					</FormActionButton>
+						<ResearchStarButton research={research} userToStarredResearch={userToStarredResearch} />
+					</div>
 				</div>
 
 				<TabsContent value="Overview">

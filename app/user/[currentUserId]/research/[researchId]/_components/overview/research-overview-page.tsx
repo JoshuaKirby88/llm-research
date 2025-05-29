@@ -9,7 +9,7 @@ import Link from "next/link"
 type Props = {
 	currentUser: ClerkQueriedUser | undefined
 	research: ResearchT
-	forkedResearch: ResearchT | null
+	forkedResearch: ResearchT | undefined
 	contributors: ContributorT[]
 	independentVariable: IndependentVariableT
 	independentValues: IndependentValueT[]

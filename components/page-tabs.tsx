@@ -2,7 +2,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/utils/cn"
 import { LucideIcon } from "lucide-react"
 import { ComponentProps, ReactNode } from "react"
-import { QueryStateSlot } from "./query-state-slot"
+import { QueryStateSlot } from "./buttons/query-state-slot"
 import { Badge } from "./ui/badge"
 
 type Tab = { key?: string; value: string; icon?: LucideIcon; iconNode?: ReactNode; badge?: ReactNode }

@@ -1,6 +1,5 @@
 import { archiveResearchAction, unarchiveResearchAction } from "@/actions/research/archive-research.action"
 import { downloadResearchAction } from "@/actions/research/download-research.action"
-import { starResearchAction, unstarResearchAction } from "@/actions/research/star-research.action"
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
@@ -8,8 +7,9 @@ import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } 
 import { ClerkPublicUser, ClerkQueriedUser } from "@/src/services/clerk.service"
 import { ActionI } from "@/utils/actions/create-action"
 import { cn } from "@/utils/cn"
-import { ArchiveIcon, ArchiveRestoreIcon, DownloadIcon, EllipsisIcon, StarIcon, StarOffIcon } from "lucide-react"
+import { ArchiveIcon, ArchiveRestoreIcon, DownloadIcon, EllipsisIcon } from "lucide-react"
 import Link from "next/link"
+import { ResearchStarButton } from "../buttons/research-star-button"
 import { ClerkProfile } from "../clerk/clerk-profile"
 import { FormActionButton } from "../form/server/form-action-button"
 import { FormRouteHandler } from "../form/server/form-route-handler"
@@ -34,7 +34,7 @@ export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStar
 			<CardFooter variant="link">
 				<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
 
-				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<ResearchStarButton research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>
 		</Card>
 	)
@@ -61,7 +61,8 @@ export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: 
 			</Link>
 
 			<CardFooter variant="link">
-				<ResearchCardStars research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<ResearchStarButton research={props.research} userToStarredResearch={props.userToStarredResearch} />
+
 				<ResearchCardDropdown
 					user={props.user}
 					research={props.research}
@@ -82,15 +83,6 @@ const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
 					<EllipsisIcon />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<FormActionButton
-						as="button"
-						className={dropdownMenuItemVariants()}
-						action={(props.userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: props.research.id, currentUserId: props.research.userId })}
-					>
-						{props.userToStarredResearch ? <StarOffIcon /> : <StarIcon />}
-						{props.userToStarredResearch ? "Unstar" : "Star"}
-					</FormActionButton>
-
 					<FormRouteHandler
 						as="button"
 						action="/api/download-research"
@@ -116,13 +108,5 @@ const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
 				</DropdownMenuContent>
 			</DropdownMenu>
 		)
-	)
-}
-
-const ResearchCardStars = (props: Pick<Props, "research" | "userToStarredResearch">) => {
-	return (
-		<div className="flex items-center gap-1">
-			<StarIcon className={cn(props.userToStarredResearch && "fill-yellow-400 text-yellow-400")} /> {props.research.starCount}
-		</div>
 	)
 }

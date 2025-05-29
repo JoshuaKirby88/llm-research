@@ -1,7 +1,7 @@
 import { ClerkQueriedUser } from "@/src/services/clerk.service"
 import { cn } from "@/utils/cn"
 import { ComponentProps } from "react"
-import { LinkButton } from "../link-button"
+import { LinkButton } from "../buttons/link-button"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 
@@ -44,7 +44,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, ...pr
 				)}
 			</div>
 
-			{!hideUserName && <p className={cn("font-medium", !disabled && "group-hover:underline")}>{userName}</p>}
+			{!hideUserName && <p className={cn("font-medium", !disabled && "group-hover:underline group-data-[state=open]:underline")}>{userName}</p>}
 		</LinkButton>
 	)
 }

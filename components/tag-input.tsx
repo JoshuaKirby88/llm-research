@@ -2,13 +2,19 @@
 
 import { cn } from "@/utils/cn"
 import { TagInput as EmplorTagInput, TagInputProps } from "emblor"
+import { XIcon } from "lucide-react"
 import { useState } from "react"
-import { Shortcut } from "./shortcut"
+import { Button } from "./ui/button"
 import { inputVariants } from "./ui/input"
 
-type Props = Partial<Omit<TagInputProps, "tags" | "onTagAdd" | "onTagRemove">> & { tags: string[]; onTagAdd: (tag: string) => void; onTagRemove: (tag: string) => void }
+type Props = Partial<Omit<TagInputProps, "tags" | "onTagAdd" | "onTagRemove" | "onClearAll">> & {
+	tags: string[]
+	onTagAdd: (tag: string) => void
+	onTagRemove: (tag: string) => void
+	onClearAll: () => void
+}
 
-export const TagInput = ({ tags, onTagAdd, onTagRemove, className, ...props }: Props) => {
+export const TagInput = ({ tags, onTagAdd, onTagRemove, onClearAll, className, ...props }: Props) => {
 	const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
 	const emblorTags = tags.map(tag => ({ id: tag, text: tag }))
 
@@ -20,7 +26,7 @@ export const TagInput = ({ tags, onTagAdd, onTagRemove, className, ...props }: P
 				onTagAdd={onTagAdd}
 				onTagRemove={onTagRemove}
 				styleClasses={{
-					input: inputVariants(),
+					input: cn(inputVariants(), "pr-10"),
 					tagList: {
 						container: cn("flex-wrap gap-1"),
 					},
@@ -35,10 +41,21 @@ export const TagInput = ({ tags, onTagAdd, onTagRemove, className, ...props }: P
 				setActiveTagIndex={setActiveTagIndex}
 				draggable={false}
 				className="flex-col-reverse"
+				placeholder='"↵" to add'
 				{...props}
 			/>
 
-			<Shortcut shortcut="enter" className="absolute top-0 right-1" />
+			<Button
+				className="absolute top-0.5 right-1"
+				size="iconSm"
+				variant="text"
+				onClick={e => {
+					onClearAll()
+					e.preventDefault()
+				}}
+			>
+				<XIcon />
+			</Button>
 		</div>
 	)
 }

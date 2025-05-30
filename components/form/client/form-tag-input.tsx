@@ -22,6 +22,7 @@ export const FormTagInput = (props: Props) => {
 						const updatedTags = ((field.value as string[]) || []).filter(t => t !== tag)
 						field.onChange(updatedTags)
 					}}
+					onClearAll={() => field.onChange([])}
 					{...props}
 				/>
 			)}

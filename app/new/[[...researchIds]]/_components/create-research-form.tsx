@@ -48,7 +48,7 @@ const config = {
 
 export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearchI> }) => {
 	const form = useForm<CreateResearchI>({
-		resolver: zodResolver(createResearchISchema),
+		resolver: zodResolver(createResearchISchema.strict),
 		defaultValues: config.formatDefaultValues(props.defaultValues),
 		reValidateMode: "onChange",
 		mode: "onChange",
@@ -80,17 +80,23 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 
 	return (
 		<Form {...form} onSubmit={onSubmit}>
-			<div className="mb-10 flex items-center gap-10">
-				<Button type="button" onClick={resetToExampleForm} variant="link">
-					View Example Research
-				</Button>
+			<div className="flex items-center justify-between">
+				<h1 className="font-semibold text-3xl">New Research</h1>
 
-				<Button type="button" variant="link" onClick={resetForm}>
-					Reset
-				</Button>
+				<div className="flex items-center gap-2">
+					<Button type="button" onClick={resetToExampleForm} variant="outline">
+						Example Research
+					</Button>
+
+					<Button type="button" variant="red" onClick={resetForm}>
+						Reset Form
+					</Button>
+				</div>
 			</div>
 
-			<LabelWithTooltip size="3xl" icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs.">
+			<Separator className="my-14" />
+
+			<LabelWithTooltip size="2xl" icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs.">
 				Research Question
 			</LabelWithTooltip>
 			<FormInput name="research.name" />

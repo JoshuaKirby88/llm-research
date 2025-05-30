@@ -7,7 +7,7 @@ import { createAction } from "@/utils/actions/create-action"
 import { z } from "zod"
 
 const schema = z.object({
-	formValues: createResearchISchema,
+	formValues: createResearchISchema.lax,
 	prompt: z.string(),
 	variable: variableSchema,
 	blockingIndex: z.number().optional(),

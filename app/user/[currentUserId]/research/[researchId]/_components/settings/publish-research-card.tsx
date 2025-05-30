@@ -23,7 +23,7 @@ export const PublishResearchCard = (props: { research: ResearchT; testBatches: T
 					<CheckIcon />
 				</IconWrapper>
 
-				<AlertCardContent title="Publish Research" description="You can still run tests.">
+				<AlertCardContent title="Publish Research" description="Allow others to view this research, and run their own tests. You can still continue to run further tests.">
 					<Dialog
 						title="Publish Research"
 						description="Optionally write a conclusion. You can edit this later."

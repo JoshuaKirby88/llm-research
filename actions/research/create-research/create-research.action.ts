@@ -11,7 +11,7 @@ import { redirect } from "next/navigation"
 
 export const createResearchAction = createAction(
 	"signedIn",
-	createResearchISchema,
+	createResearchISchema.strict,
 )(async ({ user, input }) => {
 	const forkedResearchId = await getParamsFromHeaders("/new")
 

@@ -16,13 +16,12 @@
 
 # New research form
 
+- [ ] Clear all button for tag input
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Ability to enter example messages to generate variables and message prompts from
-- [ ] Debounce tiptap onChanges
 
 # Data analysis
 
-- Look at data that produced a specific dependent value result
 - Should be able to do everything that I can do if I had the data locally
 - Automatic AI data analysis
 

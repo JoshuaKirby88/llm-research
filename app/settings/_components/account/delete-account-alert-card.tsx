@@ -1,4 +1,4 @@
-import { deleteAccountAction } from "@/actions/account/delete-account.action"
+import { deleteClerkUserAction } from "@/actions/clerk/delete-clerk-user.action"
 import { AlertCard, AlertCardContent } from "@/components/alert-card"
 import { Dialog } from "@/components/dialog"
 import { FormActionButton } from "@/components/form/server/form-action-button"
@@ -20,7 +20,7 @@ export const DeleteAccountAlertCard = () => {
 					triggerButton={<Button variant="red">Delete Account</Button>}
 					cancelProps={{ children: "Cancel" }}
 					confirmButton={
-						<FormActionButton variant="red" action={deleteAccountAction} className="w-full">
+						<FormActionButton variant="red" action={deleteClerkUserAction} className="w-full">
 							Delete Account
 						</FormActionButton>
 					}

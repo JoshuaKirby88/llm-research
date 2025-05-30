@@ -14,9 +14,7 @@ export const ClerkProfile = (props: { userId: string } & ComponentProps<typeof C
 				<div className="space-y-3">
 					<ClerkAvatar {...omit(props, ["badge"])} size="lg" />
 
-					<p className="text-muted-foreground text-sm">
-						Designer at <strong className="font-medium text-foreground">@Origin UI</strong>. Crafting web experiences with Tailwind CSS.
-					</p>
+					<p className="text-muted-foreground text-sm">{props.user?.metadata.bio}</p>
 				</div>
 			</HoverCardContent>
 		</HoverCard>

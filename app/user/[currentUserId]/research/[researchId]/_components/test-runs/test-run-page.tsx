@@ -1,7 +1,7 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { BeanOffIcon, UserIcon, UsersIcon } from "lucide-react"
 import { TestRunTabPage } from "./_components/test-run-tab-page"
 

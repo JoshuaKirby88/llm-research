@@ -12,12 +12,6 @@ const defaultColumns = {
 		.$onUpdateFn(() => new Date()),
 }
 
-export const Account = sqliteTable("Account", {
-	userId: text().primaryKey(),
-	bio: text().notNull().default(""),
-	...defaultColumns,
-})
-
 export const APIKey = sqliteTable("APIKey", {
 	userId: text().primaryKey(),
 	openai: text(),

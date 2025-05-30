@@ -5,7 +5,7 @@ import { ClerkService } from "@/src/services/clerk.service"
 import { createAction } from "@/utils/actions/create-action"
 import { redirect } from "next/navigation"
 
-export const deleteAccountAction = createAction("signedIn")(async ({ user }) => {
+export const deleteClerkUserAction = createAction("signedIn")(async ({ user }) => {
 	await Promise.all([
 		APIKeyRepo.delete(user.userId),
 

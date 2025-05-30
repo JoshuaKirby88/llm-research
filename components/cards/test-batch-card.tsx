@@ -2,7 +2,7 @@ import { downloadResearchAction } from "@/actions/research/download-research.act
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { ActionI } from "@/utils/actions/create-action"
 import { cn } from "@/utils/cn"
 import { DownloadIcon, EllipsisIcon } from "lucide-react"

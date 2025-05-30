@@ -2,7 +2,7 @@ import { AddAPIKeyAlertCard } from "@/components/add-api-key-alert-card"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { APIKeyRepo } from "@/src/repos"
 import { BlockingValueT, BlockingVariableT, IndependentValueT, ResearchT } from "@/src/schemas"
-import { ClerkPublicUser } from "@/src/services/clerk.service"
+import { ClerkPublicUser } from "@/src/schemas"
 import { APIKeyTable } from "@/src/tables"
 import { RunTestForm } from "./run-test-form"
 

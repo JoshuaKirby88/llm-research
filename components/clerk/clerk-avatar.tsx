@@ -1,4 +1,4 @@
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { cn } from "@/utils/cn"
 import { ComponentProps } from "react"
 import { LinkButton } from "../buttons/link-button"

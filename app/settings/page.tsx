@@ -2,11 +2,10 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
 import { APIKeyRepo } from "@/src/repos"
-import { AccountRepo } from "@/src/repos/account.repo"
+import { ClerkService } from "@/src/services/clerk.service"
 import { APIKeyTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
 import { CircleUserRoundIcon, KeyIcon, MailIcon } from "lucide-react"
-import { notFound } from "next/navigation"
 import { AccountPage } from "./_components/account/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
 import { ContactPage } from "./_components/contact-page"
@@ -23,11 +22,7 @@ const Page = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) 
 	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
 
-	const [account, apiKey] = await Promise.all([AccountRepo.query(user.userId), APIKeyRepo.query(user.userId)])
-
-	if (!account) {
-		notFound()
-	}
+	const [currentUser, apiKey] = await Promise.all([ClerkService.queryUser(user.userId), APIKeyRepo.query(user.userId)])
 
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 
@@ -37,7 +32,7 @@ const Page = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) 
 				<PageTabsList tabs={config.tabs} />
 
 				<TabsContent value="Account">
-					<AccountPage account={account} />
+					<AccountPage currentUser={currentUser} />
 				</TabsContent>
 
 				<TabsContent value="API Key">

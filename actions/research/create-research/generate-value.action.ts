@@ -1,8 +1,7 @@
 "use server"
 
 import { generateValuePrompts } from "@/src/prompts/create-research/generate-value.prompts"
-import { createResearchISchema } from "@/src/schemas"
-import { variableSchema } from "@/src/schemas/features/variable.schema"
+import { createResearchISchema, variableSchema } from "@/src/schemas"
 import { AIService } from "@/src/services/ai.service"
 import { createAction } from "@/utils/actions/create-action"
 import { z } from "zod"

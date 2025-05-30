@@ -2,7 +2,7 @@ import { ClerkProfile } from "@/components/clerk/clerk-profile"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { VariableBadge } from "@/components/variable-badge"
 import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { CalendarIcon, CheckCircle2Icon, GitForkIcon, VariableIcon } from "lucide-react"
 import Link from "next/link"
 

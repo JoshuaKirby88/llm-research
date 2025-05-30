@@ -1,6 +1,6 @@
 import { TestBatchCard } from "@/components/cards/test-batch-card"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 
 type Props = {
 	queriedUsers: ClerkQueriedUser[]

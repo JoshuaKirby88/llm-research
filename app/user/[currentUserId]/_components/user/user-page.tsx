@@ -4,5 +4,5 @@ import { ClerkService } from "@/src/services/clerk.service"
 export const UserPage = Suspense(async (props: { params: NextParam<"currentUserId"> }) => {
 	const queriedUser = await ClerkService.queryUser(props.params.currentUserId)
 
-	return <div>{queriedUser?.fullName}</div>
+	return <div>{queriedUser.fullName}</div>
 })

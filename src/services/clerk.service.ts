@@ -1,30 +1,43 @@
 import { User, clerkClient } from "@clerk/nextjs/server"
-import { AuthProcedureO } from "./auth-procedure.service"
-
-export type ClerkPublicUser = AuthProcedureO<"public">
-export type ClerkUser = AuthProcedureO<"signedIn">
-export type ClerkQueriedUser = User
+import { ClerkMetadata, ClerkQueriedUser } from "../schemas"
 
 const client = await clerkClient()
 
 export class ClerkService {
 	static userFnKeys: (keyof User)[] = ["raw"]
 
-	static async queryUser(userId: string): Promise<ClerkQueriedUser | undefined> {
-		const user = await client.users.getUser(userId)
-		return user
+	private static transformUser(user: User): ClerkQueriedUser {
+		const { privateMetadata, publicMetadata, unsafeMetadata, ...toKeep } = user
+		return { ...toKeep, fullName: user.fullName, metadata: publicMetadata } as ClerkQueriedUser
 	}
 
-	static async queryUsers(userIds: string[], options?: { serialize?: boolean }): Promise<ClerkQueriedUser[]> {
+	private static serializeUser(user: User | ClerkQueriedUser): ClerkQueriedUser {
+		return { ...JSON.parse(JSON.stringify(user)), fullName: user.fullName }
+	}
+
+	static async queryUser(userId: string) {
+		const user = await client.users.getUser(userId)
+		return this.transformUser(user)
+	}
+
+	static async queryUsers(userIds: string[], options?: { serialize?: boolean }) {
 		const uniqueUserIds = Array.from(new Set(userIds))
 		const result = await client.users.getUserList({ userId: uniqueUserIds })
 		const sorted = result.data.sort((a, b) => uniqueUserIds.indexOf(a.id) - uniqueUserIds.indexOf(b.id))
 
 		if (options?.serialize) {
-			return sorted.map(user => ({ ...JSON.parse(JSON.stringify(user)), fullName: user.fullName }))
+			return sorted.map(user => this.serializeUser(this.transformUser(user)))
 		} else {
-			return sorted
+			return sorted.map(user => this.transformUser(user))
 		}
+	}
+
+	static async updateMetadata(userId: string, input: Partial<ClerkMetadata>) {
+		const updatedUser = await client.users.updateUserMetadata(userId, {
+			publicMetadata: input,
+		})
+
+		return this.transformUser(updatedUser)
 	}
 
 	static async deleteUser(userId: string) {

@@ -2,7 +2,7 @@ import { ClerkAvatar } from "@/components/clerk/clerk-avatar"
 import { createColumnConfigHelper } from "@/components/data-table-filter/core/filters"
 import { FilterModelUnion } from "@/components/data-table-filter/core/types"
 import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, TestBatchT, TestT, TestToBlockingValueT } from "@/src/schemas"
-import { ClerkQueriedUser } from "@/src/services/clerk.service"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { CalendarIcon, GiftIcon, SquareIcon, SquareStackIcon, VariableIcon } from "lucide-react"
 
 export type TestFilterRow = {

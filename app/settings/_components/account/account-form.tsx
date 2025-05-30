@@ -1,15 +1,15 @@
-import { updateAccountAction } from "@/actions/account/update-account.action"
+import { updateClerkMetadataAction } from "@/actions/clerk/update-clerk-metadata.action"
 import { FormButton } from "@/components/form/server/form-button"
 import { Textarea } from "@/components/textarea"
 import { Label } from "@/components/ui/label"
-import { AccountT } from "@/src/schemas"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { callFormAction } from "@/utils/actions/call-form-action"
 
-export const AccountForm = (props: { account: AccountT }) => {
+export const AccountForm = (props: { currentUser: ClerkQueriedUser }) => {
 	const onSubmit = async (formData: FormData) => {
 		"use server"
 
-		await callFormAction(updateAccountAction, { formData })
+		await callFormAction(updateClerkMetadataAction, { formData })
 	}
 
 	return (
@@ -17,7 +17,7 @@ export const AccountForm = (props: { account: AccountT }) => {
 			<Label size="xl" className="mb-1">
 				Bio
 			</Label>
-			<Textarea name="bio" defaultValue={props.account.bio} />
+			<Textarea name="bio" defaultValue={props.currentUser.metadata.bio} />
 
 			<FormButton>Save</FormButton>
 		</form>

@@ -1,6 +1,6 @@
 import { ResearchCard } from "@/components/cards/research-card"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, UserToStarredResearchT } from "@/src/schemas"
-import { ClerkPublicUser } from "@/src/services/clerk.service"
+import { ClerkPublicUser } from "@/src/schemas"
 
 type Props = {
 	user: ClerkPublicUser

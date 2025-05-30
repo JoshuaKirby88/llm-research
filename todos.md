@@ -6,11 +6,6 @@
 
 # Todos
 
-- [ ] Relate all tables to user table
-    - Make all tables a child of account
-    - Insert user on account creation
-    - Only delete user table when deleting account
-    - Update queries
 - [ ] Rename message prompt to prompt template
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Test deleting a user such that research still remains

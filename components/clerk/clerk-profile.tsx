@@ -12,7 +12,7 @@ export const ClerkProfile = (props: { userId: string } & ComponentProps<typeof C
 
 			<HoverCardContent>
 				<div className="space-y-3">
-					<ClerkAvatar {...omit(props, ["badge"])} size="lg" />
+					<ClerkAvatar {...omit(props, ["badge"])} size="lg" overideImageSize={props.size} />
 
 					<p className="text-muted-foreground text-sm">{props.user?.metadata.bio}</p>
 				</div>

@@ -11,21 +11,22 @@ type Props = {
 	badge?: React.ReactNode
 	disabled?: boolean
 	hideUserName?: boolean
+	overideImageSize?: NonNullable<AvatarProps["size"]>
 } & PickRequired<ComponentProps<typeof Avatar>, "size">
 
 const config = {
 	variants: {
-		size: { xxxs: 16, xxs: 20, xs: 24, sm: 28, md: 32, lg: 36, xl: 40 } satisfies Record<keyof AvatarProps["size"], any>,
+		size: { xxxs: 16, xxs: 20, xs: 24, sm: 28, md: 32, lg: 36, xl: 40 } satisfies Record<NonNullable<AvatarProps["size"]>, any>,
 	},
 }
 
-export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, ...props }: Props) => {
+export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overideImageSize, ...props }: Props) => {
 	const userName = user?.fullName ?? "User is deleted"
-	const size = config.variants.size[props.size]
 
+	const imageSize = config.variants.size[overideImageSize ?? props.size].toString()
 	const params = new URLSearchParams()
-	params.set("height", size.toString())
-	params.set("width", size.toString())
+	params.set("height", imageSize)
+	params.set("width", imageSize)
 	params.set("quality", "100")
 	params.set("fit", "fill")
 

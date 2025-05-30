@@ -11,6 +11,8 @@ export const env = createEnv({
 	client: {
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
 		NEXT_PUBLIC_URL: z.string(),
+		NEXT_PUBLIC_POSTHOG_KEY: z.string(),
+		NEXT_PUBLIC_POSTHOG_HOST: z.string(),
 	},
 	runtimeEnvStrict: {
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
@@ -18,5 +20,7 @@ export const env = createEnv({
 		OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		NEXT_PUBLIC_URL: process.env.NODE_ENV === "production" ? "https://llm-research.jojokirby88-327.workers.dev" : "http://localhost:3000",
+		NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+		NEXT_PUBLIC_POSTHOG_HOST: "https://us.i.posthog.com",
 	},
 })

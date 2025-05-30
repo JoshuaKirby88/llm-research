@@ -4,15 +4,13 @@ import { ClerkMetadata, ClerkQueriedUser } from "../schemas"
 const client = await clerkClient()
 
 export class ClerkService {
-	static userFnKeys: (keyof User)[] = ["raw"]
-
 	private static transformUser(user: User): ClerkQueriedUser {
 		const { privateMetadata, publicMetadata, unsafeMetadata, ...toKeep } = user
 		return { ...toKeep, fullName: user.fullName, metadata: publicMetadata } as ClerkQueriedUser
 	}
 
-	private static serializeUser(user: User | ClerkQueriedUser): ClerkQueriedUser {
-		return { ...JSON.parse(JSON.stringify(user)), fullName: user.fullName }
+	static serializeUser(user: User | ClerkQueriedUser): ClerkQueriedUser {
+		return { ...user, fullName: user.fullName } as ClerkQueriedUser
 	}
 
 	static async queryUser(userId: string) {

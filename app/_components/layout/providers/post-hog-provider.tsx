@@ -2,7 +2,7 @@
 
 import { Suspense } from "@/components/suspense"
 import { env } from "@/utils/env"
-import { useAuth } from "@clerk/nextjs"
+import { useUser } from "@clerk/clerk-react"
 import { usePathname, useSearchParams } from "next/navigation"
 import posthog from "posthog-js"
 import { usePostHog } from "posthog-js/react"
@@ -50,14 +50,14 @@ const PostHogPageView = Suspense(() => {
 }, null)
 
 const PostHogUserIdentifier = Suspense(() => {
-	const user = useAuth()
+	const { user } = useUser()
 	const postHog = usePostHog()
 
 	useEffect(() => {
-		if (user.userId) {
-			postHog.identify(user.userId)
+		if (user) {
+			postHog.identify(user.id, { name: user.fullName, email: user.primaryEmailAddress?.emailAddress })
 		}
-	}, [postHog, user.userId])
+	}, [postHog, user])
 
 	return null
 }, null)

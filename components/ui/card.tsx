@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn"
 import { VariantProps, cva } from "class-variance-authority"
 import * as React from "react"
 
-export const cardVariants = cva("flex flex-col gap-6 rounded-3xl text-card-foreground", {
+export const cardVariants = cva("flex flex-col gap-6 rounded-3xl text-card-foreground overflow-clip", {
 	variants: {
 		variant: {
 			default: "border bg-card",
@@ -29,7 +29,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="card-header"
-			className={cn("@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6", className)}
+			className={cn("@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 has-data-[slot=card-action]:grid-cols-[1fr_auto]", className)}
 			{...props}
 		/>
 	)
@@ -51,7 +51,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 	return <div data-slot="card-content" className={cn(className)} {...props} />
 }
 
-export const cardFooterVariants = cva("flex items-center [.border-t]:pt-6 justify-between", {
+export const cardFooterVariants = cva("flex items-center justify-between", {
 	variants: {
 		variant: {
 			default: "",

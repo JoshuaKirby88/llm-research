@@ -5,6 +5,7 @@ import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { FormTagInput } from "@/components/form/client/form-tag-input"
+import { FormCard, FormCardContent, FormCardFooter, FormCardHeader } from "@/components/form/form-card"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -13,8 +14,7 @@ import { SlashEditorFeature } from "@/src/features"
 import { CreateResearchI, createResearchISchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { HardHatIcon, MessageCircleQuestionIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
-import React from "react"
+import { BookOpenIcon, HardHatIcon, MessageCircleQuestionIcon, RotateCcwIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
 import { FieldPath, useFieldArray, useForm } from "react-hook-form"
 import { GenerateValueDialog } from "./generate-value-dialog"
 import { VariableSlashEditor } from "./variable-slash-editor"
@@ -79,106 +79,166 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 	}
 
 	return (
-		<Form {...form} onSubmit={onSubmit}>
+		<Form {...form} onSubmit={onSubmit} className="space-y-10">
 			<div className="flex items-center justify-between">
 				<h1 className="font-semibold text-3xl">New Research</h1>
 
 				<div className="flex items-center gap-2">
-					<Button type="button" onClick={resetToExampleForm} variant="outline">
+					<Button type="button" onClick={resetToExampleForm} variant="outline" size="sm">
+						<BookOpenIcon />
 						Example Research
 					</Button>
 
-					<Button type="button" variant="red" onClick={resetForm}>
+					<Button type="button" variant="red" size="sm" onClick={resetForm}>
+						<RotateCcwIcon />
 						Reset Form
 					</Button>
 				</div>
 			</div>
 
-			<Separator className="my-14" />
+			<Separator className="-translate-x-[50%] mb-20 ml-[50%] min-w-screen" />
 
-			<LabelWithTooltip size="2xl" icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs.">
-				Research Question
-			</LabelWithTooltip>
-			<FormInput name="research.name" />
+			<div className="space-y-10">
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip size="2xl" icon={<MessageCircleQuestionIcon />} title="What do you want to know?" description="Write down a question you have about behaviours of LLMs.">
+							Research Question
+						</LabelWithTooltip>
+					</FormCardHeader>
 
-			<LabelWithTooltip
-				className="mt-10"
-				size="2xl"
-				icon={<VariableIcon />}
-				title="Which One Was This Again?"
-				description="This is what you change on purpose to see how it affects the outcome."
-			>
-				Independent variable
-			</LabelWithTooltip>
+					<FormCardContent>
+						<FormInput name="research.name" />
+					</FormCardContent>
+				</FormCard>
 
-			<Label>Name</Label>
-			<FormInput name="independentVariable.name" />
-			<Label>Variables</Label>
-			<div className="flex items-start gap-4">
-				<FormTagInput name="independentVariable.values" className="w-full" />
-				<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "independentVariable.values", values })} form={form} variable="independent" />
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip size="2xl" icon={<VariableIcon />} title="Which One Was This Again?" description="This is what you change on purpose to see how it affects the outcome.">
+							Independent variable
+						</LabelWithTooltip>
+					</FormCardHeader>
+
+					<FormCardContent>
+						<div className="space-y-1">
+							<Label>Name</Label>
+							<FormInput name="independentVariable.name" />
+						</div>
+
+						<div className="space-y-1">
+							<Label>Variables</Label>
+							<div className="flex items-start gap-4">
+								<FormTagInput name="independentVariable.values" className="w-full" />
+								<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "independentVariable.values", values })} form={form} variable="independent" />
+							</div>
+						</div>
+					</FormCardContent>
+				</FormCard>
+
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip
+							size="2xl"
+							icon={<VariableIcon />}
+							title="Generate Test Variations"
+							description="Add variables here with multiple values. The system will automatically create test runs for every possible combination you define."
+						>
+							Blocking variables
+						</LabelWithTooltip>
+					</FormCardHeader>
+
+					<FormCardContent>
+						{blockingVariableFields.fields.map((field, i) => (
+							<div key={field.id} className="group flex flex-col gap-4">
+								<div className="space-y-1">
+									<Label>Name</Label>
+									<FormInput name={`blockingVariables.${i}.name`} />
+								</div>
+
+								<div className="space-y-1">
+									<Label>Variables</Label>
+									<div className="flex items-start gap-4">
+										<FormTagInput name={`blockingVariables.${i}.values`} className="w-full" />
+										<GenerateValueDialog
+											onSubmit={values => appendIndependentValues({ formKey: `blockingVariables.${i}.values`, values })}
+											blockingIndex={i}
+											form={form}
+											variable="blocking"
+										/>
+									</div>
+								</div>
+
+								<Button type="button" className="w-full" variant="red" onClick={() => blockingVariableFields.remove(i)}>
+									Delete Variable
+								</Button>
+
+								<Separator className="my-6 group-last:hidden" />
+							</div>
+						))}
+					</FormCardContent>
+
+					<FormCardFooter>
+						<Button type="button" className="w-full" onClick={() => blockingVariableFields.append({ name: "", values: [] })}>
+							Add Variable
+						</Button>
+					</FormCardFooter>
+				</FormCard>
+
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip
+							size="2xl"
+							icon={<HardHatIcon />}
+							title="Can We Prompt it? Yes We Can!"
+							description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
+						>
+							Message prompt
+						</LabelWithTooltip>
+					</FormCardHeader>
+
+					<FormCardContent>
+						<div className="space-y-1">
+							<Label>System</Label>
+							<VariableSlashEditor name="systemMessagePrompt.text" type="systemMessagePrompt" />
+						</div>
+
+						<div className="space-y-1">
+							<Label>User</Label>
+							<VariableSlashEditor name="userMessagePrompt.text" type="userMessagePrompt" />
+						</div>
+					</FormCardContent>
+				</FormCard>
+
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip size="2xl" icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt.">
+							Evaluation prompt
+						</LabelWithTooltip>
+					</FormCardHeader>
+
+					<FormCardContent>
+						<VariableSlashEditor name="evalPrompt.text" type="evalPrompt" />
+					</FormCardContent>
+				</FormCard>
+
+				<FormCard>
+					<FormCardHeader>
+						<LabelWithTooltip size="2xl" icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined.">
+							Dependent Variable
+						</LabelWithTooltip>
+					</FormCardHeader>
+
+					<FormCardContent>
+						<div className="flex items-start gap-4">
+							<FormTagInput name="dependentValues" className="w-full" />
+							<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "dependentValues", values })} form={form} variable="dependent" />
+						</div>
+					</FormCardContent>
+				</FormCard>
 			</div>
 
-			<LabelWithTooltip
-				size="2xl"
-				className="mt-10"
-				icon={<VariableIcon />}
-				title="Generate Test Variations"
-				description="Add variables here with multiple values. The system will automatically create test runs for every possible combination you define."
-			>
-				Blocking variables
-			</LabelWithTooltip>
-
-			{blockingVariableFields.fields.map((field, i) => (
-				<React.Fragment key={field.id}>
-					<Label>Name</Label>
-					<FormInput name={`blockingVariables.${i}.name`} />
-					<Label>Variables</Label>
-					<div className="flex items-start gap-4">
-						<FormTagInput name={`blockingVariables.${i}.values`} className="w-full" />
-						<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: `blockingVariables.${i}.values`, values })} blockingIndex={i} form={form} variable="blocking" />
-					</div>
-					<Button type="button" className="w-full" variant="red" onClick={() => blockingVariableFields.remove(i)}>
-						Delete Blocking Variable
-					</Button>
-					<Separator className="my-5" />
-				</React.Fragment>
-			))}
-			<Button type="button" className="w-full" variant="secondary" onClick={() => blockingVariableFields.append({ name: "", values: [] })}>
-				Add Blocking Variable
-			</Button>
-
-			<LabelWithTooltip
-				size="2xl"
-				className="mt-10"
-				icon={<HardHatIcon />}
-				title="Can We Prompt it? Yes We Can!"
-				description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
-			>
-				Message prompt
-			</LabelWithTooltip>
-
-			<Label>System</Label>
-			<VariableSlashEditor name="systemMessagePrompt.text" type="systemMessagePrompt" />
-			<Label>User</Label>
-			<VariableSlashEditor name="userMessagePrompt.text" type="userMessagePrompt" />
-
-			<LabelWithTooltip className="mt-10" size="2xl" icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt.">
-				Evaluation prompt
-			</LabelWithTooltip>
-
-			<VariableSlashEditor name="evalPrompt.text" type="evalPrompt" />
-
-			<LabelWithTooltip className="mt-10" size="2xl" icon={<StarIcon />} title="Possible Results" description="The LLM will choose an option, based on the above instructions you defined.">
-				Dependent Variable
-			</LabelWithTooltip>
-
-			<div className="flex items-start gap-4">
-				<FormTagInput name="dependentValues" className="w-full" />
-				<GenerateValueDialog onSubmit={values => appendIndependentValues({ formKey: "dependentValues", values })} form={form} variable="dependent" />
-			</div>
-
-			<FormButton className="mt-10">Submit</FormButton>
+			<FormButton variant="green" size="lg">
+				Submit
+			</FormButton>
 		</Form>
 	)
 }

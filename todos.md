@@ -1,31 +1,20 @@
-# Stripe
-
-- Try Clerk billing
-- Usage based
-- How to track usage per model?
-
 # Todos
 
-- [ ] Add posthog
 - [ ] Rename message prompt to prompt template
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Test deleting a user such that research still remains
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Check if deleting non-existant vector errors
-- [ ] Add provider icon to ai model select
 - [ ] Support research without blocking variables
 - [ ] Get domain
 - [ ] Use Clerk prod once I have domain
 
 # New research form
 
+- [ ] Long tags get clipped. Make it scrollable.
+- [ ] Feed in previous generated values in prompt
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Ability to enter example messages to generate variables and message prompts from
-
-# Data analysis
-
-- Should be able to do everything that I can do if I had the data locally
-- Automatic AI data analysis
 
 # Research examples
 

@@ -10,7 +10,7 @@ export class ClerkService {
 	}
 
 	static serializeUser(user: User | ClerkQueriedUser): ClerkQueriedUser {
-		return { ...user, fullName: user.fullName } as ClerkQueriedUser
+		return { ...JSON.parse(JSON.stringify(user)), fullName: user.fullName } as ClerkQueriedUser
 	}
 
 	static async queryUser(userId: string) {

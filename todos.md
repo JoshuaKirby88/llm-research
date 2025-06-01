@@ -8,7 +8,6 @@
 - [ ] Link github page in contact
 - [ ] Markdown support for all text fields.
 - [ ] Show research description in overview
-- [ ] Hide star button if user is not signed in
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Test deleting a user such that research still remains
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)

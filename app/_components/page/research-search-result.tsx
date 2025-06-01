@@ -9,15 +9,15 @@ import { FlaskConicalIcon, TestTubeDiagonalIcon } from "lucide-react"
 
 export const ResearchSearchResult = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) => {
 	const searchParams = await props.searchParams
-	const { queriedUsers, researches, userToStarredResearches } = await resultIsValid(searchResearchAction({ search: searchParams.search }))
+	const result = await resultIsValid(searchResearchAction({ search: searchParams.search }))
 
-	if (researches.length) {
+	if (result.researches.length) {
 		return (
 			<div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
-				{researches.map(research => {
-					const currentUser = queriedUsers.find(queriedUser => queriedUser.id === research.userId)
-					const userToStarredResearch = userToStarredResearches.find(utsr => utsr.researchId === research.id)
-					return <HomePageResearchCard key={research.id} currentUser={currentUser} research={research} userToStarredResearch={userToStarredResearch} />
+				{result.researches.map(research => {
+					const currentUser = result.queriedUsers.find(queriedUser => queriedUser.id === research.userId)
+					const userToStarredResearch = result.userToStarredResearches.find(utsr => utsr.researchId === research.id)
+					return <HomePageResearchCard key={research.id} user={result.user} currentUser={currentUser} research={research} userToStarredResearch={userToStarredResearch} />
 				})}
 			</div>
 		)

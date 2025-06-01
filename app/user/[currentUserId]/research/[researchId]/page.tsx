@@ -78,7 +78,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 							</Button>
 						</RunTestSheet>
 
-						<ResearchStarButton research={research} userToStarredResearch={userToStarredResearch} />
+						<ResearchStarButton user={user} research={research} userToStarredResearch={userToStarredResearch} />
 					</div>
 				</div>
 

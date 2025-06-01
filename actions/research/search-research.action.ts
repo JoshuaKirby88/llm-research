@@ -46,6 +46,7 @@ export const searchResearchAction = createAction(
 	const [researches, { userToStarredResearches }] = destructureArray(result, { userToStarredResearches: true })
 
 	return {
+		user,
 		queriedUsers,
 		researches,
 		userToStarredResearches,

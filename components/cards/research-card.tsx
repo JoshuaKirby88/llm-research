@@ -16,13 +16,14 @@ import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
 
 type Props = {
+	user: ClerkPublicUser
 	research: ResearchT
 	userToStarredResearch: UserToStarredResearchT | undefined
 	dependentValues: DependentValueT[]
 	testBatchResults: TestBatchResultT[]
 }
 
-export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
+export const HomePageResearchCard = (props: Pick<Props, "user" | "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
 	return (
 		<Card size="none">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
@@ -34,13 +35,13 @@ export const HomePageResearchCard = (props: Pick<Props, "research" | "userToStar
 			<CardFooter variant="link">
 				<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
 
-				<ResearchStarButton research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>
 		</Card>
 	)
 }
 
-export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: React.ReactNode }) => {
+export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 	return (
 		<Card size="none">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ size: "sm", variant: "link" }), "")}>
@@ -61,7 +62,7 @@ export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: 
 			</Link>
 
 			<CardFooter variant="link">
-				<ResearchStarButton research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
 
 				<ResearchCardDropdown
 					user={props.user}
@@ -75,7 +76,7 @@ export const ResearchCard = (props: Props & { user: ClerkPublicUser; children?: 
 	)
 }
 
-const ResearchCardDropdown = (props: Props & { user: ClerkPublicUser }) => {
+const ResearchCardDropdown = (props: Props) => {
 	return (
 		props.user.userId && (
 			<DropdownMenu>

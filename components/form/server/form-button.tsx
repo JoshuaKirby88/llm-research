@@ -7,5 +7,9 @@ export const FormButton = ({ as, ...props }: ButtonProps & { as?: string }) => {
 	const Comp = as ?? Button
 	const { pending } = useFormStatus()
 
-	return <Comp type="submit" isLoading={pending} {...props} />
+	if (!as) {
+		props.isLoading = pending
+	}
+
+	return <Comp type="submit" {...props} />
 }

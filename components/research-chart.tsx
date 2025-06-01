@@ -10,14 +10,15 @@ import { LabelList, Pie, PieChart } from "recharts"
 const context = createContext<Props | null>(null)
 
 type Props = {
+	research: ResearchT
 	dependentValues: DependentValueT[]
 	testBatchResults: TestBatchResultT[]
 }
 
-export const ResearchChartCard = ({ dependentValues, testBatchResults, ...props }: Props & React.ComponentProps<typeof Card>) => {
+export const ResearchChartCard = ({ research, dependentValues, testBatchResults, ...props }: Props & React.ComponentProps<typeof Card>) => {
 	return (
-		<context.Provider value={{ dependentValues, testBatchResults }}>
-			<Card size="sm" {...props} className={cn("relative gap-1 overflow-clip", props.className)} />
+		<context.Provider value={{ research, dependentValues, testBatchResults }}>
+			<Card size="sm" {...props} className={cn("relative", props.className)} />
 		</context.Provider>
 	)
 }
@@ -39,8 +40,8 @@ export const ResearchChart = (props: React.ComponentProps<typeof CardContent>) =
 	)
 
 	return (
-		<CardContent {...props} className={cn("aspect-square pb-0", props.className)}>
-			<ChartContainer config={chartConfig} className="-m-2 aspect-square [&_.recharts-text]:fill-background">
+		<CardContent {...props} className={cn("", props.className)}>
+			<ChartContainer config={chartConfig} className="aspect-square [&_.recharts-text]:fill-background">
 				<PieChart>
 					<ChartTooltip content={<ChartTooltipContent nameKey="count" hideLabel />} />
 					<Pie data={chartData} dataKey="count" animationDuration={500} animationEasing="ease" animationBegin={0}>
@@ -60,10 +61,12 @@ const ResearchChartHeader = () => {
 	)
 }
 
-export const ResearchChartFooter = (props: { research: ResearchT }) => {
+export const ResearchChartFooter = () => {
+	const { research } = useContext(context)!
+
 	return (
-		<CardFooter>
-			<p className="font-medium text-sm">{props.research.conclusion}</p>
+		<CardFooter className="flex p-4 pt-0">
+			<p className={cn("font-medium text-muted-foreground text-sm")}>{research.conclusion}</p>
 		</CardFooter>
 	)
 }

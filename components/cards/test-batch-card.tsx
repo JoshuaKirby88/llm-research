@@ -1,5 +1,5 @@
 import { downloadResearchAction } from "@/actions/research/download-research.action"
-import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
+import { ResearchChart, ResearchChartCard } from "@/components/research-chart"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
@@ -34,9 +34,8 @@ export const TestBatchCard = (props: Props) => {
 						<p>Total iterations: {props.testBatch.testCount}</p>
 					</div>
 
-					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
+					<ResearchChartCard research={props.research} dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
 						<ResearchChart />
-						<ResearchChartNoResultOverlay />
 					</ResearchChartCard>
 				</CardContent>
 			</Link>

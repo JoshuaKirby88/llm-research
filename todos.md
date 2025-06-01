@@ -2,9 +2,7 @@
 
 - [ ] Show published status on research page tab list if research belongs to user, and remove from list
 - [ ] Populate user page with pfp, name, bio
-- [ ] Add conclusion summary alongside conclusion
-    - Show conclusion summary in chart
-    - Show conclusion in result page
+- [ ] Show conclusion in result page
 - [ ] Link github page in contact
 - [ ] Markdown support for all text fields.
 - [ ] Show research description in overview

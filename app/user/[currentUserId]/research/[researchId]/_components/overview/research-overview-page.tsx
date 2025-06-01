@@ -28,9 +28,9 @@ export const ResearchOverviewPage = (props: Props) => {
 			</div>
 
 			<div className="flex gap-5">
-				<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults}>
+				<ResearchChartCard research={props.research} dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} size="none" className="w-[20rem]">
 					<ResearchChart />
-					<ResearchChartFooter research={props.research} />
+					<ResearchChartFooter />
 					<ResearchChartNoResultOverlay />
 				</ResearchChartCard>
 

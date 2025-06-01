@@ -54,7 +54,7 @@ export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 						</CardDescription>
 					</div>
 
-					<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
+					<ResearchChartCard research={props.research} dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
 						<ResearchChart />
 						<ResearchChartNoResultOverlay className="text-xs" />
 					</ResearchChartCard>

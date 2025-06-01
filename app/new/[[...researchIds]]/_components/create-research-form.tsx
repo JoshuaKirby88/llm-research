@@ -21,20 +21,50 @@ import { VariableSlashEditor } from "./variable-slash-editor"
 
 const config = {
 	exampleValues: {
-		research: { name: "Does using multiple language affect LLM?" },
-		independentVariable: { name: "Language", values: ["English", "Japanese"] },
+		research: { name: "Does mixing 2 language affect accuracy?" },
+		independentVariable: { name: "First Language", values: ["English", "Japanese"] },
 		blockingVariables: [
-			{ name: "Sub Language", values: ["English", "Japanese"] },
-			{ name: "Topic", values: ["Toy Store A", "Car Maker B"] },
+			{ name: "Second Language", values: ["English", "Japanese"] },
+			{
+				name: "Quiz Topic",
+				values: [
+					"A Day in the Life of a Time Traveler",
+					"The Secret Garden of a Forgotten City",
+					"A Lost Letter from the Past",
+					"The Last Train to Nowhere",
+					"The Mysterious Painting in the Attic",
+				],
+			},
 		],
 		systemMessagePrompt: {
-			text: "Generate made up information about {{Topic}} in {{Language}}.",
+			text: `Create a short story that can be enjoyed in around ~30 minutes.
+The purpose of the short story is to test the reading and recall abilities.
+So, the story should include many names, facts, and events that are all fictional.
+The short story should be written in {{First Language}}.
+Topic: {{Short Story Topic}}.`,
 		},
 		userMessagePrompt: {
-			text: '"""\n{{System Prompt}}\n"""\n\nAsk a question that can only be answered, given the above information, in {{Sub Language}}.',
+			text: `Short Story:
+"""
+{{System Prompt}}
+"""
+
+I want to test reading and recall abilities.
+Please ask a question in {{Second Language}} about the above short story that requires reading and analyzing the story.`,
 		},
 		evalPrompt: {
-			text: 'Based on this information:\n"""\n{{System Prompt}}\n"""\n\nIs this answer correct?\nQuestion:\n{{User Prompt}}\nAnswer:\n{{Completion}}',
+			text: `Quiz Context:
+"""
+{{System Prompt}}
+"""
+
+Question:
+{{User Prompt}}
+
+Answer:
+{{Completion}}
+
+Is the answer correct?`,
 		},
 		dependentValues: ["Correct", "Incorrect"],
 	} satisfies CreateResearchI,

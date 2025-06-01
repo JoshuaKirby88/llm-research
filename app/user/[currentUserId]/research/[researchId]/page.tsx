@@ -60,7 +60,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 	}
 
 	return (
-		<div className="mx-auto w-full max-w-4xl">
+		<div className="mx-auto w-full max-w-5xl">
 			<PageTabs tabs={tabs} searchParams={searchParams}>
 				<div className="flex items-start gap-5">
 					<PageTabsList tabs={tabs} />

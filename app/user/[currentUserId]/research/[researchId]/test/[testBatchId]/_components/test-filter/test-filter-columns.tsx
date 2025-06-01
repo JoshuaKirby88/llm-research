@@ -93,7 +93,7 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 			.options(
 				props.dependentValues.map(dVal => ({
 					value: dVal.id,
-					icon: <circle className="size-2.5 rounded-full" style={{ backgroundColor: dVal.color }} />,
+					icon: <div className="size-2.5 rounded-full" style={{ backgroundColor: dVal.color }} />,
 					label: dVal.value,
 				})),
 			)

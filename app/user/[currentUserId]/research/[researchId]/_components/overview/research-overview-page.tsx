@@ -1,5 +1,5 @@
 import { ClerkProfile } from "@/components/clerk/clerk-profile"
-import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartHeader, ResearchChartNoResultOverlay } from "@/components/research-chart"
+import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { VariableBadge } from "@/components/variable-badge"
 import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
@@ -21,14 +21,16 @@ type Props = {
 
 export const ResearchOverviewPage = (props: Props) => {
 	return (
-		<div className="flex flex-col gap-4">
-			<h1 className="font-semibold text-3xl">{props.research.name}</h1>
+		<div className="flex flex-col gap-10">
+			<div className="space-y-1">
+				<h1 className="font-semibold text-3xl">{props.research.name}</h1>
+				<p className="text-muted-foreground">{props.research.description}</p>
+			</div>
 
-			<div className="flex gap-4">
+			<div className="flex gap-5">
 				<ResearchChartCard dependentValues={props.dependentValues} testBatchResults={props.testBatchResults}>
-					<ResearchChartHeader />
 					<ResearchChart />
-					<ResearchChartFooter />
+					<ResearchChartFooter research={props.research} />
 					<ResearchChartNoResultOverlay />
 				</ResearchChartCard>
 

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { ResearchT, TestBatchT } from "@/src/schemas"
 import { callFormAction } from "@/utils/actions/call-form-action"
-import { CheckIcon } from "lucide-react"
+import { GlobeIcon } from "lucide-react"
 
 export const PublishResearchCard = (props: { research: ResearchT; testBatches: TestBatchT[]; children?: React.ReactNode }) => {
 	const onSubmit = async (formData: FormData) => {
@@ -20,15 +20,20 @@ export const PublishResearchCard = (props: { research: ResearchT; testBatches: T
 		<>
 			<AlertCard>
 				<IconWrapper>
-					<CheckIcon />
+					<GlobeIcon />
 				</IconWrapper>
 
 				<AlertCardContent title="Publish Research" description="Allow others to view this research, and run their own tests. You can still continue to run further tests.">
 					<Dialog
 						title="Publish Research"
 						description="Optionally write a conclusion. You can edit this later."
-						triggerButton={<Button>Publish</Button>}
-						icon={<CheckIcon />}
+						triggerButton={
+							<Button variant="blue">
+								<GlobeIcon />
+								Publish
+							</Button>
+						}
+						icon={<GlobeIcon />}
 						contentProps={{ className: "max-w-lg" }}
 					>
 						<form action={onSubmit}>
@@ -37,7 +42,15 @@ export const PublishResearchCard = (props: { research: ResearchT; testBatches: T
 							</Label>
 							<Textarea name="conclusion" minRows={5} className="mb-10" />
 
-							<DialogFooter confirmCloseButton={<Button type="submit">Publish</Button>} cancelProps={{ children: "Cancel" }} />
+							<DialogFooter
+								confirmCloseButton={
+									<Button type="submit" variant="blue">
+										<GlobeIcon />
+										Publish
+									</Button>
+								}
+								cancelProps={{ children: "Cancel" }}
+							/>
 						</form>
 					</Dialog>
 				</AlertCardContent>

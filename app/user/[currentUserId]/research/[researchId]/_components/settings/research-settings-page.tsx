@@ -7,7 +7,7 @@ import { ResearchNameAndDescriptionAndConclusionForm } from "./research-name-and
 
 export const ResearchSettingsPage = (props: { research: ResearchT; dependentValues: DependentValueT[]; testBatches: TestBatchT[] }) => {
 	return (
-		<div className="flex flex-col gap-10">
+		<div className="flex flex-col gap-14">
 			<ResearchNameAndDescriptionAndConclusionForm research={props.research} />
 
 			<Separator />
@@ -16,9 +16,9 @@ export const ResearchSettingsPage = (props: { research: ResearchT; dependentValu
 
 			<Separator />
 
-			<PublishResearchCard research={props.research} testBatches={props.testBatches}>
-				<Separator />
-			</PublishResearchCard>
+			<PublishResearchCard research={props.research} testBatches={props.testBatches} />
+
+			<Separator />
 
 			<ArchiveResearchCard research={props.research} />
 		</div>

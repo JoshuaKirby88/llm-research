@@ -36,7 +36,7 @@ export const Research = sqliteTable(
 		forkedResearchId: integer().references((): AnySQLiteColumn => Research.id, { onDelete: "set null" }),
 		...defaultColumns,
 	},
-	table => [check("isPublished", or(and(eq(table.isPublished, sql`false`), isNull(table.conclusion)), and(eq(table.isPublished, sql`true`), isNotNull(table.conclusion)))!)],
+	table => [check("isPublished", or(eq(table.isPublished, sql`false`), and(eq(table.isPublished, sql`true`), isNotNull(table.conclusion)))!)],
 )
 
 export const UserToStarredResearch = sqliteTable(

@@ -15,6 +15,7 @@ export const buttonVariantClasses = {
 	red: "bg-red-600 hover:bg-red-600/70 data-[state=open]:bg-red-600/70 text-white",
 	green: "bg-green-600 hover:bg-green-600/70 data-[state=open]:bg-green-600/70 text-white",
 	blue: "bg-blue-600 hover:bg-blue-600/70 data-[state=open]:bg-blue-600/70 text-white",
+	yellow: "bg-yellow-600 hover:bg-yellow-600/70 data-[state=open]:bg-yellow-600/70 text-white",
 	matte: "bg-secondary text-foreground/60 hover:bg-foreground/70 data-[state=open]:bg-foreground/70 hover:text-background data-[state=open]:text-background",
 	matteRed: "bg-secondary text-foreground/60 hover:bg-red-600 data-[state=open]:bg-red-600 hover:text-white data-[state=open]:text-white",
 	inverseRed: "text-red-600 hover:text-white data-[state=open]:text-white hover:bg-red-600 data-[state=open]:bg-red-600",
@@ -58,10 +59,10 @@ function Button({ className, variant, size, asChild, isLoading, children, disabl
 	const Comp = asChild ? Slot : "button"
 
 	return (
-		<Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }), isLoading && "*:opacity-5")} disabled={disabled || isLoading} {...props}>
+		<Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} disabled={disabled || isLoading} {...props}>
 			<>
 				{children}
-				{isLoading && <Spinner className="absolute" style={{ opacity: 100 }} />}
+				{isLoading && <Spinner className="absolute" />}
 			</>
 		</Comp>
 	)

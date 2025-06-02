@@ -31,3 +31,16 @@ export const publishResearchAction = createAction(
 
 	revalidatePath("/")
 })
+
+export const unpublishResearchAction = createAction(
+	"signedIn",
+	researchSchema.pick({ id: true }),
+)(async ({ input }) => {
+	await ResearchRepo.update(input.id, { isPublished: false })
+
+	after(async () => {
+		await ResearchVectorRepo.delete([input.id])
+	})
+
+	revalidatePath("/")
+})

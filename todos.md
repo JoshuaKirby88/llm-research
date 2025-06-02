@@ -1,5 +1,4 @@
-# Todos
-
+- [ ] Press and hold button for deleting account
 - [ ] Show published status on research page tab list if research belongs to user, and remove from list
 - [ ] Populate user page with pfp, name, bio
 - [ ] Show conclusion in result page

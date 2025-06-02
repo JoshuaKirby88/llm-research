@@ -1,7 +1,7 @@
 import { deleteClerkUserAction } from "@/actions/clerk/delete-clerk-user.action"
 import { AlertCard, AlertCardContent } from "@/components/alert-card"
+import { PressAndHoldButton } from "@/components/buttons/press-and-hold-button"
 import { Dialog } from "@/components/dialog"
-import { FormActionButton } from "@/components/form/server/form-action-button"
 import { IconWrapper } from "@/components/icon-wrapper"
 import { Button } from "@/components/ui/button"
 import { TriangleAlertIcon } from "lucide-react"
@@ -20,9 +20,9 @@ export const DeleteAccountAlertCard = () => {
 					triggerButton={<Button variant="red">Delete Account</Button>}
 					cancelProps={{ children: "Cancel" }}
 					confirmButton={
-						<FormActionButton variant="red" action={deleteClerkUserAction} className="w-full">
+						<PressAndHoldButton variant="red" onClick={deleteClerkUserAction}>
 							Delete Account
-						</FormActionButton>
+						</PressAndHoldButton>
 					}
 				/>
 			</AlertCardContent>

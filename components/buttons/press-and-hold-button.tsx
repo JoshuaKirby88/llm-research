@@ -6,7 +6,7 @@ import { Button, ButtonProps } from "../ui/button"
 
 const DURATION = 2000
 
-export const PressAndHoldButton = ({ text, icon, className, onClick, ...props }: { text: string; icon?: React.ReactNode; onClick: () => {} } & ButtonProps) => {
+export const PressAndHoldButton = ({ children, icon, className, onClick, ...props }: { icon?: React.ReactNode; onClick: () => {} } & ButtonProps) => {
 	const [isHolding, setIsHolding] = useState(false)
 	const timerRef = useRef<NodeJS.Timeout>(null)
 
@@ -29,7 +29,7 @@ export const PressAndHoldButton = ({ text, icon, className, onClick, ...props }:
 
 	return (
 		<Button
-			className={cn("select-none overflow-hidden", isHolding && "scale-[0.97]", className)}
+			className={cn("relative select-none overflow-hidden", isHolding && "scale-[0.97]", className)}
 			onMouseDown={onHold}
 			onTouchStart={onHold}
 			onMouseUp={onRelease}
@@ -45,12 +45,10 @@ export const PressAndHoldButton = ({ text, icon, className, onClick, ...props }:
 					transition: isHolding ? `clip-path ${DURATION}ms linear` : "clip-path 500ms ease-out",
 				}}
 			>
-				{icon}
-				{text}
+				{children}
 			</div>
 
-			{icon}
-			{text}
+			{children}
 		</Button>
 	)
 }

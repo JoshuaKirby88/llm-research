@@ -39,7 +39,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overi
 				</Avatar>
 
 				{badge && (
-					<Badge className="-top-3 -translate-x-3 absolute left-full border-background" size="roundSm">
+					<Badge className="-top-3 -translate-x-3 absolute left-full border-background font-semibold" size="roundSm">
 						{badge}
 					</Badge>
 				)}

@@ -9,10 +9,11 @@ export const badgeVariants = cva("inline-flex items-center border transition-col
 			secondary: cn("border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"),
 			destructive: cn("border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80"),
 			outline: cn("text-foreground"),
+			secondaryOutline: cn("bg-secondary text-foreground hover:bg-secondary/80"),
 		},
 		size: {
-			roundXs: cn("h-[1.1rem] min-w-[1.1rem] justify-center rounded-full px-1 font-normal font-semibold text-xs"),
-			roundSm: cn("h-6 min-w-6 justify-center rounded-full px-1.5 font-semibold text-sm"),
+			roundXs: cn("h-[1.1rem] min-w-[1.1rem] justify-center rounded-full px-1 text-xs"),
+			roundSm: cn("h-6 min-w-6 justify-center rounded-full px-1.5 text-sm"),
 			xs: cn("h-[1.1rem] justify-center rounded-sm px-1 font-normal text-xs"),
 			sm: cn("rounded-md px-2 font-semibold text-sm"),
 			default: cn("rounded-md px-2 py-0.5 font-semibold text-sm"),

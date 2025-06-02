@@ -31,7 +31,11 @@ export const PageTabsList = ({ tabs, name, ...props }: { tabs: readonly Tab[]; n
 							{tab.icon && <tab.icon className="text-muted-foreground" />}
 							{tab.iconNode}
 							{tab.value}
-							{tab.badge != undefined && <Badge size="roundXs">{tab.badge}</Badge>}
+							{tab.badge != undefined && (
+								<Badge size="roundXs" className="font-semibold">
+									{tab.badge}
+								</Badge>
+							)}
 						</TabsTrigger>
 					</QueryStateSlot>
 				)

@@ -1,9 +1,10 @@
 import { ClerkProfile } from "@/components/clerk/clerk-profile"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartNoResultOverlay } from "@/components/research-chart"
+import { Badge } from "@/components/ui/badge"
 import { VariableBadge } from "@/components/variable-badge"
 import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
-import { CalendarIcon, CheckCircle2Icon, GitForkIcon, VariableIcon } from "lucide-react"
+import { CalendarIcon, GitForkIcon, GlobeIcon, VariableIcon } from "lucide-react"
 import Link from "next/link"
 
 type Props = {
@@ -23,7 +24,13 @@ export const ResearchOverviewPage = (props: Props) => {
 	return (
 		<div className="flex flex-col gap-10">
 			<div className="space-y-1">
-				<h1 className="font-semibold text-3xl">{props.research.name}</h1>
+				<div className="flex items-center gap-2">
+					<h1 className="font-semibold text-3xl">{props.research.name}</h1>
+					<Badge size="roundSm" className="gap-1 text-muted-foreground" variant="secondaryOutline">
+						<GlobeIcon className="size-4 text-blue-500" />
+						Public
+					</Badge>
+				</div>
 				<p className="text-muted-foreground">{props.research.description}</p>
 			</div>
 
@@ -46,10 +53,6 @@ export const ResearchOverviewPage = (props: Props) => {
 					<div className="flex items-center gap-2">
 						<CalendarIcon />
 						Created: {props.research.createdAt.toLocaleDateString()}
-					</div>
-					<div className="flex items-center gap-2">
-						<CheckCircle2Icon />
-						Status: {props.research.isPublished ? "Published" : "Researching"}
 					</div>
 					<div className="flex items-center gap-2">
 						<VariableIcon />

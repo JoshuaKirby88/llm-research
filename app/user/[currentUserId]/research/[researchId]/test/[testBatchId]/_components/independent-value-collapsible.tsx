@@ -44,7 +44,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 					{props.independentVariable.name}: {props.independentValue.value}
 				</div>
 
-				<Badge size="roundSm" variant="outline">
+				<Badge size="roundSm" variant="outline" className="font-semibold">
 					{filteredTests.length}
 				</Badge>
 			</CollapsibleTrigger>

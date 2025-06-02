@@ -8,7 +8,7 @@ export const VariableBadge = (props: { variable: { name: string }; values: { val
 				<TooltipTrigger asChild>
 					<Badge variant="secondary">
 						{props.variable.name}
-						<Badge className="ml-1" size="roundXs" variant="default">
+						<Badge className="ml-1 font-semibold" size="roundXs" variant="default">
 							{props.values.length}
 						</Badge>
 					</Badge>

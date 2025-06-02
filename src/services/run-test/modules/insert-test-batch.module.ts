@@ -10,11 +10,13 @@ import {
 	InsertTestModelBatchT,
 	InsertTestT,
 	InsertTestToBlockingValueT,
+	ResearchT,
 	RunTestI,
 } from "@/src/schemas"
 import { RunTestModule } from "./run-test.module"
 
 type Input = RunTestI & {
+	research: ResearchT
 	testResults: Return<typeof RunTestModule.execute>
 	dependentValues: DependentValueT[]
 }
@@ -23,7 +25,7 @@ export class InsertTestBatchModule {
 	static async execute(input: Input) {
 		const totalTestsCount = input.testResults.flat().length
 
-		const contributor = await ContributorRepo.incrementCount({ userId: input.userId, researchId: input.researchId, count: totalTestsCount })
+		const contributor = await ContributorRepo.incrementCount({ count: totalTestsCount, isOwner: input.research.userId === input.userId, userId: input.userId, researchId: input.researchId })
 
 		return await transaction(async () => {
 			const newTestBatch = await TestBatchRepo.insert({

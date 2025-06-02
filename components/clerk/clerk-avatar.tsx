@@ -16,7 +16,7 @@ type Props = {
 
 const config = {
 	variants: {
-		size: { xxxs: 16, xxs: 20, xs: 24, sm: 28, md: 32, lg: 36, xl: 40 } satisfies Record<NonNullable<AvatarProps["size"]>, any>,
+		size: { "3xs": 16, "2xs": 20, xs: 24, sm: 28, md: 32, lg: 36, xl: 40, "2xl": 44, "3xl": 48, "19xl": 112 } satisfies Record<NonNullable<AvatarProps["size"]>, any>,
 	},
 }
 

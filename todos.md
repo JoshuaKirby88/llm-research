@@ -1,4 +1,3 @@
-- [ ] Populate user page with pfp, name, bio
 - [ ] Show conclusion in result page
 - [ ] Link github page in contact
 - [ ] Markdown support for all text fields.

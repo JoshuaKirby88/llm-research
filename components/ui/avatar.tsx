@@ -8,13 +8,16 @@ export type AvatarProps = VariantProps<typeof avatarVariants>
 export const avatarVariants = cva("relative flex shrink-0 overflow-hidden rounded-full", {
 	variants: {
 		size: {
-			xxxs: "size-4",
-			xxs: "size-5",
+			"3xs": "size-4",
+			"2xs": "size-5",
 			xs: "size-6",
 			sm: "size-7",
 			md: "size-8",
 			lg: "size-9",
 			xl: "size-10",
+			"2xl": "size-11",
+			"3xl": "size-12",
+			"19xl": "size-28",
 		},
 	},
 	defaultVariants: {

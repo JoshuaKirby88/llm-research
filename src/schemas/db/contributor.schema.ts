@@ -15,6 +15,7 @@ export type InsertContributorT = z.infer<typeof insertContributorSchema>
 
 export const updateContributorSchema = contributorSchema.pick({ id: true }).merge(
 	createUpdateSchema(Contributor).omit({
+		isOwner: true,
 		userId: true,
 		researchId: true,
 		createdAt: true,

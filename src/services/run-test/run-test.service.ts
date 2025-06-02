@@ -23,6 +23,6 @@ export class RunTestService {
 			evalPrompt,
 		})
 
-		return await InsertTestBatchModule.execute({ userId: input.userId, researchId: input.researchId, models: input.models, iterations: input.iterations, testResults, dependentValues })
+		return await InsertTestBatchModule.execute({ userId: input.userId, researchId: input.researchId, models: input.models, iterations: input.iterations, research, testResults, dependentValues })
 	}
 }

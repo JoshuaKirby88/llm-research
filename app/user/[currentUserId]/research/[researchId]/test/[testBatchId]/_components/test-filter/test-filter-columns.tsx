@@ -44,7 +44,7 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 					const queriedUser = props.queriedUsers.find(user => user.id === contributor.userId)
 					return {
 						value: contributor.id,
-						icon: <ClerkAvatar disabled size="xxxs" userId={contributor.userId} user={queriedUser} hideUserName />,
+						icon: <ClerkAvatar disabled size="3xs" userId={contributor.userId} user={queriedUser} hideUserName />,
 						label: queriedUser?.fullName ?? "",
 					}
 				}),

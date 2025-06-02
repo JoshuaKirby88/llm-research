@@ -56,6 +56,7 @@ export const Contributor = sqliteTable(
 	{
 		id: integer().primaryKey({ autoIncrement: true }),
 		count: integer().notNull(),
+		isOwner: integer({ mode: "boolean" }).notNull(),
 		userId: text().notNull(),
 		researchId: integer()
 			.notNull()

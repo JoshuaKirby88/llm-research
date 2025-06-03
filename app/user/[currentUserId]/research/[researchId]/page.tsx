@@ -84,6 +84,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 
 				<TabsContent value="Overview">
 					<ResearchOverviewPage
+						user={user}
 						currentUser={currentUser}
 						research={research}
 						forkedResearch={forkedResearch}

@@ -2,12 +2,13 @@ import { ClerkProfile } from "@/components/clerk/clerk-profile"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { Badge } from "@/components/ui/badge"
 import { VariableBadge } from "@/components/variable-badge"
-import { BlockingValueT, BlockingVariableT, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
+import { BlockingValueT, BlockingVariableT, ClerkPublicUser, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
 import { CalendarIcon, GitForkIcon, GlobeIcon, VariableIcon } from "lucide-react"
 import Link from "next/link"
 
 type Props = {
+	user: ClerkPublicUser
 	currentUser: ClerkQueriedUser | undefined
 	research: ResearchT
 	forkedResearch: ResearchT | undefined
@@ -26,10 +27,12 @@ export const ResearchOverviewPage = (props: Props) => {
 			<div className="space-y-1">
 				<div className="flex items-center gap-2">
 					<h1 className="font-semibold text-3xl">{props.research.name}</h1>
-					<Badge size="roundSm" className="gap-1 text-muted-foreground" variant="secondaryOutline">
-						<GlobeIcon className="size-4 text-blue-500" />
-						Public
-					</Badge>
+					{props.research.userId === props.user.userId && (
+						<Badge size="roundSm" className="gap-1 text-muted-foreground" variant="secondaryOutline">
+							<GlobeIcon className="size-4 text-blue-500" />
+							Public
+						</Badge>
+					)}
 				</div>
 				<p className="text-muted-foreground">{props.research.description}</p>
 			</div>

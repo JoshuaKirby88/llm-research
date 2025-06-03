@@ -1,9 +1,7 @@
 - [ ] Make dates consistent. I prefer month + year only like Luma
-- [ ] Remove whitespace in clerk profile hover card when bio doesnt exist
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] PostHog reverse proxy
-- [ ] Show conclusion in result page
 - [ ] Markdown support for all text fields.
 - [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
 - [ ] Test deleting a user such that research still remains

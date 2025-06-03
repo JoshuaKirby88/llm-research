@@ -3,7 +3,8 @@ import { AIIcons } from "@/components/icons/ai-icons"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
-import { AIFeature } from "@/src/features"
+import { AIFeature, AIModel } from "@/src/features"
+import { TestModelBatchT, TestT } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
 import { notFound } from "next/navigation"
 import { TestFilter } from "./_components/test-filter/test-filter"
@@ -12,6 +13,16 @@ import { testPageQuery } from "./_queries/test-page-query"
 
 const config = {
 	tabName: "modelTab",
+	getTabs(input: { models: AIModel[]; tests: TestT[]; testModelBatches: TestModelBatchT[] }) {
+		return input.models.map(model => {
+			const testModelBatchIds = input.testModelBatches.filter(tmb => tmb.model === model).map(tmb => tmb.id)
+			return {
+				value: model,
+				iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(model)} className="size-4.5" />,
+				badge: input.tests.filter(t => testModelBatchIds.includes(t.testModelBatchId)).length,
+			}
+		})
+	},
 }
 
 const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "testBatchId">>; searchParams: Promise<NextSearchParam> }) => {
@@ -44,14 +55,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "
 		notFound()
 	}
 
-	const tabs = models.map(model => {
-		const testModelBatchIds = testModelBatches.filter(tmb => tmb.model === model).map(tmb => tmb.id)
-		return {
-			value: model,
-			iconNode: <AIIcons aiProvider={AIFeature.modelToProvider(model)} className="size-4.5" />,
-			badge: tests.filter(t => testModelBatchIds.includes(t.testModelBatchId)).length,
-		}
-	})
+	const tabs = config.getTabs({ models, tests, testModelBatches })
 
 	return (
 		<div className="w-full">

@@ -7,7 +7,7 @@ import { ActionI } from "@/utils/actions/create-action"
 import { cn } from "@/utils/cn"
 import { DownloadIcon, EllipsisIcon } from "lucide-react"
 import Link from "next/link"
-import { ClerkProfile } from "../clerk/clerk-profile"
+import { ClerkHoverCard } from "../clerk/clerk-hover-card"
 import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
 import { Card, CardContent, CardFooter, cardVariants } from "../ui/card"
@@ -41,7 +41,7 @@ export const TestBatchCard = (props: Props) => {
 			</Link>
 
 			<CardFooter variant="link">
-				<ClerkProfile userId={props.research.userId} size="sm" user={props.currentUser} />
+				<ClerkHoverCard userId={props.research.userId} size="sm" user={props.currentUser} />
 				<TestBatchCardDropdown research={props.research} testBatch={props.testBatch} />
 			</CardFooter>
 		</Card>

@@ -1,4 +1,4 @@
-import { ClerkProfile } from "@/components/clerk/clerk-profile"
+import { ClerkHoverCard } from "@/components/clerk/clerk-hover-card"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { Badge } from "@/components/ui/badge"
 import { VariableBadge } from "@/components/variable-badge"
@@ -46,7 +46,7 @@ export const ResearchOverviewPage = (props: Props) => {
 
 				<div className="flex flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" badge={props.contributors.find(c => c.userId === props.currentUser?.id)?.count ?? 0} />
+						<ClerkHoverCard userId={props.research.userId} user={props.currentUser} size="sm" badge={props.contributors.find(c => c.userId === props.currentUser?.id)?.count ?? 0} />
 					</div>
 					<div className="flex items-center gap-2">
 						<CalendarIcon />

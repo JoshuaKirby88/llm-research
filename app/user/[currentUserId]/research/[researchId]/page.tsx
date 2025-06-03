@@ -4,28 +4,25 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Suspense } from "@/components/suspense"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
+import { ClerkPublicUser, TestBatchT } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
 import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
+import { ResearchResultPage } from "./_components/result/research-result-page"
 import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
 import { researchPageQuery } from "./_queries/research-page-query"
 
 const config = {
-	tabs: {
-		isCurrentUser: [
+	getTabs(input: { params: NextParam<"currentUserId">; user: ClerkPublicUser; testBatches: TestBatchT[] }) {
+		return [
 			{ value: "Overview", icon: FlaskConicalIcon },
 			{ value: "Test Runs", icon: SquareStackIcon },
-			{ value: "Result", icon: ShapesIcon },
-			{ value: "Settings", icon: CogIcon },
-		],
-		isOtherUser: [
-			{ value: "Overview", icon: FlaskConicalIcon },
-			{ value: "Test Runs", icon: SquareStackIcon },
-			{ value: "Result", icon: ShapesIcon },
-		],
+			...(input.testBatches.length ? [{ value: "Result", icon: ShapesIcon }] : []),
+			...(input.params.currentUserId === input.user.userId ? [{ value: "Settings", icon: CogIcon }] : []),
+		]
 	},
 } as const
 
@@ -33,7 +30,6 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 	const params = await props.params
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
-	const tabs = config.tabs[params.currentUserId === user.userId ? "isCurrentUser" : "isOtherUser"]
 
 	const {
 		research,
@@ -58,6 +54,8 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 	if (!research) {
 		notFound()
 	}
+
+	const tabs = config.getTabs({ params, user, testBatches })
 
 	return (
 		<div className="mx-auto w-full max-w-5xl">
@@ -112,7 +110,11 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 					/>
 				</TabsContent>
 
-				<TabsContent value="Result"></TabsContent>
+				{testBatches.length > 0 && (
+					<TabsContent value="Result">
+						<ResearchResultPage research={research} dependentValues={dependentValues} testBatchResults={testBatchResults} />
+					</TabsContent>
+				)}
 
 				{params.currentUserId === user.userId && (
 					<TabsContent value="Settings">

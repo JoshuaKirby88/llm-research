@@ -10,7 +10,7 @@ import { cn } from "@/utils/cn"
 import { ArchiveIcon, ArchiveRestoreIcon, DownloadIcon, EllipsisIcon } from "lucide-react"
 import Link from "next/link"
 import { ResearchStarButton } from "../buttons/research-star-button"
-import { ClerkProfile } from "../clerk/clerk-profile"
+import { ClerkHoverCard } from "../clerk/clerk-hover-card"
 import { FormActionButton } from "../form/server/form-action-button"
 import { FormRouteHandler } from "../form/server/form-route-handler"
 import { buttonVariants } from "../ui/button"
@@ -34,7 +34,7 @@ export const HomePageResearchCard = (props: Pick<Props, "user" | "currentUser" |
 			</Link>
 
 			<CardFooter variant="link">
-				<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
+				<ClerkHoverCard userId={props.research.userId} user={props.currentUser} size="sm" />
 
 				<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
 			</CardFooter>
@@ -61,7 +61,7 @@ export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 
 			<CardFooter variant="link">
 				<div className="flex items-center gap-4">
-					<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
+					<ClerkHoverCard userId={props.research.userId} user={props.currentUser} size="sm" />
 					<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
 				</div>
 

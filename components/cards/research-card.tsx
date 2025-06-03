@@ -29,7 +29,7 @@ export const HomePageResearchCard = (props: Pick<Props, "user" | "currentUser" |
 		<Card size="none">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
 				<CardHeader>
-					<CardTitle className="text-2xl">{props.research.name}</CardTitle>
+					<CardTitle className="text-xl">{props.research.name}</CardTitle>
 				</CardHeader>
 			</Link>
 

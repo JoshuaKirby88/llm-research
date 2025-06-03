@@ -2,7 +2,17 @@
 
 import { transaction } from "@/drizzle/transaction"
 import { SlashEditorFeature } from "@/src/features"
-import { BlockingValueRepo, BlockingVariableRepo, DependentValueRepo, EvalPromptRepo, IndependentValueRepo, IndependentVariableRepo, MessagePromptRepo, ResearchRepo } from "@/src/repos"
+import {
+	BlockingValueRepo,
+	BlockingVariableRepo,
+	ContributorRepo,
+	DependentValueRepo,
+	EvalPromptRepo,
+	IndependentValueRepo,
+	IndependentVariableRepo,
+	MessagePromptRepo,
+	ResearchRepo,
+} from "@/src/repos"
 import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
 import { DependentValueTable } from "@/src/tables"
 import { createAction } from "@/utils/actions/create-action"
@@ -26,6 +36,8 @@ export const createResearchAction = createAction(
 	})
 
 	await transaction(async () => {
+		const newContributor = await ContributorRepo.incrementCount({ count: 0, isOwner: true, researchId: newResearch.id, userId: user.userId })
+
 		const newIndependentVariable = await IndependentVariableRepo.insert({ researchId: newResearch.id, name: input.independentVariable.name })
 		const independentValuesToInsert: InsertIndependentValueT[] = input.independentVariable.values.map(value => ({
 			independentVariableId: newIndependentVariable.id,

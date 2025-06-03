@@ -1,10 +1,10 @@
-- [ ] Remove whitespace for research chart that has an empty conclusion
+- [ ] Insert owner of research as contributor with count 0 on research creation
+- [ ] Trim in db zod schema
 - [ ] "User is deleted" when looking at other people's research
 - [ ] Make dates consistent. I prefer month + year only like Luma
-- [ ] Make contributions icon consistent
 - [ ] Remove whitespace in clerk profile hover card when bio doesnt exist
 - [ ] Empty state for contributor/research list
-- [ ] Add setup steps to readme
+- [ ] Add "Getting started" steps to readme
 - [ ] PostHog reverse proxy
 - [ ] Show conclusion in result page
 - [ ] Markdown support for all text fields.

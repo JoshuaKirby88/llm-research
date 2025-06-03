@@ -7,6 +7,7 @@ export const contributorSchema = createSelectSchema(Contributor)
 export type ContributorT = z.infer<typeof contributorSchema>
 
 export const insertContributorSchema = createInsertSchema(Contributor).omit({
+	id: true,
 	createdAt: true,
 	updatedAt: true,
 })

@@ -2,7 +2,7 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { TabsContent } from "@/components/ui/tabs"
 import { ContributorT, DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
-import { BeanOffIcon, UserIcon, UsersIcon } from "lucide-react"
+import { BeanOffIcon, GiftIcon, UserIcon } from "lucide-react"
 import { TestRunTabPage } from "./_components/test-run-tab-page"
 
 type Props = {
@@ -22,7 +22,7 @@ const config = {
 	tabs: [
 		{ value: "All", icon: BeanOffIcon },
 		{ value: "Authored", icon: UserIcon },
-		{ value: "Contributions", icon: UsersIcon },
+		{ value: "Contributions", icon: GiftIcon },
 	],
 } as const
 

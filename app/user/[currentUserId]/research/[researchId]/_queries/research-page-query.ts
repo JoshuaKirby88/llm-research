@@ -73,7 +73,7 @@ export const researchPageQuery = async (input: { params: NextParam<"currentUserI
 	const userToStarredResearch = mightNotExist(userToStarredResearches, { index: 0 })
 
 	const queriedUsers = await ClerkService.queryUsers(contributors.map(c => c.userId))
-	const currentUser = queriedUsers.find(queriedUser => input.params.currentUserId === queriedUser.id)
+	const currentUser = queriedUsers.find(u => input.params.currentUserId === u.id)
 
 	return {
 		research,

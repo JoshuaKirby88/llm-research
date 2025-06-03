@@ -65,7 +65,8 @@ export const ResearchChartFooter = () => {
 	const { research } = useContext(context)!
 
 	return (
-		research.isPublished && (
+		research.isPublished &&
+		research.conclusion && (
 			<CardFooter className="flex p-4 pt-0">
 				<p className={cn("font-medium text-muted-foreground text-sm")}>{research.conclusion}</p>
 			</CardFooter>

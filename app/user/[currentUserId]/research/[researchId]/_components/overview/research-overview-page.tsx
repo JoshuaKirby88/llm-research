@@ -2,6 +2,7 @@ import { ClerkHoverCard } from "@/components/clerk/clerk-hover-card"
 import { ResearchChart, ResearchChartCard, ResearchChartFooter, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { Badge } from "@/components/ui/badge"
 import { VariableBadge } from "@/components/variable-badge"
+import { DateFeature } from "@/src/features/date.feature"
 import { BlockingValueT, BlockingVariableT, ClerkPublicUser, ContributorT, DependentValueT, IndependentValueT, IndependentVariableT, ResearchT, TestBatchResultT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
 import { CalendarIcon, GitForkIcon, GlobeIcon, VariableIcon } from "lucide-react"
@@ -50,7 +51,7 @@ export const ResearchOverviewPage = (props: Props) => {
 					</div>
 					<div className="flex items-center gap-2">
 						<CalendarIcon />
-						Created: {props.research.createdAt.toLocaleDateString()}
+						Created: {DateFeature.toMonthYear(props.research.createdAt)}
 					</div>
 					<div className="flex items-center gap-2">
 						<VariableIcon />

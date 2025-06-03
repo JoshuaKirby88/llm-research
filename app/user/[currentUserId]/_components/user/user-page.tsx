@@ -2,6 +2,7 @@ import { ClerkAvatar } from "@/components/clerk/clerk-avatar"
 import { Suspense } from "@/components/suspense"
 import { db } from "@/drizzle/db"
 import { Contributor, Research } from "@/drizzle/schema"
+import { DateFeature } from "@/src/features/date.feature"
 import { ClerkService } from "@/src/services/clerk.service"
 import { and, count, eq } from "drizzle-orm"
 import { CalendarIcon } from "lucide-react"
@@ -30,7 +31,7 @@ export const UserPage = Suspense(async (props: { params: NextParam<"currentUserI
 					<p className="flex items-center gap-1 font-semibold text-muted-foreground text-sm">
 						<CalendarIcon className="size-4" />
 						Joined
-						<span className="font-bold text-foreground">{new Date(queriedUser.createdAt).toLocaleDateString()}</span>
+						<span className="font-bold text-foreground">{DateFeature.toMonthYear(new Date(queriedUser.createdAt))}</span>
 					</p>
 
 					<div className="flex items-center gap-3 font-medium text-muted-foreground text-sm">

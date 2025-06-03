@@ -1,6 +1,7 @@
 import { downloadResearchAction } from "@/actions/research/download-research.action"
 import { ResearchChart, ResearchChartCard } from "@/components/research-chart"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
+import { DateFeature } from "@/src/features/date.feature"
 import { DependentValueT, ResearchT, TestBatchResultT, TestBatchT, TestModelBatchT } from "@/src/schemas"
 import { ClerkQueriedUser } from "@/src/schemas"
 import { ActionI } from "@/utils/actions/create-action"
@@ -28,7 +29,7 @@ export const TestBatchCard = (props: Props) => {
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}/test/${props.testBatch.id}`} className={cardVariants({ variant: "link", size: "sm" })}>
 				<CardContent className="flex justify-between">
 					<div>
-						<p className="text-muted-foreground">{props.testBatch.createdAt.toLocaleDateString()}</p>
+						<p className="text-muted-foreground">{DateFeature.toMonthYear(props.testBatch.createdAt)}</p>
 						<p>Models: {props.testModelBatches.map(tmb => tmb.model).join(", ")}</p>
 						<p>Iterations: {props.testBatch.iterations}</p>
 						<p>Total iterations: {props.testBatch.testCount}</p>

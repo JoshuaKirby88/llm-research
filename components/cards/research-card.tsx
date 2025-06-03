@@ -3,6 +3,7 @@ import { downloadResearchAction } from "@/actions/research/download-research.act
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
+import { DateFeature } from "@/src/features/date.feature"
 import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } from "@/src/schemas"
 import { ClerkPublicUser, ClerkQueriedUser } from "@/src/schemas"
 import { ActionI } from "@/utils/actions/create-action"
@@ -48,7 +49,7 @@ export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
 				<CardContent className="flex justify-between">
 					<div>
-						<p className="mb-2 text-muted-foreground text-sm">{props.research.createdAt.toLocaleDateString()}</p>
+						<p className="mb-2 text-muted-foreground text-sm">{DateFeature.toMonthYear(props.research.createdAt)}</p>
 						<CardTitle className="text-xl">{props.research.name}</CardTitle>
 					</div>
 

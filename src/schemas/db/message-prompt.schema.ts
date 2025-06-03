@@ -5,7 +5,7 @@ import { z } from "zod"
 export const rawMessagePromptSchema = createSelectSchema(MessagePrompt)
 
 export const messagePromptSchema = rawMessagePromptSchema.extend({
-	text: rawMessagePromptSchema.shape.text.min(1),
+	text: rawMessagePromptSchema.shape.text.trim().min(1),
 })
 
 export type MessagePromptT = z.infer<typeof messagePromptSchema>

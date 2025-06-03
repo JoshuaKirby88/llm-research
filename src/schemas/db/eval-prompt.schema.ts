@@ -5,7 +5,7 @@ import { z } from "zod"
 export const rawEvalPromptSchema = createSelectSchema(EvalPrompt)
 
 export const evalPromptSchema = rawEvalPromptSchema.extend({
-	text: rawEvalPromptSchema.shape.text.min(1),
+	text: rawEvalPromptSchema.shape.text.trim().min(1),
 })
 
 export type EvalPromptT = z.infer<typeof evalPromptSchema>

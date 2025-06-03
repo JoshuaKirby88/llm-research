@@ -1,6 +1,3 @@
-- [ ] Insert owner of research as contributor with count 0 on research creation
-- [ ] Trim in db zod schema
-- [ ] "User is deleted" when looking at other people's research
 - [ ] Make dates consistent. I prefer month + year only like Luma
 - [ ] Remove whitespace in clerk profile hover card when bio doesnt exist
 - [ ] Empty state for contributor/research list

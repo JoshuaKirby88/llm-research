@@ -5,7 +5,7 @@ import { z } from "zod"
 export const rawIndependentVariableSchema = createSelectSchema(IndependentVariable)
 
 export const independentVariableSchema = rawIndependentVariableSchema.extend({
-	name: rawIndependentVariableSchema.shape.name.min(1),
+	name: rawIndependentVariableSchema.shape.name.trim().min(1),
 })
 
 export type IndependentVariableT = z.infer<typeof independentVariableSchema>

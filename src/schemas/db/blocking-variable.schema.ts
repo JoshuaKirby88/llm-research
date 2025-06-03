@@ -6,7 +6,7 @@ import { blockingValueSchema } from "./blocking-value.schema"
 export const rawBlockingVariableSchema = createSelectSchema(BlockingVariable)
 
 export const blockingVariableSchema = rawBlockingVariableSchema.extend({
-	name: rawBlockingVariableSchema.shape.name.min(1),
+	name: rawBlockingVariableSchema.shape.name.trim().min(1),
 })
 
 export type BlockingVariableT = z.infer<typeof blockingVariableSchema>

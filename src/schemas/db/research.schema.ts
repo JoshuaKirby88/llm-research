@@ -5,7 +5,7 @@ import { z } from "zod"
 const rawResearchSchema = createSelectSchema(Research)
 
 export const researchSchema = rawResearchSchema.extend({
-	name: rawResearchSchema.shape.name.min(1),
+	name: rawResearchSchema.shape.name.trim().min(1),
 })
 
 export type ResearchT = z.infer<typeof researchSchema>

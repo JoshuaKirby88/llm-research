@@ -33,7 +33,25 @@ export class BatchAIProxyService {
 			body: JSON.stringify(inputs),
 		})
 
-		const json = SuperJSON.parse(await result.text())
+		if (!result.ok || !result.body) {
+			throw new Error(result.statusText)
+		}
+
+		const reader = result.body.getReader()
+		const decoder = new TextDecoder()
+		let chunks = ""
+		while (true) {
+			const { done, value } = await reader.read()
+			if (done) break
+			chunks += decoder.decode(value, { stream: true })
+		}
+
+		chunks += decoder.decode()
+		const json = SuperJSON.parse(chunks)
+
+		if (json instanceof Error) {
+			throw json
+		}
 
 		return json as GenerateTextResult<never, never>[]
 	}
@@ -48,7 +66,25 @@ export class BatchAIProxyService {
 			body: JSON.stringify(payload),
 		})
 
-		const json = SuperJSON.parse(await result.text())
+		if (!result.ok || !result.body) {
+			throw new Error(result.statusText)
+		}
+
+		const reader = result.body.getReader()
+		const decoder = new TextDecoder()
+		let chunks = ""
+		while (true) {
+			const { done, value } = await reader.read()
+			if (done) break
+			chunks += decoder.decode(value, { stream: true })
+		}
+
+		chunks += decoder.decode()
+		const json = SuperJSON.parse(chunks)
+
+		if (json instanceof Error) {
+			throw json
+		}
 
 		return json as GenerateObjectResult<T>[]
 	}

@@ -10,10 +10,10 @@ export const ContactPage = () => {
 		<div className="space-y-10">
 			<AlertCard>
 				<IconWrapper>
-					<GithubIcon />
+					<GithubIcon className="fill-muted-foreground" />
 				</IconWrapper>
 				<AlertCardContent title="GitHub" description="The GitHub repository is public.">
-					<LinkButton href="https://github.com/JoshuaKirby88/llm-research" target="_blank" className={buttonVariants({ variant: "blue" })}>
+					<LinkButton href="https://github.com/JoshuaKirby88/llm-research" target="_blank" className={buttonVariants()}>
 						View
 						<ExternalLinkIcon />
 					</LinkButton>
@@ -25,7 +25,7 @@ export const ContactPage = () => {
 					<LightbulbIcon />
 				</IconWrapper>
 				<AlertCardContent title="Have a feature?" description="Request new features, vote on features, and report bugs.">
-					<LinkButton href="https://llmresearch.featurebase.app" target="_blank" className={buttonVariants({ variant: "blue" })}>
+					<LinkButton href="https://llmresearch.featurebase.app" target="_blank" className={buttonVariants()}>
 						Open
 						<ExternalLinkIcon />
 					</LinkButton>

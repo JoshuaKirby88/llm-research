@@ -43,12 +43,7 @@ export const ResearchOverviewPage = (props: Props) => {
 
 				<div className="flex flex-col gap-2">
 					<div className="flex items-center gap-2">
-						<ClerkProfile
-							userId={props.research.userId}
-							user={props.currentUser}
-							size="sm"
-							badge={props.currentUser ? props.contributors.find(c => c.userId === props.currentUser!.id)?.count : undefined}
-						/>
+						<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" badge={props.contributors.find(c => c.userId === props.currentUser?.id)?.count ?? 0} />
 					</div>
 					<div className="flex items-center gap-2">
 						<CalendarIcon />

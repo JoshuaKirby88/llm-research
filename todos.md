@@ -3,8 +3,6 @@
 - [ ] Make dates consistent. I prefer month + year only like Luma
 - [ ] Make contributions icon consistent
 - [ ] Remove whitespace in clerk profile hover card when bio doesnt exist
-- [ ] Stream back results from batch ai lambda to prevent timeout
-    - Return errors and handle them properly
 - [ ] Hide "public" badge for other people's research
 - [ ] Empty state for contributor/research list
 - [ ] Fill contributions page

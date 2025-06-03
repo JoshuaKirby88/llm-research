@@ -5,9 +5,10 @@ import { db } from "@/drizzle/db"
 import { Research, UserToStarredResearch } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
 import { ClerkPublicUser } from "@/src/schemas"
+import { ClerkService } from "@/src/services/clerk.service"
 import { destructureArray } from "@/utils/destructure-array"
 import { and, desc, eq } from "drizzle-orm"
-import { ArchiveIcon, CheckCircle2Icon, FlaskConicalIcon, NotebookPenIcon, StarIcon } from "lucide-react"
+import { ArchiveIcon, FlaskConicalIcon, GlobeIcon, NotebookPenIcon, StarIcon } from "lucide-react"
 import { UserResearchTabPage } from "./user-research-tab-page"
 
 const config = {
@@ -15,13 +16,13 @@ const config = {
 	tabs: {
 		isCurrentUser: [
 			{ value: "All", icon: FlaskConicalIcon },
-			{ value: "Published", icon: CheckCircle2Icon },
+			{ value: "Published", icon: GlobeIcon },
 			{ value: "Researching", icon: NotebookPenIcon },
 			{ value: "Starred", icon: StarIcon },
 			{ value: "Archived", icon: ArchiveIcon },
 		],
 		isOtherUser: [
-			{ value: "Published", icon: CheckCircle2Icon },
+			{ value: "Published", icon: GlobeIcon },
 			{ value: "Starred", icon: StarIcon },
 		],
 	},
@@ -42,13 +43,21 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 		orderBy: desc(Research.id),
 	})
 
+	const [researches, { userToStarredResearches, dependentValues, testBatches, testBatchResults }] = destructureArray(result, {
+		userToStarredResearches: true,
+		dependentValues: true,
+		testBatches: { testBatchResults: true },
+	})
+
+	const queriedUsers = await ClerkService.queryUsers(researches.map(r => r.userId))
+
 	return (
 		<div className="w-full">
 			<PageTabs tabs={tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
 				<PageTabsList tabs={tabs} name={config.tabName} />
 
 				{tabs.map(tab => {
-					const filteredResult = result.filter(
+					const filteredResearches = researches.filter(
 						r =>
 							(tab.value === "All" && !r.isArchived) ||
 							(tab.value === "Published" && !r.isArchived && r.isPublished) ||
@@ -57,17 +66,12 @@ export const UserResearchPage = Suspense(async (props: { params: NextParam<"curr
 							(tab.value === "Archived" && r.isArchived),
 					)
 
-					const [researches, { userToStarredResearches, dependentValues, testBatches, testBatchResults }] = destructureArray(filteredResult, {
-						userToStarredResearches: true,
-						dependentValues: true,
-						testBatches: { testBatchResults: true },
-					})
-
 					return (
 						<TabsContent key={tab.value} value={tab.value} className="space-y-10">
 							<UserResearchTabPage
 								user={props.user}
-								researches={researches}
+								queriedUsers={queriedUsers}
+								researches={filteredResearches}
 								userToStarredResearches={userToStarredResearches}
 								dependentValues={dependentValues}
 								testBatches={testBatches}

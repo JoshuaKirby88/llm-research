@@ -37,7 +37,7 @@ export const PublishResearchCard = (props: { research: ResearchT; testBatches: T
 						title="Publish Research"
 						description="Optionally write a conclusion. You can edit this later."
 						triggerButton={
-							<Button variant="blue" isLoading>
+							<Button variant="blue">
 								<GlobeIcon />
 								Publish
 							</Button>

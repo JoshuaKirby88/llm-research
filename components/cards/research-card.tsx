@@ -1,7 +1,7 @@
 import { archiveResearchAction, unarchiveResearchAction } from "@/actions/research/archive-research.action"
 import { downloadResearchAction } from "@/actions/research/download-research.action"
 import { ResearchChart, ResearchChartCard, ResearchChartNoResultOverlay } from "@/components/research-chart"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, cardVariants } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger, dropdownMenuItemVariants } from "@/components/ui/dropdown-menu"
 import { DependentValueT, ResearchT, TestBatchResultT, UserToStarredResearchT } from "@/src/schemas"
 import { ClerkPublicUser, ClerkQueriedUser } from "@/src/schemas"
@@ -17,13 +17,14 @@ import { buttonVariants } from "../ui/button"
 
 type Props = {
 	user: ClerkPublicUser
+	currentUser: ClerkQueriedUser | undefined
 	research: ResearchT
 	userToStarredResearch: UserToStarredResearchT | undefined
 	dependentValues: DependentValueT[]
 	testBatchResults: TestBatchResultT[]
 }
 
-export const HomePageResearchCard = (props: Pick<Props, "user" | "research" | "userToStarredResearch"> & { currentUser: ClerkQueriedUser | undefined }) => {
+export const HomePageResearchCard = (props: Pick<Props, "user" | "currentUser" | "research" | "userToStarredResearch">) => {
 	return (
 		<Card size="none">
 			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
@@ -44,14 +45,11 @@ export const HomePageResearchCard = (props: Pick<Props, "user" | "research" | "u
 export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 	return (
 		<Card size="none">
-			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cn(cardVariants({ size: "sm", variant: "link" }), "")}>
+			<Link href={`/user/${props.research.userId}/research/${props.research.id}`} className={cardVariants({ size: "sm", variant: "link" })}>
 				<CardContent className="flex justify-between">
 					<div>
-						<p className="text-muted-foreground">{props.research.createdAt.toLocaleDateString()}</p>
-						<CardTitle>{props.research.name}</CardTitle>
-						<CardDescription>
-							<p>Status: {props.research.isPublished ? "Published" : "Researching"}</p>
-						</CardDescription>
+						<p className="mb-2 text-muted-foreground text-sm">{props.research.createdAt.toLocaleDateString()}</p>
+						<CardTitle className="text-xl">{props.research.name}</CardTitle>
 					</div>
 
 					<ResearchChartCard research={props.research} dependentValues={props.dependentValues} testBatchResults={props.testBatchResults} className="size-40 p-0">
@@ -62,10 +60,14 @@ export const ResearchCard = (props: Props & { children?: React.ReactNode }) => {
 			</Link>
 
 			<CardFooter variant="link">
-				<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				<div className="flex items-center gap-4">
+					<ClerkProfile userId={props.research.userId} user={props.currentUser} size="sm" />
+					<ResearchStarButton user={props.user} research={props.research} userToStarredResearch={props.userToStarredResearch} />
+				</div>
 
 				<ResearchCardDropdown
 					user={props.user}
+					currentUser={props.currentUser}
 					research={props.research}
 					userToStarredResearch={props.userToStarredResearch}
 					dependentValues={props.dependentValues}

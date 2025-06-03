@@ -12,7 +12,7 @@ export const UserPage = Suspense(async (props: { params: NextParam<"currentUserI
 		db
 			.select({ count: count() })
 			.from(Research)
-			.where(and(eq(Research.userId, props.params.currentUserId), eq(Research.isPublished, true))),
+			.where(and(eq(Research.userId, props.params.currentUserId), eq(Research.isPublished, true), eq(Research.isArchived, false))),
 		db
 			.select({ count: count() })
 			.from(Contributor)

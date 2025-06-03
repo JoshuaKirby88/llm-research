@@ -38,7 +38,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overi
 					<AvatarFallback />
 				</Avatar>
 
-				{badge && (
+				{badge != undefined && (
 					<Badge className="-top-3 -translate-x-3 absolute left-full border-background font-semibold" size="roundSm">
 						{badge}
 					</Badge>

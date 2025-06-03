@@ -34,7 +34,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId">
 				</TabsContent>
 
 				<TabsContent value="Contributions">
-					<ContributionPage />
+					<ContributionPage params={params} user={user} />
 				</TabsContent>
 			</PageTabs>
 		</div>

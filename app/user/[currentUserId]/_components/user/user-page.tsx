@@ -8,7 +8,7 @@ export const UserPage = (props: { params: NextParam<"currentUserId">; currentUse
 	return (
 		<div className="mx-auto w-full max-w-xl space-y-10">
 			<div className="mx-auto flex w-fit gap-10 ">
-				<ClerkAvatar userId={props.params.currentUserId} user={props.currentUser} size="19xl" hideUserName />
+				<ClerkAvatar userId={props.params.currentUserId} user={props.currentUser} size="19xl" hideUserName disabled />
 
 				<div className="space-y-2">
 					<h1 className="font-semibold text-3xl">{props.currentUser ? props.currentUser.fullName : "User deleted"}</h1>

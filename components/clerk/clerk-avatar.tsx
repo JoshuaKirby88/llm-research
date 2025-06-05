@@ -1,5 +1,6 @@
 import { ClerkQueriedUser } from "@/src/schemas"
 import { cn } from "@/utils/cn"
+import Image from "next/image"
 import { ComponentProps } from "react"
 import { LinkButton } from "../buttons/link-button"
 import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
@@ -21,21 +22,25 @@ const config = {
 }
 
 export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overideImageSize, ...props }: Props) => {
-	const userName = user?.fullName ?? "User deleted"
+	const userName = user ? user.fullName : "User deleted"
 
-	const imageSize = config.variants.size[overideImageSize ?? props.size].toString()
+	const avatarSize = config.variants.size[props.size]
+	const imageSize = config.variants.size[overideImageSize ?? props.size]
+
 	const params = new URLSearchParams()
-	params.set("height", imageSize)
-	params.set("width", imageSize)
+	params.set("height", imageSize.toString())
+	params.set("width", imageSize.toString())
 	params.set("quality", "100")
 	params.set("fit", "fill")
 
 	return (
-		<LinkButton href={`/user/${userId}`} className="group flex items-center gap-2 opacity-100" disabled={disabled}>
+		<LinkButton href={`/user/${userId}`} className="group pointer-events-auto flex items-center gap-2 opacity-100" disabled={disabled}>
 			<div className="relative">
 				<Avatar {...props}>
 					<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
-					<AvatarFallback />
+					<AvatarFallback>
+						<Image src="/thiings/ghost.webp" width={imageSize} height={imageSize} alt="Ghost by Charlie Clark" style={{ width: avatarSize, height: avatarSize }} />
+					</AvatarFallback>
 				</Avatar>
 
 				{badge != undefined && (

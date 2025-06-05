@@ -5,33 +5,34 @@
 	"compatibility_date": "2025-04-13",
 	"compatibility_flags": ["nodejs_compat"],
 	"minify": true,
+	"keep_names": false,
 	"assets": {
 		"directory": ".open-next/assets",
-		"binding": "ASSETS"
+		"binding": "ASSETS",
 	},
 	"placement": { "mode": "smart" },
 	"observability": {
 		"enabled": true,
 		"logs": {
-			"enabled": false
-		}
+			"enabled": false,
+		},
 	},
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "llm-research",
 			"database_id": "98fd5254-fd05-4459-a74d-3c9ad082c314",
-			"migrations_dir": "drizzle/migrations"
-		}
+			"migrations_dir": "drizzle/migrations",
+		},
 	],
 	"vectorize": [
 		{
 			"binding": "VECTORIZE_PROD",
-			"index_name": "llm-research-prod"
+			"index_name": "llm-research-prod",
 		},
 		{
 			"binding": "VECTORIZE_DEV",
-			"index_name": "llm-research-dev"
-		}
-	]
+			"index_name": "llm-research-dev",
+		},
+	],
 }

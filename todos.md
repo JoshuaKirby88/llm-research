@@ -1,5 +1,4 @@
 - [ ] Fix clerk middleware error
-- [ ] Add proper favicon
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)

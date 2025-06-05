@@ -31,7 +31,7 @@ export const searchResearchAction = createAction(
 			return researches.sort((a, b) => researchIds.indexOf(a.id) - researchIds.indexOf(b.id))
 		} else {
 			return await db.query.Research.findMany({
-				where: ResearchRepo.getPublicWhere({ userId: null }),
+				where: ResearchRepo.getPublicWhere({ user: null }),
 				with: {
 					userToStarredResearches: user.userId ? { where: eq(UserToStarredResearch.userId, user.userId) } : { limit: 0 },
 				},

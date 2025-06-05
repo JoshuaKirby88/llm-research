@@ -10,9 +10,9 @@ import { ResearchTable } from "../tables"
 import { ResearchVectorRepo } from "./research-vector.repo"
 
 export class ResearchRepo {
-	static getPublicWhere(input: { userId: ClerkPublicUser["userId"] }) {
-		if (input.userId) {
-			return or(eq(Research.userId, input.userId), and(eq(Research.isPublished, true), eq(Research.isArchived, false)))
+	static getPublicWhere(input: { user: ClerkPublicUser | null }) {
+		if (input.user?.userId) {
+			return or(eq(Research.userId, input.user.userId), and(eq(Research.isPublished, true), eq(Research.isArchived, false)))
 		} else {
 			return and(eq(Research.isPublished, true), eq(Research.isArchived, false))
 		}

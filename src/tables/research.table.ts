@@ -1,7 +1,13 @@
-import { ResearchT } from "../schemas"
+import { ClerkPublicUser, ResearchT } from "../schemas"
 
 export class ResearchTable {
-	static vectorizedWhere = { isPublished: true, isArchived: false }
+	static isPublic(input: { research: ResearchT; user: ClerkPublicUser | null }) {
+		if (input.user?.userId) {
+			return input.research.userId === input.user.userId || (input.research.isPublished && !input.research.isArchived)
+		} else {
+			return input.research.isPublished && !input.research.isArchived
+		}
+	}
 
 	static canDelete(input: { contributorCount: number }) {
 		// Only contributor is the owner of the research
@@ -10,7 +16,7 @@ export class ResearchTable {
 
 	static createEmbeddingText(input: Pick<ResearchT, "name" | "description" | "conclusion">) {
 		const parts = [input.name, input.description, input.conclusion].filter(text => text?.trim())
-		return parts.join("\n")
+		return parts.join("\n\n")
 	}
 
 	static canVectorize(research: ResearchT) {
@@ -18,6 +24,6 @@ export class ResearchTable {
 	}
 
 	static canDeleteVector(research: ResearchT) {
-		return research.isPublished
+		return research.isPublished && research.isArchived
 	}
 }

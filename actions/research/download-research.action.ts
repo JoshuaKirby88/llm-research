@@ -14,7 +14,7 @@ export const downloadResearchAction = createAction(
 	z.object({ researchId: researchSchema.shape.id, testBatchId: testBatchSchema.shape.id.optional() }),
 )(async ({ user, input }) => {
 	const result = await db.query.Research.findFirst({
-		where: and(eq(Research.id, input.researchId), ResearchRepo.getPublicWhere({ userId: user.userId })),
+		where: and(eq(Research.id, input.researchId), ResearchRepo.getPublicWhere({ user })),
 		with: {
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },

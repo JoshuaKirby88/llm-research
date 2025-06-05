@@ -2,7 +2,7 @@ import { db } from "@/drizzle/db"
 import { Contributor, UserToStarredResearch } from "@/drizzle/schema"
 import { ClerkPublicUser } from "@/src/schemas"
 import { destructureArray } from "@/utils/destructure-array"
-import { and, eq } from "drizzle-orm"
+import { and, desc, eq } from "drizzle-orm"
 
 export const userContributionPageQuery = async (input: { params: NextParam<"currentUserId">; user: ClerkPublicUser }) => {
 	const result = await db.query.Contributor.findMany({
@@ -20,6 +20,7 @@ export const userContributionPageQuery = async (input: { params: NextParam<"curr
 				},
 			},
 		},
+		orderBy: desc(Contributor.id),
 	})
 
 	const [contributors, { research: researches, userToStarredResearches, dependentValues, testBatches, testBatchResults }] = destructureArray(result, {

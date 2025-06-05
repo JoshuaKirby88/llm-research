@@ -15,7 +15,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 	const defaultValues: CreateResearchI = await (async () => {
 		if (Array.isArray(params.researchIds)) {
 			const research = await db.query.Research.findFirst({
-				where: and(eq(Research.id, Number.parseInt(params.researchIds[0])), ResearchRepo.getPublicWhere({ userId: user.userId })),
+				where: and(eq(Research.id, Number.parseInt(params.researchIds[0])), ResearchRepo.getPublicWhere({ user })),
 				with: {
 					independentVariable: { with: { independentValues: true } },
 					blockingVariables: { with: { blockingValues: true } },

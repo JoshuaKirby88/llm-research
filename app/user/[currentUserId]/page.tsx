@@ -9,7 +9,7 @@ import { UserResearchPage } from "./_components/research/user-research-page"
 import { UserPage } from "./_components/user/user-page"
 import { userContributionPageQuery } from "./_queries/user-contribution-page-query"
 import { userPageQuery } from "./_queries/user-page-query"
-import { userResearchPageQuery } from "./_queries/user-research-page-query"
+import { userResearchPageQuery, userResearchPageStarredQuery } from "./_queries/user-research-page-query"
 
 const config = {
 	tabs: [
@@ -24,15 +24,17 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId">
 	const searchParams = await props.searchParams
 	const user = await authProcedure("public")
 
-	const [userPageQueryResult, userResearchPageQueryResult, userContributionPageQueryResult] = await Promise.all([
+	const [userPageQueryResult, userResearchPageQueryResult, userResearchPageStarredQueryResult, userContributionPageQueryResult] = await Promise.all([
 		userPageQuery({ params }),
 		userResearchPageQuery({ params, user }),
+		userResearchPageStarredQuery({ params, user }),
 		userContributionPageQuery({ params, user }),
 	])
 
 	const queriedUsers = await ClerkService.queryUsers([
 		params.currentUserId,
 		...userResearchPageQueryResult.researches.map(r => r.userId),
+		...userResearchPageStarredQueryResult.researches.map(r => r.userId),
 		...userContributionPageQueryResult.researches.map(r => r.userId),
 	])
 
@@ -55,7 +57,14 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId">
 				</TabsContent>
 
 				<TabsContent value="Research">
-					<UserResearchPage params={params} searchParams={searchParams} user={user} queriedUsers={queriedUsers} {...userResearchPageQueryResult} />
+					<UserResearchPage
+						params={params}
+						searchParams={searchParams}
+						user={user}
+						queriedUsers={queriedUsers}
+						starred={userResearchPageStarredQueryResult}
+						{...userResearchPageQueryResult}
+					/>
 				</TabsContent>
 
 				<TabsContent value="Contributions">

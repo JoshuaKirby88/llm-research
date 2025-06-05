@@ -14,7 +14,7 @@ export const testPageQuery = async (input: { params: NextParam<"researchId" | "t
 
 	// TODO: Use .select over .query for blockingVariableCombination filter
 	const result = await db.query.Research.findFirst({
-		where: and(eq(Research.id, Number.parseInt(input.params.researchId)), ResearchRepo.getPublicWhere({ userId: input.user.userId })),
+		where: and(eq(Research.id, Number.parseInt(input.params.researchId)), ResearchRepo.getPublicWhere({ user: input.user })),
 		with: {
 			contributors: true,
 			independentVariable: { with: { independentValues: true } },

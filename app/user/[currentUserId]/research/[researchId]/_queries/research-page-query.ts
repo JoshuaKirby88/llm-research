@@ -9,7 +9,7 @@ import { and, desc, eq } from "drizzle-orm"
 
 export const researchPageQuery = async (input: { params: NextParam<"currentUserId" | "researchId">; user: ClerkPublicUser }) => {
 	const result = await db.query.Research.findFirst({
-		where: and(eq(Research.id, Number.parseInt(input.params.researchId)), ResearchRepo.getPublicWhere({ userId: input.user.userId })),
+		where: and(eq(Research.id, Number.parseInt(input.params.researchId)), ResearchRepo.getPublicWhere({ user: input.user })),
 		with: {
 			forkedResearch: true,
 			contributors: true,

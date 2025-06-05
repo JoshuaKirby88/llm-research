@@ -29,8 +29,10 @@ function Avatar({ className, size, ...props }: React.ComponentProps<typeof Avata
 	return <AvatarPrimitive.Root data-slot="avatar" className={cn(avatarVariants({ size }), className)} {...props} />
 }
 
+export const avatarImageVariants = cva("aspect-square size-full")
+
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
-	return <AvatarPrimitive.Image data-slot="avatar-image" className={cn("aspect-square size-full", className)} {...props} />
+	return <AvatarPrimitive.Image data-slot="avatar-image" className={cn(avatarImageVariants(), className)} {...props} />
 }
 
 function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {

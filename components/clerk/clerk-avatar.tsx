@@ -3,7 +3,7 @@ import { cn } from "@/utils/cn"
 import Image from "next/image"
 import { ComponentProps } from "react"
 import { LinkButton } from "../buttons/link-button"
-import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
+import { Avatar, AvatarFallback, AvatarProps, avatarImageVariants } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 
 type Props = {
@@ -33,14 +33,21 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overi
 	params.set("quality", "100")
 	params.set("fit", "fill")
 
+	const imageUrl = user ? `${user.imageUrl}?${params.toString()}` : "/thiings/ghost.webp"
+
 	return (
 		<LinkButton href={`/user/${userId}`} className="group pointer-events-auto flex items-center gap-2 opacity-100" disabled={disabled}>
 			<div className="relative">
 				<Avatar {...props}>
-					<AvatarImage src={`${user?.imageUrl}?${params.toString()}`} alt="User image" />
-					<AvatarFallback>
-						<Image src="/thiings/ghost.webp" width={imageSize} height={imageSize} alt="Ghost by Charlie Clark" style={{ width: avatarSize, height: avatarSize }} />
-					</AvatarFallback>
+					<Image
+						src={imageUrl}
+						width={imageSize}
+						height={imageSize}
+						className={avatarImageVariants()}
+						style={{ width: avatarSize, height: avatarSize, objectFit: "cover" }}
+						alt="Profile pic"
+					/>
+					<AvatarFallback />
 				</Avatar>
 
 				{badge != undefined && (

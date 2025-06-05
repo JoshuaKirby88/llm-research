@@ -1,4 +1,3 @@
-- [ ] Handle 3mb upload limit
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] PostHog reverse proxy

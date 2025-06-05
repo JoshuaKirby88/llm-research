@@ -6,7 +6,6 @@ initOpenNextCloudflareForDev()
 const nextConfig: NextConfig = {
 	experimental: {
 		authInterrupts: true,
-		ppr: true,
 	},
 }
 

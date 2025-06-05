@@ -6,6 +6,7 @@ import { ClerkService } from "@/src/services/clerk.service"
 import { APIKeyTable } from "@/src/tables"
 import { authProcedure } from "@/utils/auth-procedure"
 import { CircleUserRoundIcon, KeyIcon, MailIcon } from "lucide-react"
+import { notFound } from "next/navigation"
 import { AccountPage } from "./_components/account/account-page"
 import { APIKeyPage } from "./_components/api-key-page"
 import { ContactPage } from "./_components/contact-page"
@@ -16,13 +17,17 @@ const config = {
 		{ value: "API Key", icon: KeyIcon },
 		{ value: "Contact Us", icon: MailIcon },
 	],
-} as const
+}
 
 const Page = Suspense(async (props: { searchParams: Promise<NextSearchParam> }) => {
 	const searchParams = await props.searchParams
 	const user = await authProcedure("signedIn")
 
 	const [currentUser, apiKey] = await Promise.all([ClerkService.queryUser(user.userId), APIKeyRepo.query(user.userId)])
+
+	if (!currentUser) {
+		notFound()
+	}
 
 	const maskedAPIKey = apiKey ? APIKeyTable.mask(APIKeyTable.decrypt(apiKey)) : null
 

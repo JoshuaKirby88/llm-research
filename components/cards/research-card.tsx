@@ -97,17 +97,19 @@ const ResearchCardDropdown = (props: Props) => {
 						Download
 					</FormRouteHandler>
 
-					<DropdownMenuSeparator />
-
 					{props.user.userId === props.research.userId && (
-						<FormActionButton
-							as="button"
-							action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
-							className={dropdownMenuItemVariants({ variant: props.research.isArchived ? "inverseBlue" : "inverseRed" })}
-						>
-							{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
-							{props.research.isArchived ? "Restore" : "Archive"}
-						</FormActionButton>
+						<>
+							<DropdownMenuSeparator />
+
+							<FormActionButton
+								as="button"
+								action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
+								className={dropdownMenuItemVariants({ variant: props.research.isArchived ? "inverseBlue" : "inverseRed" })}
+							>
+								{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}
+								{props.research.isArchived ? "Restore" : "Archive"}
+							</FormActionButton>
+						</>
 					)}
 				</DropdownMenuContent>
 			</DropdownMenu>

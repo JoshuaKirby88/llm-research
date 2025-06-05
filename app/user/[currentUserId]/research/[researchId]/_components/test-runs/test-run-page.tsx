@@ -24,7 +24,7 @@ const config = {
 		{ value: "Authored", icon: UserIcon },
 		{ value: "Contributions", icon: GiftIcon },
 	],
-} as const
+}
 
 export const TestRunPage = (props: Props) => {
 	return (

@@ -7,7 +7,7 @@ import { useTheme } from "next-themes"
 
 const config = {
 	themes: ["light", "dark", "system"],
-} as const
+}
 
 export const ThemeDropdown = (props: ButtonProps) => {
 	const { setTheme, theme: selectedTheme } = useTheme()

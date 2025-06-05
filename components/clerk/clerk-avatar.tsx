@@ -21,7 +21,7 @@ const config = {
 }
 
 export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overideImageSize, ...props }: Props) => {
-	const userName = user?.fullName ?? "User is deleted"
+	const userName = user?.fullName ?? "User deleted"
 
 	const imageSize = config.variants.size[overideImageSize ?? props.size].toString()
 	const params = new URLSearchParams()

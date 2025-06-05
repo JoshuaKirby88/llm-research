@@ -36,12 +36,15 @@ export const Navbar = async () => {
 				</SignedIn>
 
 				<SignedOut>
-					<Button asChild>
-						<SignInButton />
-					</Button>
-					<Button asChild>
-						<SignUpButton />
-					</Button>
+					<SignInButton>
+						<Button size="sm" variant="outline">
+							Sign In
+						</Button>
+					</SignInButton>
+
+					<SignUpButton>
+						<Button size="sm">Sign Up</Button>
+					</SignUpButton>
 				</SignedOut>
 			</div>
 		</header>

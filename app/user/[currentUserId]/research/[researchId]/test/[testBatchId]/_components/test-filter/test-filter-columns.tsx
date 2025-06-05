@@ -41,11 +41,12 @@ export const testFilterColumnsConfig = (props: TestFilterColumnsConfigProps) =>
 			.icon(GiftIcon)
 			.options(
 				props.contributors.map(contributor => {
-					const queriedUser = props.queriedUsers.find(user => user.id === contributor.userId)
+					const currentUser = props.queriedUsers.find(user => user.id === contributor.userId)
 					return {
 						value: contributor.id,
-						icon: <ClerkAvatar disabled size="3xs" userId={contributor.userId} user={queriedUser} hideUserName />,
-						label: queriedUser?.fullName ?? "",
+						icon: <ClerkAvatar disabled size="3xs" userId={contributor.userId} user={currentUser} hideUserName />,
+						// TODO: Should this say "User deleted"...?
+						label: currentUser?.fullName ?? "",
 					}
 				}),
 			)

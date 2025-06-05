@@ -24,7 +24,7 @@ const config = {
 			...(input.params.currentUserId === input.user.userId ? [{ value: "Settings", icon: CogIcon }] : []),
 		]
 	},
-} as const
+}
 
 const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" | "researchId">>; searchParams: Promise<NextSearchParam> }) => {
 	const params = await props.params

@@ -1,52 +1,37 @@
 import { ClerkAvatar } from "@/components/clerk/clerk-avatar"
-import { Suspense } from "@/components/suspense"
-import { db } from "@/drizzle/db"
-import { Contributor, Research } from "@/drizzle/schema"
 import { DateFeature } from "@/src/features/date.feature"
-import { ClerkService } from "@/src/services/clerk.service"
-import { and, count, eq } from "drizzle-orm"
+import { ClerkQueriedUser } from "@/src/schemas"
 import { CalendarIcon } from "lucide-react"
+import { userPageQuery } from "../../_queries/user-page-query"
 
-export const UserPage = Suspense(async (props: { params: NextParam<"currentUserId"> }) => {
-	const [queriedUser, [{ count: publishedCount }], [{ count: contributionCount }]] = await Promise.all([
-		ClerkService.queryUser(props.params.currentUserId),
-		db
-			.select({ count: count() })
-			.from(Research)
-			.where(and(eq(Research.userId, props.params.currentUserId), eq(Research.isPublished, true), eq(Research.isArchived, false))),
-		db
-			.select({ count: count() })
-			.from(Contributor)
-			.where(and(eq(Contributor.userId, props.params.currentUserId), eq(Contributor.isOwner, false))),
-	])
-
+export const UserPage = (props: { params: NextParam<"currentUserId">; currentUser: ClerkQueriedUser | undefined } & Return<typeof userPageQuery>) => {
 	return (
 		<div className="mx-auto w-full max-w-xl space-y-10">
-			<div className="flex gap-10">
-				<ClerkAvatar userId={props.params.currentUserId} user={queriedUser} size="19xl" hideUserName />
+			<div className="mx-auto flex w-fit gap-10 ">
+				<ClerkAvatar userId={props.params.currentUserId} user={props.currentUser} size="19xl" hideUserName />
 
 				<div className="space-y-2">
-					<h1 className="font-semibold text-3xl">{queriedUser.fullName}</h1>
+					<h1 className="font-semibold text-3xl">{props.currentUser ? props.currentUser.fullName : "User deleted"}</h1>
 
 					<p className="flex items-center gap-1 font-semibold text-muted-foreground text-sm">
 						<CalendarIcon className="size-4" />
 						Joined
-						<span className="font-bold text-foreground">{DateFeature.toMonthYear(new Date(queriedUser.createdAt))}</span>
+						<span className="font-bold text-foreground">{props.currentUser ? DateFeature.toMonthYear(new Date(props.currentUser.createdAt)) : "---"}</span>
 					</p>
 
 					<div className="flex items-center gap-3 font-medium text-muted-foreground text-sm">
 						<p>
-							<span className="font-bold text-foreground">{publishedCount}</span> Published
+							<span className="font-bold text-foreground">{props.publishedCount}</span> Published
 						</p>
 
 						<p>
-							<span className="font-bold text-foreground">{contributionCount}</span> Contributed
+							<span className="font-bold text-foreground">{props.contributionCount}</span> Contributed
 						</p>
 					</div>
 				</div>
 			</div>
 
-			<p className="text-muted-foreground">{queriedUser.metadata.bio}</p>
+			{props.currentUser ? <p className="text-muted-foreground">{props.currentUser.metadata.bio}</p> : null}
 		</div>
 	)
-})
+}

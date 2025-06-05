@@ -14,8 +14,16 @@ export class ClerkService {
 	}
 
 	static async queryUser(userId: string) {
-		const user = await client.users.getUser(userId)
-		return this.transformUser(user)
+		try {
+			const user = await client.users.getUser(userId)
+			return this.transformUser(user)
+		} catch (error: any) {
+			if (error.status === 404) {
+				return
+			}
+
+			throw error
+		}
 	}
 
 	static async queryUsers(userIds: string[], options?: { serialize?: boolean }) {

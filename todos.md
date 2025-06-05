@@ -1,8 +1,10 @@
+- [ ] Move all thiings image to root
+- [ ] Add fallback image to clerk avatar
+- [ ] Fix user starred research page. It should show all research starred by that user, not just their research
+- [ ] Fix Drizzle batch insert
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] PostHog reverse proxy
-- [ ] I should make deleted user's page still accessible, just add banner that the user is deleted, but make sure that all personal info is not shown
-- [ ] Test deleting a user such that research still remains
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data

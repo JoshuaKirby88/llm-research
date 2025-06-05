@@ -1,86 +1,63 @@
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
-import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
-import { db } from "@/drizzle/db"
-import { Research, UserToStarredResearch } from "@/drizzle/schema"
-import { ResearchRepo } from "@/src/repos"
-import { ClerkPublicUser } from "@/src/schemas"
-import { ClerkService } from "@/src/services/clerk.service"
-import { destructureArray } from "@/utils/destructure-array"
-import { and, desc, eq } from "drizzle-orm"
+import { ClerkPublicUser, ClerkQueriedUser } from "@/src/schemas"
 import { ArchiveIcon, FlaskConicalIcon, GlobeIcon, NotebookPenIcon, StarIcon } from "lucide-react"
+import { userResearchPageQuery } from "../../_queries/user-research-page-query"
 import { UserResearchTabPage } from "./user-research-tab-page"
 
 const config = {
 	tabName: "researchTab",
-	tabs: {
-		isCurrentUser: [
-			{ value: "All", icon: FlaskConicalIcon },
-			{ value: "Published", icon: GlobeIcon },
-			{ value: "Researching", icon: NotebookPenIcon },
-			{ value: "Starred", icon: StarIcon },
-			{ value: "Archived", icon: ArchiveIcon },
-		],
-		isOtherUser: [
-			{ value: "Published", icon: GlobeIcon },
-			{ value: "Starred", icon: StarIcon },
-		],
+	getTabs(input: { params: NextParam<"currentUserId">; user: ClerkPublicUser }) {
+		if (input.params.currentUserId === input.user.userId) {
+			return [
+				{ value: "All", icon: FlaskConicalIcon },
+				{ value: "Published", icon: GlobeIcon },
+				{ value: "Researching", icon: NotebookPenIcon },
+				{ value: "Starred", icon: StarIcon },
+				{ value: "Archived", icon: ArchiveIcon },
+			]
+		} else {
+			return [
+				{ value: "Published", icon: GlobeIcon },
+				{ value: "Starred", icon: StarIcon },
+			]
+		}
 	},
-} as const
+}
 
-export const UserResearchPage = Suspense(async (props: { params: NextParam<"currentUserId">; searchParams: Awaited<NextSearchParam>; user: ClerkPublicUser }) => {
-	const tabs = config.tabs[props.params.currentUserId === props.user.userId ? "isCurrentUser" : "isOtherUser"]
-
-	const result = await db.query.Research.findMany({
-		where: and(eq(Research.userId, props.params.currentUserId), ResearchRepo.getPublicWhere({ userId: props.user.userId })),
-		with: {
-			userToStarredResearches: props.user.userId ? { where: eq(UserToStarredResearch.userId, props.user.userId) } : { limit: 0 },
-			dependentValues: true,
-			testBatches: {
-				with: { testBatchResults: true },
-			},
-		},
-		orderBy: desc(Research.id),
-	})
-
-	const [researches, { userToStarredResearches, dependentValues, testBatches, testBatchResults }] = destructureArray(result, {
-		userToStarredResearches: true,
-		dependentValues: true,
-		testBatches: { testBatchResults: true },
-	})
-
-	const queriedUsers = await ClerkService.queryUsers(researches.map(r => r.userId))
+export const UserResearchPage = (
+	props: { params: NextParam<"currentUserId">; searchParams: NextSearchParam; user: ClerkPublicUser; queriedUsers: ClerkQueriedUser[] } & Return<typeof userResearchPageQuery>,
+) => {
+	const tabs = config.getTabs({ params: props.params, user: props.user })
 
 	return (
-		<div className="w-full">
-			<PageTabs tabs={tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
-				<PageTabsList tabs={tabs} name={config.tabName} />
+		<PageTabs tabs={tabs} name={config.tabName} searchParams={props.searchParams} orientation="vertical">
+			<PageTabsList tabs={tabs} name={config.tabName} />
 
-				{tabs.map(tab => {
-					const filteredResearches = researches.filter(
-						r =>
-							(tab.value === "All" && !r.isArchived) ||
-							(tab.value === "Published" && !r.isArchived && r.isPublished) ||
-							(tab.value === "Researching" && !r.isArchived && !r.isPublished) ||
-							(tab.value === "Starred" && r.isStarredByUser) ||
-							(tab.value === "Archived" && r.isArchived),
-					)
+			{tabs.map(tab => {
+				const filteredResearches = props.researches.filter(
+					r =>
+						(tab.value === "All" && !r.isArchived) ||
+						(tab.value === "Published" && !r.isArchived && r.isPublished) ||
+						(tab.value === "Researching" && !r.isArchived && !r.isPublished) ||
+						(tab.value === "Starred" && r.isStarredByUser) ||
+						(tab.value === "Archived" && r.isArchived),
+				)
 
-					return (
-						<TabsContent key={tab.value} value={tab.value} className="space-y-10">
-							<UserResearchTabPage
-								user={props.user}
-								queriedUsers={queriedUsers}
-								researches={filteredResearches}
-								userToStarredResearches={userToStarredResearches}
-								dependentValues={dependentValues}
-								testBatches={testBatches}
-								testBatchResults={testBatchResults}
-							/>
-						</TabsContent>
-					)
-				})}
-			</PageTabs>
-		</div>
+				return (
+					<TabsContent key={tab.value} value={tab.value} className="space-y-10">
+						<UserResearchTabPage
+							user={props.user}
+							queriedUsers={props.queriedUsers}
+							researches={filteredResearches}
+							userToStarredResearches={props.userToStarredResearches}
+							dependentValues={props.dependentValues}
+							testBatches={props.testBatches}
+							testBatchResults={props.testBatchResults}
+						/>
+					</TabsContent>
+				)
+			})}
+		</PageTabs>
 	)
-})
+}

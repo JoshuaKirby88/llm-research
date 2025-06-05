@@ -6,7 +6,7 @@ import { InsertTestT, TestT, UpdateTestT } from "../schemas"
 
 export class TestRepo {
 	static async insertMany(input: InsertTestT[]) {
-		const newTests = await DrizzleService.batchInsert(input, items => db.insert(Test).values(items).returning())
+		const newTests = await DrizzleService.batchInsert(Test, input, items => db.insert(Test).values(items).returning())
 		return newTests
 	}
 

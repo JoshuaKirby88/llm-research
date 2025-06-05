@@ -1,4 +1,5 @@
-import { AnyColumn, SQL, Table, and, eq, sql } from "drizzle-orm"
+import { db } from "@/drizzle/db"
+import { AnyColumn, InferInsertModel, SQL, Table, and, eq, getTableColumns, sql } from "drizzle-orm"
 
 type TypeSafeTable<T extends Table> = T & Record<TableKey<T>, T["_"]["columns"][TableKey<T>]>
 export type TableWhere<T extends Table> = Partial<T["$inferSelect"]>
@@ -9,7 +10,7 @@ export type TableMixedSQLUpdate<U> = {
 }
 
 export class DrizzleService {
-	private static batchInsertSize = 10
+	private static maxSQLVariables = 100
 
 	static where<T extends Table>(table: TypeSafeTable<T>, obj: TableWhere<T>) {
 		const keys = Object.keys(obj) as TableKey<T>[]
@@ -32,15 +33,35 @@ export class DrizzleService {
 		}
 	}
 
-	static async batchInsert<T, K extends { id: number }>(items: T[], callback: (items: T[]) => Promise<K[]>) {
-		const results: K[] = []
+	static async batchInsert<T extends Table, I extends InferInsertModel<T>, K extends { id: number }>(table: T, items: I[], callback: (args: I[]) => Promise<K[]>) {
+		const columns = getTableColumns(table)
+		const defaultColumns = Object.entries(columns)
+			.filter(([_, v]) => v.hasDefault)
+			.map(([k]) => k)
 
-		for (let i = 0; i < items.length; i += this.batchInsertSize) {
-			const result = await callback(items.slice(i, i + this.batchInsertSize))
-			results.push(...result)
+		let chunkArgsLength = 0
+		const chunks: I[][] = [[]]
+
+		for (const item of items) {
+			const args = Array.from(new Set([...Object.keys(item), ...defaultColumns]))
+
+			if (chunkArgsLength + args.length >= this.maxSQLVariables) {
+				chunks.push([item])
+				chunkArgsLength = args.length
+				continue
+			}
+
+			chunks[chunks.length - 1].push(item)
+			chunkArgsLength += args.length
 		}
 
-		return results.sort((a, b) => a.id - b.id)
+		const results: K[] = await db.batch(chunks.map(chunk => callback(chunk)) as any)
+
+		if (typeof results[0] === "object" && results[0] && "id" in results[0]) {
+			results.sort((a, b) => a.id - b.id)
+		}
+
+		return results
 	}
 
 	static async updateMany<T extends Table, K extends keyof T["_"]["columns"]>(table: T, values: Array<{ id: number } & Record<K, T["$inferSelect"][K]>>, key: K) {

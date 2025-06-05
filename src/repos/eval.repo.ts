@@ -6,7 +6,7 @@ import { EvalT, InsertEvalT, UpdateEvalT } from "../schemas"
 
 export class EvalRepo {
 	static async insertMany(input: InsertEvalT[]) {
-		const newEvals = await DrizzleService.batchInsert(input, items => db.insert(Eval).values(items).returning())
+		const newEvals = await DrizzleService.batchInsert(Eval, input, items => db.insert(Eval).values(items).returning())
 		return newEvals
 	}
 

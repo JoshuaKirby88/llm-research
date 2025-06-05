@@ -12,7 +12,7 @@ export class MessagePromptRepo {
 	}
 
 	static async insertMany(input: InsertMessagePromptT[]) {
-		const newMessagePrompts = await DrizzleService.batchInsert(input, items => db.insert(MessagePrompt).values(items).returning())
+		const newMessagePrompts = await DrizzleService.batchInsert(MessagePrompt, input, items => db.insert(MessagePrompt).values(items).returning())
 
 		return newMessagePrompts
 	}

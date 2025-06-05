@@ -1,6 +1,5 @@
 - [ ] Handle 3mb upload limit
 - [ ] Fix user starred research page. It should show all research starred by that user, not just their research
-- [ ] Fix Drizzle batch insert
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] PostHog reverse proxy

@@ -12,7 +12,7 @@ export class DependentValueRepo {
 	}
 
 	static async insertMany(input: InsertDependentValueT[]) {
-		const newDependentValues = await DrizzleService.batchInsert(input, items => db.insert(DependentValue).values(items).returning())
+		const newDependentValues = await DrizzleService.batchInsert(DependentValue, input, items => db.insert(DependentValue).values(items).returning())
 
 		return newDependentValues
 	}

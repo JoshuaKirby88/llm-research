@@ -12,7 +12,7 @@ export class BlockingVariableRepo {
 	}
 
 	static async insertMany(input: InsertBlockingVariableT[]) {
-		const newBlockingVariables = await DrizzleService.batchInsert(input, items => db.insert(BlockingVariable).values(items).returning())
+		const newBlockingVariables = await DrizzleService.batchInsert(BlockingVariable, input, items => db.insert(BlockingVariable).values(items).returning())
 
 		return newBlockingVariables
 	}

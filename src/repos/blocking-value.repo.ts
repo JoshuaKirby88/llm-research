@@ -12,7 +12,7 @@ export class BlockingValueRepo {
 	}
 
 	static async insertMany(input: InsertBlockingValueT[]) {
-		const newBlockingValues = await DrizzleService.batchInsert(input, items => db.insert(BlockingValue).values(items).returning())
+		const newBlockingValues = await DrizzleService.batchInsert(BlockingValue, input, items => db.insert(BlockingValue).values(items).returning())
 
 		return newBlockingValues
 	}

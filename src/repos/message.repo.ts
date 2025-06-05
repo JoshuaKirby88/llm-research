@@ -6,7 +6,7 @@ import { InsertMessageT, MessageT, UpdateMessageT } from "../schemas"
 
 export class MessageRepo {
 	static async insertMany(input: InsertMessageT[]) {
-		const newMessages = await DrizzleService.batchInsert(input, items => db.insert(Message).values(items).returning())
+		const newMessages = await DrizzleService.batchInsert(Message, input, items => db.insert(Message).values(items).returning())
 		return newMessages
 	}
 

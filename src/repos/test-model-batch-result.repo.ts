@@ -6,7 +6,7 @@ import { InsertTestModelBatchResultT, TestModelBatchResultT, UpdateTestModelBatc
 
 export class TestModelBatchResultRepo {
 	static async insertMany(input: InsertTestModelBatchResultT[]) {
-		const newTestModelBatchResults = await DrizzleService.batchInsert(input, items => db.insert(TestModelBatchResult).values(items).returning())
+		const newTestModelBatchResults = await DrizzleService.batchInsert(TestModelBatchResult, input, items => db.insert(TestModelBatchResult).values(items).returning())
 		return newTestModelBatchResults
 	}
 

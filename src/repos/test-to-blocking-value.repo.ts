@@ -6,7 +6,7 @@ import { InsertTestToBlockingValueT, TestToBlockingValueT, UpdateTestToBlockingV
 
 export class TestToBlockingValueRepo {
 	static async insertMany(input: InsertTestToBlockingValueT[]) {
-		const newTestToBlockingValues = await DrizzleService.batchInsert(input, items => db.insert(TestToBlockingValue).values(items).returning())
+		const newTestToBlockingValues = await DrizzleService.batchInsert(TestToBlockingValue, input, items => db.insert(TestToBlockingValue).values(items).returning())
 		return newTestToBlockingValues
 	}
 

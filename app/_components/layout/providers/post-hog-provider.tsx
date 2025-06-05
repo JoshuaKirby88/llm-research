@@ -12,7 +12,8 @@ import { ReactNode, useEffect } from "react"
 export const PostHogProvider = (props: { children: ReactNode }) => {
 	useEffect(() => {
 		posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-			api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
+			api_host: "/anon-headgehog",
+			ui_host: "https://us.posthog.com",
 			person_profiles: "identified_only",
 			capture_pageview: false,
 			capture_pageleave: true,

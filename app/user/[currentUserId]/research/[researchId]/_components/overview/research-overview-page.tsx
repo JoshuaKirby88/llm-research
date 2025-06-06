@@ -28,7 +28,7 @@ export const ResearchOverviewPage = (props: Props) => {
 			<div className="space-y-1">
 				<div className="flex items-center gap-2">
 					<h1 className="font-semibold text-3xl">{props.research.name}</h1>
-					{props.research.userId === props.user.userId && (
+					{props.research.isPublished && props.research.userId === props.user.userId && (
 						<Badge size="roundSm" className="gap-1 text-muted-foreground" variant="secondaryOutline">
 							<GlobeIcon className="size-4 text-blue-500" />
 							Public

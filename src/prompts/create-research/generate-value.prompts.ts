@@ -1,5 +1,4 @@
 import { CreateResearchI } from "@/src/schemas"
-import { omit } from "@/utils/omit"
 
 type Input = {
 	formValues: CreateResearchI
@@ -23,7 +22,7 @@ export const generateValuePrompts = {
 		const currentValues = input.currentValues?.length ? `- Generate values in addition to these that are currently generated: ${JSON.stringify(input.currentValues)}` : ""
 
 		return `Current study form that the researcher is filling in:
-${JSON.stringify(omit(input.formValues, ["systemMessagePrompt", "userMessagePrompt", "evalPrompt"]), null, 2)}
+${JSON.stringify(input.formValues, null, 2)}
 
 ---
 

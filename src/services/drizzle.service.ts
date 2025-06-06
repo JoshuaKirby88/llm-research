@@ -55,7 +55,8 @@ export class DrizzleService {
 			chunkArgsLength += args.length
 		}
 
-		const results: K[] = await db.batch(chunks.map(chunk => callback(chunk)) as any)
+		const chunkedResults: K[][] = await db.batch(chunks.map(chunk => callback(chunk)) as any)
+		const results = chunkedResults.flat()
 
 		if (typeof results[0] === "object" && results[0] && "id" in results[0]) {
 			results.sort((a, b) => a.id - b.id)

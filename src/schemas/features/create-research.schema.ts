@@ -17,8 +17,7 @@ const strictSchema = z.object({
 		.extend({ values: blockingValueSchema.shape.value.array().min(1) })
 		.array()
 		.min(1),
-	systemMessagePrompt: messagePromptSchema.pick({ text: true }),
-	userMessagePrompt: messagePromptSchema.pick({ text: true }),
+	messagePrompts: messagePromptSchema.pick({ role: true, text: true }).array().min(1),
 	evalPrompt: evalPromptSchema.pick({ text: true }),
 	dependentValues: dependentValueSchema.shape.value.array().min(1),
 })

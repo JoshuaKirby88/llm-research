@@ -4,6 +4,7 @@ import { createResearchAction } from "@/actions/research/create-research/create-
 import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
+import { FormSelect, FormSelectItem } from "@/components/form/client/form-select"
 import { FormTagInput } from "@/components/form/client/form-tag-input"
 import { FormCard, FormCardContent, FormCardFooter, FormCardHeader } from "@/components/form/form-card"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
@@ -36,22 +37,26 @@ const config = {
 				],
 			},
 		],
-		systemMessagePrompt: {
-			text: `Create a short story that can be enjoyed in around ~30 minutes.
+		messagePrompts: [
+			{
+				role: "system",
+				text: `Create a short story that can be enjoyed in around ~30 minutes.
 The purpose of the short story is to test the reading and recall abilities.
 So, the story should include many names, facts, and events that are all fictional.
 The short story should be written in {{First Language}}.
 Topic: {{Short Story Topic}}.`,
-		},
-		userMessagePrompt: {
-			text: `Short Story:
+			},
+			{
+				role: "user",
+				text: `Short Story:
 """
 {{System Prompt}}
 """
 
 I want to test reading and recall abilities.
 Please ask a question in {{Second Language}} about the above short story that requires reading and analyzing the story.`,
-		},
+			},
+		],
 		evalPrompt: {
 			text: `Quiz Context:
 """
@@ -68,10 +73,9 @@ Is the answer correct?`,
 		},
 		dependentValues: ["Correct", "Incorrect"],
 	} satisfies CreateResearchI,
-	formatDefaultValues: (values: Partial<CreateResearchI>) => ({
+	formatDefaultValues: (values: Partial<CreateResearchI>): Partial<CreateResearchI> => ({
 		...values,
-		systemMessagePrompt: values.systemMessagePrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.systemMessagePrompt.text) } : undefined,
-		userMessagePrompt: values.userMessagePrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.userMessagePrompt.text) } : undefined,
+		messagePrompts: values.messagePrompts?.map(mp => ({ role: mp.role, text: SlashEditorFeature.customStringToTiptapString(mp.text) })),
 		evalPrompt: values.evalPrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.evalPrompt.text) } : undefined,
 	}),
 }
@@ -87,6 +91,11 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 	const blockingVariableFields = useFieldArray({
 		control: form.control,
 		name: "blockingVariables",
+	})
+
+	const messagePromptFields = useFieldArray({
+		control: form.control,
+		name: "messagePrompts",
 	})
 
 	const onSubmit = async (input: CreateResearchI) => {
@@ -226,16 +235,38 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 					</FormCardHeader>
 
 					<FormCardContent>
-						<div className="space-y-1">
-							<Label>System</Label>
-							<VariableSlashEditor name="systemMessagePrompt.text" type="systemMessagePrompt" />
-						</div>
+						{messagePromptFields.fields.map((field, i) => (
+							<div key={field.id} className="group flex flex-col gap-4">
+								<div className="space-y-2">
+									<FormSelect name={`messagePrompts.${i}.role`}>
+										{["system", "user", "assistant"].map(role => (
+											<FormSelectItem key={role} value={role} className="capitalize">
+												{role}
+											</FormSelectItem>
+										))}
+									</FormSelect>
 
-						<div className="space-y-1">
-							<Label>User</Label>
-							<VariableSlashEditor name="userMessagePrompt.text" type="userMessagePrompt" />
-						</div>
+									<VariableSlashEditor name={`messagePrompts.${i}.text`} index={i} messagePromptFields={messagePromptFields} />
+								</div>
+
+								<Button type="button" className="w-full" variant="red" onClick={() => messagePromptFields.remove(i)}>
+									Delete Message
+								</Button>
+
+								<Separator className="my-6 group-last:hidden" />
+							</div>
+						))}
 					</FormCardContent>
+
+					<FormCardFooter>
+						<Button
+							type="button"
+							className="w-full"
+							onClick={() => messagePromptFields.append({ role: messagePromptFields.fields.at(-1)?.role === "user" ? "assistant" : "user", text: "" })}
+						>
+							Add Message
+						</Button>
+					</FormCardFooter>
 				</FormCard>
 
 				<FormCard>
@@ -246,7 +277,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 					</FormCardHeader>
 
 					<FormCardContent>
-						<VariableSlashEditor name="evalPrompt.text" type="evalPrompt" />
+						<VariableSlashEditor name="evalPrompt.text" index={messagePromptFields.fields.length} messagePromptFields={messagePromptFields} />
 					</FormCardContent>
 				</FormCard>
 

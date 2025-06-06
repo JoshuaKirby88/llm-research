@@ -1,3 +1,4 @@
+- [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
 - [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
@@ -7,7 +8,6 @@
 
 # New research form
 
-- [ ] Messages as arrays with select for role
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data
 - [ ] Long tags get clipped. Make it scrollable
@@ -16,6 +16,7 @@
 
 # Research examples
 
+- Look for more examples using LLM
 - Does language consistency affect accurancy?
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?

@@ -4,6 +4,7 @@ import { Research } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
 import { CreateResearchI } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
+import { pick } from "@/utils/pick"
 import { and, eq } from "drizzle-orm"
 import { notFound } from "next/navigation"
 import { CreateResearchForm } from "./_components/create-research-form"
@@ -33,8 +34,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 				research: { name: research.name },
 				independentVariable: { name: research.independentVariable.name, values: research.independentVariable.independentValues.map(iVal => iVal.value) },
 				blockingVariables: research.blockingVariables.map(bVar => ({ name: bVar.name, values: bVar.blockingValues.map(bVal => bVal.value) })),
-				systemMessagePrompt: { text: research.messagePrompts.find(mp => mp.role === "system")!.text },
-				userMessagePrompt: { text: research.messagePrompts.find(mp => mp.role === "user")!.text },
+				messagePrompts: research.messagePrompts.map(mp => pick(mp, ["role", "text"])),
 				evalPrompt: { text: research.evalPrompt.text },
 				dependentValues: research.dependentValues.map(dVal => dVal.value),
 			}
@@ -43,8 +43,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 				research: { name: "" },
 				independentVariable: { name: "", values: [] },
 				blockingVariables: [{ name: "", values: [] }],
-				systemMessagePrompt: { text: "" },
-				userMessagePrompt: { text: "" },
+				messagePrompts: [{ role: "system", text: "" }],
 				evalPrompt: { text: "" },
 				dependentValues: [],
 			}

@@ -25,8 +25,7 @@ export const createResearchAction = createAction(
 )(async ({ user, input }) => {
 	const forkedResearchId = await getParamsFromHeaders("/new")
 
-	const systemMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.systemMessagePrompt.text)
-	const userMessagePrompt = SlashEditorFeature.tiptapStringToCustomString(input.userMessagePrompt.text)
+	const messagePrompts = input.messagePrompts.map(mp => ({ ...mp, text: SlashEditorFeature.tiptapStringToCustomString(mp.text) }))
 	const evalPrompt = SlashEditorFeature.tiptapStringToCustomString(input.evalPrompt.text)
 
 	const newResearch = await ResearchRepo.insert({
@@ -50,6 +49,7 @@ export const createResearchAction = createAction(
 			name: blockingVariable.name,
 		}))
 		const newBlockingVariables = await BlockingVariableRepo.insertMany(blockingVariablesToInsert)
+
 		const blockingValesToInsert: InsertBlockingValueT[] = input.blockingVariables.flatMap((blockingVariable, i) =>
 			blockingVariable.values.map(value => ({
 				blockingVariableId: newBlockingVariables[i].id,
@@ -58,10 +58,7 @@ export const createResearchAction = createAction(
 		)
 		const newBlockingValues = await BlockingValueRepo.insertMany(blockingValesToInsert)
 
-		const messagePromptsToInsert: InsertMessagePromptT[] = [
-			{ researchId: newResearch.id, role: "system", text: systemMessagePrompt },
-			{ researchId: newResearch.id, role: "user", text: userMessagePrompt },
-		]
+		const messagePromptsToInsert: InsertMessagePromptT[] = messagePrompts.map(mp => ({ role: mp.role, text: mp.text, researchId: newResearch.id }))
 		const newMessagePrompts = await MessagePromptRepo.insertMany(messagePromptsToInsert)
 
 		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: evalPrompt })

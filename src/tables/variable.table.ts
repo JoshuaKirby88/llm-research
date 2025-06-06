@@ -20,12 +20,12 @@ export class VariableTable {
 		return variable.substring(2, variable.length - 2)
 	}
 
-	static messageToVarName(message: Pick<MessageT, "role" | "isCompletion">) {
-		return message.isCompletion ? "Completion" : `${capitalize(message.role)} Prompt`
+	static messageToVarName(input: { role: "system" | "user" | "assistant" } & ({ isCompletion: false; index: number } | { isCompletion: true })) {
+		return input.isCompletion ? "Completion" : `${input.index} ${capitalize(input.role)} Prompt`
 	}
 
-	static messageToVar(message: Pick<MessageT, "role" | "isCompletion">) {
-		return this.toVar(this.messageToVarName(message))
+	static messageToVar(input: Parameters<typeof this.messageToVarName>[0]) {
+		return this.toVar(this.messageToVarName(input))
 	}
 
 	static replaceVariables(
@@ -65,9 +65,10 @@ export class VariableTable {
 		}
 
 		// Messages
-		for (const message of variables.messages) {
-			results = replaceResults(this.messageToVar(message), message.content)
-		}
+		variables.messages.forEach((message, i) => {
+			const variable = !message.isCompletion ? this.messageToVar({ role: message.role, isCompletion: false, index: i }) : this.messageToVar({ role: message.role, isCompletion: true })
+			results = replaceResults(variable, message.content)
+		})
 
 		// Filter
 		results = results.filter(result => result.text)

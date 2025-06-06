@@ -1,7 +1,6 @@
 - [ ] Make experiment tube image empty
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
-- [ ] Add "Getting started" steps to readme
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Get domain
 - [ ] Use Clerk prod once I have domain

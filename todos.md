@@ -7,6 +7,7 @@
 
 # New research form
 
+- [ ] Enforce token count for message prompts
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data
@@ -19,3 +20,4 @@
 - Does language consistency affect accurancy?
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?
+- What identification method is it best at: (index, UUID, word combo, quote the entire value)

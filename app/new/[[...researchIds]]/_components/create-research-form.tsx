@@ -27,7 +27,7 @@ const config = {
 		blockingVariables: [
 			{ name: "Second Language", values: ["English", "Japanese"] },
 			{
-				name: "Quiz Topic",
+				name: "Story Topic",
 				values: [
 					"A Day in the Life of a Time Traveler",
 					"The Secret Garden of a Forgotten City",
@@ -40,21 +40,21 @@ const config = {
 		messagePrompts: [
 			{
 				role: "system",
-				text: `Create a short story that can be enjoyed in around ~30 minutes.
-The purpose of the short story is to test the reading and recall abilities.
+				text: `Create a story that can be enjoyed in around ~30 minutes.
+The purpose of the story is to test the reading and recall abilities.
 So, the story should include many names, facts, and events that are all fictional.
-The short story should be written in {{First Language}}.
-Topic: {{Short Story Topic}}.`,
+The story should be written in {{First Language}}.
+Topic: {{Story Topic}}.`,
 			},
 			{
 				role: "user",
-				text: `Short Story:
+				text: `Story:
 """
 {{System Prompt}}
 """
 
 I want to test reading and recall abilities.
-Please ask a question in {{Second Language}} about the above short story that requires reading and analyzing the story.`,
+Please ask a question in {{Second Language}} about the above story that requires reading and analyzing the story.`,
 			},
 		],
 		evalPrompt: {
@@ -298,7 +298,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 			</div>
 
 			<FormButton variant="green" size="lg">
-				Submit
+				Create Research
 			</FormButton>
 		</Form>
 	)

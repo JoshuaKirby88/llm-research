@@ -1,8 +1,8 @@
 import { cn } from "@/utils/cn"
 import * as React from "react"
-import { addClassName } from "../utils/add-className"
+import { addClassName } from "../../utils/add-className"
 
-type EmptyStateProps = {
+type Props = {
 	title: string
 	description: string
 	icons?: React.ReactNode[]
@@ -11,7 +11,7 @@ type EmptyStateProps = {
 	className?: string
 }
 
-export const EmptyState = (props: EmptyStateProps) => (
+export const EmptyStateBox = (props: Props) => (
 	<div className={cn("group w-full rounded-xl border-2 border-border border-dashed bg-background p-7 text-center", props.className)}>
 		<div className="isolate flex justify-center">
 			{props.icons?.length === 3 ? (

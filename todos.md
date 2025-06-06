@@ -1,6 +1,6 @@
+- [ ] Make experiment tube image empty
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
-- [ ] Empty state for contributor/research list
 - [ ] Add "Getting started" steps to readme
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Get domain
@@ -8,10 +8,10 @@
 
 # New research form
 
+- [ ] Generate sample prompts for all prompt inputs
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data
 - [ ] Long tags get clipped. Make it scrollable
-- [ ] Generate sample prompts for all prompt inputs
 - [ ] Ability to enter example messages to generate variables and message prompts from
 
 # Research examples

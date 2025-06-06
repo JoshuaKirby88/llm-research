@@ -22,9 +22,10 @@ const config = {
 	tabs: [
 		{ value: "All", icon: BeanOffIcon },
 		{ value: "Authored", icon: UserIcon },
-		{ value: "Contributions", icon: GiftIcon },
+		{ value: "Contributed", icon: GiftIcon },
 	],
-}
+} as const
+export type TestRunPageConfig = typeof config
 
 export const TestRunPage = (props: Props) => {
 	return (
@@ -38,12 +39,13 @@ export const TestRunPage = (props: Props) => {
 						tb =>
 							tab.value === "All" ||
 							(tab.value === "Authored" && currentContributor && tb.contributorId === currentContributor.id) ||
-							(tab.value === "Contributions" && (!currentContributor || tb.contributorId !== currentContributor.id)),
+							(tab.value === "Contributed" && (!currentContributor || tb.contributorId !== currentContributor.id)),
 					)
 
 					return (
 						<TabsContent key={tab.value} value={tab.value} className="w-full space-y-10">
 							<TestRunTabPage
+								tab={tab.value}
 								queriedUsers={props.queriedUsers}
 								research={props.research}
 								contributors={props.contributors}

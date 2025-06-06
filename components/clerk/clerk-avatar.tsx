@@ -1,9 +1,8 @@
 import { ClerkQueriedUser } from "@/src/schemas"
 import { cn } from "@/utils/cn"
-import Image from "next/image"
 import { ComponentProps } from "react"
 import { LinkButton } from "../buttons/link-button"
-import { Avatar, AvatarFallback, AvatarProps, avatarImageVariants } from "../ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage, AvatarProps } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 
 type Props = {
@@ -24,7 +23,6 @@ const config = {
 export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overideImageSize, ...props }: Props) => {
 	const userName = user ? user.fullName : "User deleted"
 
-	const avatarSize = config.variants.size[props.size]
 	const imageSize = config.variants.size[overideImageSize ?? props.size]
 
 	const params = new URLSearchParams()
@@ -39,14 +37,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overi
 		<LinkButton href={`/user/${userId}`} className="group pointer-events-auto flex items-center gap-2 opacity-100" disabled={disabled}>
 			<div className="relative">
 				<Avatar {...props}>
-					<Image
-						src={imageUrl}
-						width={imageSize}
-						height={imageSize}
-						className={avatarImageVariants()}
-						style={{ width: avatarSize, height: avatarSize, objectFit: "cover" }}
-						alt="Profile pic"
-					/>
+					<AvatarImage src={imageUrl} width={imageSize} height={imageSize} alt="Profile pic" />
 					<AvatarFallback />
 				</Avatar>
 

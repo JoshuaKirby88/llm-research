@@ -1,7 +1,7 @@
 import { newResearchAction } from "@/actions/research/new-research.action"
 import { searchResearchAction } from "@/actions/research/search-research.action"
 import { HomePageResearchCard } from "@/components/cards/research-card"
-import { EmptyState } from "@/components/empty-state"
+import { EmptyStateBox } from "@/components/empty-states/empty-state-box"
 import { FormActionButton } from "@/components/form/server/form-action-button"
 import { Suspense } from "@/components/suspense"
 import { resultIsValid } from "@/utils/actions/result-is-valid"
@@ -24,7 +24,7 @@ export const ResearchSearchResult = Suspense(async (props: { searchParams: Promi
 	} else {
 		return (
 			<div className="mx-auto w-full max-w-3xl">
-				<EmptyState
+				<EmptyStateBox
 					title="This research doesn't exist yet."
 					description="Perform your own research by clicking this button."
 					icons={[<TestTubeDiagonalIcon className="-scale-x-100" />, <FlaskConicalIcon />, <TestTubeDiagonalIcon />]}

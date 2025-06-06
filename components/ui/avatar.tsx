@@ -1,6 +1,7 @@
 import { cn } from "@/utils/cn"
 import * as AvatarPrimitive from "@radix-ui/react-avatar"
 import { VariantProps, cva } from "class-variance-authority"
+import Image from "next/image"
 import * as React from "react"
 
 export type AvatarProps = VariantProps<typeof avatarVariants>
@@ -26,13 +27,11 @@ export const avatarVariants = cva("relative flex shrink-0 overflow-hidden rounde
 })
 
 function Avatar({ className, size, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root> & AvatarProps) {
-	return <AvatarPrimitive.Root data-slot="avatar" className={cn(avatarVariants({ size }), className)} {...props} />
+	return <AvatarPrimitive.Root data-slot="avatar" data-size={size} className={cn(avatarVariants({ size }), className)} {...props} />
 }
 
-export const avatarImageVariants = cva("aspect-square size-full")
-
-function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
-	return <AvatarPrimitive.Image data-slot="avatar-image" className={cn(avatarImageVariants(), className)} {...props} />
+function AvatarImage({ className, ...props }: React.ComponentProps<typeof Image>) {
+	return <Image data-slot="avatar-image" className={cn("aspect-square size-full object-cover", className)} {...props} />
 }
 
 function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {

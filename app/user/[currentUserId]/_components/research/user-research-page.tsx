@@ -20,7 +20,7 @@ const config = {
 			return [
 				{ value: "All", icon: FlaskConicalIcon },
 				{ value: "Published", icon: GlobeIcon },
-				{ value: "Researching", icon: NotebookPenIcon },
+				{ value: "In Progress", icon: NotebookPenIcon },
 				{ value: "Starred", icon: StarIcon },
 				{ value: "Archived", icon: ArchiveIcon },
 			] as const
@@ -32,6 +32,7 @@ const config = {
 		}
 	},
 }
+export type UserResearchPageConfig = typeof config
 
 export const UserResearchPage = (props: Props) => {
 	const tabs = config.getTabs({ params: props.params, user: props.user })
@@ -46,6 +47,7 @@ export const UserResearchPage = (props: Props) => {
 						if (tab.value === "Starred") {
 							return (
 								<UserResearchTabPage
+									tab={tab.value}
 									user={props.user}
 									queriedUsers={props.queriedUsers}
 									researches={props.starred.researches}
@@ -60,12 +62,13 @@ export const UserResearchPage = (props: Props) => {
 								r =>
 									(tab.value === "All" && !r.isArchived) ||
 									(tab.value === "Published" && !r.isArchived && r.isPublished) ||
-									(tab.value === "Researching" && !r.isArchived && !r.isPublished) ||
+									(tab.value === "In Progress" && !r.isArchived && !r.isPublished) ||
 									(tab.value === "Archived" && r.isArchived),
 							)
 
 							return (
 								<UserResearchTabPage
+									tab={tab.value}
 									user={props.user}
 									queriedUsers={props.queriedUsers}
 									researches={filteredResearches}

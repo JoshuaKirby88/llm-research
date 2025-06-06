@@ -34,7 +34,7 @@ export const ClerkAvatar = ({ userId, user, badge, disabled, hideUserName, overi
 	const imageUrl = user ? `${user.imageUrl}?${params.toString()}` : "/thiings/ghost.webp"
 
 	return (
-		<LinkButton href={`/user/${userId}`} className="group pointer-events-auto flex items-center gap-2 opacity-100" disabled={disabled}>
+		<LinkButton href={`/user/${userId}?tab=User`} className="group pointer-events-auto flex items-center gap-2 opacity-100" disabled={disabled}>
 			<div className="relative">
 				<Avatar {...props}>
 					<AvatarImage src={imageUrl} width={imageSize} height={imageSize} alt="Profile pic" />

@@ -1,9 +1,8 @@
-- [ ] Make experiment tube image empty
+- [ ] Full screen loading for run test
+- [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
-- [ ] Get domain
-- [ ] Use Clerk prod once I have domain
 
 # New research form
 
@@ -21,3 +20,15 @@
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?
 - What identification method is it best at: (index, UUID, word combo, quote the entire value)
+
+# Get domain
+
+- Register through AWS Route 53
+- Transfer to Cloudflare
+- Enable image transformations
+- Clerk on prod
+
+# Get Cloudflare Pro
+
+- Increases CPU time limit from 10ms to 300,000ms
+- Stop using batch AI proxy, and limit number batch length to 1,000

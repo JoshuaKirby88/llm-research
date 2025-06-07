@@ -36,6 +36,6 @@ export const TestRunTabPage = (props: Props) => {
 			)
 		})
 	} else {
-		return <EmptyStateImage title={["No", ...(props.tab !== "All" ? [props.tab] : []), "Test Runs"].join(" ")} src="/thiings/experiment-tube.webp" alt="Experiment tube" />
+		return <EmptyStateImage title={["No", ...(props.tab !== "All" ? [props.tab] : []), "Test Runs"].join(" ")} src="/thiings/empty-experiment-tube.webp" alt="Experiment tube" />
 	}
 }

@@ -11,13 +11,14 @@ import { runTestFormSchema } from "@/src/schemas"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { HashIcon, RocketIcon } from "lucide-react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { AIModelSelect } from "./ai-model-select"
 import { RunTestFormCard } from "./run-test-form-card"
 
 export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentValues: IndependentValueT[]; blockingVariables: BlockingVariableT[]; blockingValues: BlockingValueT[] }) => {
-	const params = useParams<NextParam<"researchId">>()
+	const params = useParams<NextParam<"currentUserId" | "researchId">>()
+	const router = useRouter()
 
 	const form = useForm<RunTestFormS>({
 		resolver: zodResolver(runTestFormSchema),
@@ -25,12 +26,17 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentVal
 	})
 
 	const onSubmit = async (input: RunTestFormS) => {
-		const result = await runTestAction({ ...input, researchId: Number.parseInt(params.researchId) })
-		isResultValid(result)
+		runTestAction({ ...input, researchId: Number.parseInt(params.researchId) }).then(result => {
+			if (!isResultValid(result)) {
+				router.push(`/user/${params.currentUserId}/research/${params.researchId}/run-test`)
+			}
+		})
+
+		router.push(`/user/${params.currentUserId}/research/${params.researchId}/run-test/loading`)
 	}
 
 	return (
-		<Form {...form} onSubmit={onSubmit} className="flex h-full flex-col justify-between">
+		<Form {...form} onSubmit={onSubmit} className="flex h-full flex-col justify-between gap-20">
 			<div className="space-y-10">
 				<div className="space-y-2">
 					<LabelWithTooltip>Select AI Models to run the tests on</LabelWithTooltip>

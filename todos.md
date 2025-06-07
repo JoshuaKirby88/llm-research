@@ -1,4 +1,3 @@
-- [ ] Full screen loading for run test
 - [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error

@@ -11,7 +11,10 @@ const config = {
 
 export const NavbarBreadCrumb = () => {
 	const pathname = usePathname()
-	const paths = pathname.split("/").filter(Boolean)
+	const paths = pathname
+		.split("/")
+		.filter(Boolean)
+		.map(path => path.split("-").join(" "))
 
 	return (
 		<Breadcrumb>
@@ -28,7 +31,13 @@ export const NavbarBreadCrumb = () => {
 					<React.Fragment key={i}>
 						<BreadcrumbItem className="max-w-24">
 							{i < paths.length - 1 && !config.nonLinkPaths.includes(path) ? (
-								<BreadcrumbLink href={`/${paths.slice(0, i + 1).join("/")}`} className="truncate capitalize">
+								<BreadcrumbLink
+									href={`/${paths
+										.slice(0, i + 1)
+										.map(path => path.replace(" ", "-"))
+										.join("/")}`}
+									className="truncate capitalize"
+								>
 									{path}
 								</BreadcrumbLink>
 							) : (

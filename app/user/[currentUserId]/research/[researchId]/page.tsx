@@ -2,7 +2,7 @@ import { LinkButton } from "@/components/buttons/link-button"
 import { ResearchStarButton } from "@/components/buttons/research-star-button"
 import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Suspense } from "@/components/suspense"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { ClerkPublicUser, TestBatchT } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
@@ -10,7 +10,6 @@ import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareS
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
 import { ResearchResultPage } from "./_components/result/research-result-page"
-import { RunTestSheet } from "./_components/run-test-sheet/run-test-sheet"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
 import { researchPageQuery } from "./_queries/research-page-query"
@@ -69,12 +68,10 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 							Fork Research
 						</LinkButton>
 
-						<RunTestSheet user={user} research={research} independentValues={independentValues} blockingVariables={blockingVariables} blockingValues={blockingValues}>
-							<Button variant="green" disabled={!user.userId}>
-								<RocketIcon />
-								Run Tests
-							</Button>
-						</RunTestSheet>
+						<LinkButton href={`/user/${params.currentUserId}/research/${params.researchId}/run-test`} disabled={!user.userId} className={buttonVariants({ variant: "green" })}>
+							<RocketIcon />
+							Run Test
+						</LinkButton>
 
 						<ResearchStarButton user={user} research={research} userToStarredResearch={userToStarredResearch} />
 					</div>

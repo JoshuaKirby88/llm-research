@@ -6,8 +6,8 @@ import { CoreMessage, LoadAPIKeyError, customProvider, embed, generateObject, ge
 import { ZodSchema, z } from "zod"
 import { APIKeyError } from "../entities/errors"
 import { AIFeature, AIModel } from "../features"
-import { APIKeyT } from "../schemas"
-import { BatchAIProxyService, BatchCompletionI, BatchStructuredCompletionI } from "./batch-ai-proxy.service"
+import { AIServiceSchema, AIServiceSchemaKey, APIKeyT } from "../schemas"
+import { BatchAIService } from "./batch-ai.service"
 
 type EmbeddingModel = Parameters<(typeof AIServiceInstance)["prototype"]["models"]["textEmbeddingModel"]>[0]
 
@@ -69,20 +69,9 @@ export class AIServiceInstance {
 	}
 
 	async batchCompletion(inputs: { model: AIModel; messages: CoreMessage[] }[]) {
-		const payload: BatchCompletionI[] = inputs.map(input => {
-			const model = this.models.languageModel(input.model)
-			return {
-				provider: model.provider,
-				modelId: model.modelId,
-				messages: input.messages,
-			}
-		})
+		const promise = BatchAIService.batchCompletion(inputs, this.apiKey)
 
-		const promise = BatchAIProxyService.batchCompletion(payload, this.apiKey)
-
-		const results = await this.handleAPIKeyError(promise, inputs[0])
-
-		return results.map(result => ({ completion: result.text, tokens: result.usage }))
+		return await this.handleAPIKeyError(promise, inputs[0])
 	}
 
 	async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
@@ -100,22 +89,10 @@ export class AIServiceInstance {
 		}
 	}
 
-	async batchStructuredCompletion<T>(inputs: { model: AIModel; schema: ZodSchema<T>; messages: CoreMessage[] }[]) {
-		const payload: BatchStructuredCompletionI<T>[] = inputs.map(input => {
-			const model = this.models.languageModel(input.model)
-			return {
-				provider: model.provider,
-				modelId: model.modelId,
-				messages: input.messages,
-				schema: input.schema,
-			}
-		})
+	async batchStructuredCompletion<T extends AIServiceSchema[AIServiceSchemaKey]["json"]>(inputs: { model: AIModel; schema: T; messages: CoreMessage[] }[]) {
+		const promise = BatchAIService.batchStructuredCompletion(inputs, this.apiKey)
 
-		const promise = BatchAIProxyService.batchStructuredCompletion(payload, this.apiKey)
-
-		const results = await this.handleAPIKeyError(promise, inputs[0])
-
-		return results.map(result => ({ completion: result.object, tokens: result.usage }))
+		return await this.handleAPIKeyError(promise, inputs[0])
 	}
 
 	async createEmbedding(input: { model: EmbeddingModel; text: string }) {

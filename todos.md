@@ -1,3 +1,6 @@
+- [ ] Use user api key for all ai features
+- [ ] Revive recursion batch ai
+- [ ] Make research more flexible
 - [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
@@ -12,10 +15,6 @@
     - Make test filter page more flexible to different data
 - [ ] Long tags get clipped. Make it scrollable
 - [ ] Ability to enter example messages to generate variables and message prompts from
-
-# Get domain
-
-- Revive recursive batch ai api
 
 # Get Cloudflare Pro
 

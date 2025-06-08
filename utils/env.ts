@@ -18,7 +18,7 @@ export const env = createEnv({
 		CRYPTO_KEY: process.env.CRYPTO_KEY,
 		OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-		NEXT_PUBLIC_URL: process.env.NODE_ENV === "production" ? "https://llm-research.jojokirby88-327.workers.dev" : "http://localhost:3000",
+		NEXT_PUBLIC_URL: process.env.NODE_ENV === "production" ? "https://llmresearch.joshuakirby.webcam" : "http://localhost:3000",
 		NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
 	},
 })

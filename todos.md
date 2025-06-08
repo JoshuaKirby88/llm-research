@@ -5,20 +5,13 @@
 
 # New research form
 
-- [ ] Enforce token count for message prompts
+- [ ] Compare mode: Each test has 2 different messages. Evaluation prompt can access both, and compare
+- [ ] Option to enforce token count for message prompts
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data
 - [ ] Long tags get clipped. Make it scrollable
 - [ ] Ability to enter example messages to generate variables and message prompts from
-
-# Research examples
-
-- Look for more examples using LLM
-- Does language consistency affect accurancy?
-- Do LLMs bias toward identified over anonymous individuals?
-- Should conversation history be in individual messages or user prompt?
-- What identification method is it best at: (index, UUID, word combo, quote the entire value)
 
 # Get domain
 
@@ -26,8 +19,16 @@
 - Transfer to Cloudflare
 - Enable image transformations
 - Clerk on prod
+- Revive recursive batch ai api
 
 # Get Cloudflare Pro
 
 - Increases CPU time limit from 10ms to 300,000ms
 - Stop using batch AI proxy, and limit number batch length to 1,000
+
+# Research examples
+
+- Do LLMs bias toward identified over anonymous individuals?
+- Should conversation history be in individual messages or user prompt?
+- What identification method is it best at: (index, UUID, word combo, quote the entire value)
+- Look for more examples using LLM

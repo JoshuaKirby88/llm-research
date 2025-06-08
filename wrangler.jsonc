@@ -3,19 +3,25 @@
 	"main": ".open-next/worker.js",
 	"name": "llm-research",
 	"compatibility_date": "2025-04-13",
-	"compatibility_flags": ["nodejs_compat"],
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"minify": true,
 	"keep_names": false,
-	"assets": {
-		"directory": ".open-next/assets",
-		"binding": "ASSETS",
-	},
 	"placement": { "mode": "smart" },
 	"observability": {
 		"enabled": true,
 		"logs": {
 			"enabled": false,
 		},
+	},
+	"services": [
+		{
+			"binding": "WORKER_SELF_REFERENCE",
+			"service": "llm-research",
+		},
+	],
+	"assets": {
+		"directory": ".open-next/assets",
+		"binding": "ASSETS",
 	},
 	"d1_databases": [
 		{
@@ -33,6 +39,12 @@
 		{
 			"binding": "VECTORIZE_DEV",
 			"index_name": "llm-research-dev",
+		},
+	],
+	"routes": [
+		{
+			"pattern": "llmresearch.joshuakirby.webcam",
+			"custom_domain": true,
 		},
 	],
 }

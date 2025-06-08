@@ -9,6 +9,10 @@ export default function cloudflareLoader({ src, width, quality }: ImageLoaderPro
 		return src
 	}
 
+	if (src.startsWith("http")) {
+		return src
+	}
+
 	const params = [`width=${width}`]
 	if (quality) {
 		params.push(`quality=${quality}`)

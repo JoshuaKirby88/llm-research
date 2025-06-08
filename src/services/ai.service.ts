@@ -1,4 +1,5 @@
 import { env } from "@/utils/env"
+import { omit } from "@/utils/omit"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
@@ -55,12 +56,16 @@ export class AIServiceI {
 	}
 
 	async getCompletion(input: { model: AIModel; messages: CoreMessage[] }) {
+		console.log("input", JSON.stringify(input, null, 2))
+
 		const promise = generateText({
 			model: this.models.languageModel(input.model),
 			messages: input.messages,
 		})
 
 		const result = await this.handleAPIKeyError(promise, input)
+
+		console.log("result.text", result.text)
 
 		return {
 			completion: result.text,
@@ -75,6 +80,8 @@ export class AIServiceI {
 	}
 
 	async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
+		console.log('omit(input, ["schema"])', JSON.stringify(omit(input, ["schema"]), null, 2))
+
 		const promise = generateObject({
 			model: this.models.languageModel(input.model),
 			schema: input.schema,
@@ -82,6 +89,8 @@ export class AIServiceI {
 		})
 
 		const result = await this.handleAPIKeyError(promise, input)
+
+		console.log("result.object", JSON.stringify(result.object, null, 2))
 
 		return {
 			completion: result.object as z.infer<T>,

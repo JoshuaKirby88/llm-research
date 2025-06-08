@@ -15,7 +15,6 @@
 
 # Get domain
 
-- Clerk on prod
 - Revive recursive batch ai api
 
 # Get Cloudflare Pro

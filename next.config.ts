@@ -6,6 +6,8 @@ initOpenNextCloudflareForDev()
 const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [{ protocol: "https", hostname: "img.clerk.com" }],
+		loader: "custom",
+		loaderFile: "./image-loader.ts",
 	},
 	async rewrites() {
 		return [

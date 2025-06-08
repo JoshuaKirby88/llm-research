@@ -15,9 +15,6 @@
 
 # Get domain
 
-- Register through AWS Route 53
-- Transfer to Cloudflare
-- Enable image transformations
 - Clerk on prod
 - Revive recursive batch ai api
 

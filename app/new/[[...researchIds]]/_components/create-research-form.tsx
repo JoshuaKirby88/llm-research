@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { SlashEditorFeature } from "@/src/features"
 import { CreateResearchI, createResearchISchema } from "@/src/schemas"
+import { VariableTable } from "@/src/tables"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BookOpenIcon, HardHatIcon, MessageCircleQuestionIcon, RotateCcwIcon, RulerIcon, StarIcon, VariableIcon } from "lucide-react"
@@ -28,13 +29,7 @@ const config = {
 			{ name: "Second Language", values: ["English", "Japanese"] },
 			{
 				name: "Story Topic",
-				values: [
-					"A Day in the Life of a Time Traveler",
-					"The Secret Garden of a Forgotten City",
-					"A Lost Letter from the Past",
-					"The Last Train to Nowhere",
-					"The Mysterious Painting in the Attic",
-				],
+				values: ["A Day in the Life of a Time Traveler", "The Secret Garden of a Forgotten City", "A Lost Letter from the Past"],
 			},
 		],
 		messagePrompts: [
@@ -43,31 +38,31 @@ const config = {
 				text: `Create a story that can be enjoyed in around ~30 minutes.
 The purpose of the story is to test the reading and recall abilities.
 So, the story should include many names, facts, and events that are all fictional.
-The story should be written in {{First Language}}.
-Topic: {{Story Topic}}.`,
+The story should be written in ${VariableTable.toVar("First Language")}.
+Topic: ${VariableTable.toVar("Story Topic")}.`,
 			},
 			{
 				role: "user",
 				text: `Story:
 """
-{{System Prompt}}
+${VariableTable.toVar(VariableTable.messageToVarName({ role: "system", count: 1, isCompletion: false }))}
 """
 
 I want to test reading and recall abilities.
-Please ask a question in {{Second Language}} about the above story that requires reading and analyzing the story.`,
+Please ask a question in ${VariableTable.toVar("Second Language")} about the above story that requires reading and analyzing the story.`,
 			},
 		],
 		evalPrompt: {
 			text: `Quiz Context:
 """
-{{System Prompt}}
+${VariableTable.toVar(VariableTable.messageToVarName({ role: "system", count: 1, isCompletion: false }))}
 """
 
 Question:
-{{User Prompt}}
+${VariableTable.toVar(VariableTable.messageToVarName({ role: "user", count: 1, isCompletion: false }))}
 
 Answer:
-{{Completion}}
+${VariableTable.toVar(VariableTable.messageToVarName({ role: "assistant", isCompletion: true }))}
 
 Is the answer correct?`,
 		},
@@ -239,7 +234,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 							<div key={field.id} className="group flex flex-col gap-4">
 								<div className="space-y-2">
 									<FormSelect name={`messagePrompts.${i}.role`}>
-										{["system", "user", "assistant"].map(role => (
+										{[...(i === 0 ? ["system"] : []), "user", "assistant"].map(role => (
 											<FormSelectItem key={role} value={role} className="capitalize">
 												{role}
 											</FormSelectItem>

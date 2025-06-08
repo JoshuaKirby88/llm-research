@@ -16,10 +16,10 @@ const config = {
 		label: name,
 		description: values.map(v => `"${v}"`).join(" | "),
 	}),
-	createPromptSuggestion: (role: "system" | "user" | "assistant", index: number): Suggestion => ({
-		id: VariableTable.messageToVarName({ role, isCompletion: false, index }),
+	createPromptSuggestion: (role: "system" | "user" | "assistant", index: number, messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id">): Suggestion => ({
+		id: VariableTable.messageToVarName({ role, isCompletion: false, count: config.messagePromptIndexToCount(index, messagePromptFields) }),
 		icon: SquareChevronRightIcon,
-		label: VariableTable.messageToVarName({ role, isCompletion: false, index }),
+		label: VariableTable.messageToVarName({ role, isCompletion: false, count: config.messagePromptIndexToCount(index, messagePromptFields) }),
 		description: `The generated ${role} prompt.`,
 	}),
 	completionSuggestion: {
@@ -29,6 +29,11 @@ const config = {
 		description: "The generated completion, based on the generated messages.",
 	} satisfies Suggestion,
 	dependentFields: ["evalPrompt.text"] as const,
+	messagePromptIndexToCount(index: number, messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id">) {
+		const role = messagePromptFields.fields[index].role
+		const messageOfRoleCount = messagePromptFields.fields.slice(0, index + 1).filter(field => field.role === role).length
+		return messageOfRoleCount
+	},
 }
 
 export const VariableSlashEditor = (props: { name: string; index: number; messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id"> }) => {
@@ -87,7 +92,7 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 	const suggestions: Suggestion[] = [
 		...(independent.name ? [config.createVariableSuggestion(independent.name, independent.values)] : []),
 		...blockings.flatMap(bVar => (bVar.name ? [config.createVariableSuggestion(bVar.name, bVar.values)] : [])),
-		...props.messagePromptFields.fields.slice(0, props.index).map((field, i) => config.createPromptSuggestion(field.role, i)),
+		...props.messagePromptFields.fields.slice(0, props.index).map((field, i) => config.createPromptSuggestion(field.role, i, props.messagePromptFields)),
 		...(props.index === props.messagePromptFields.fields.length - 1 ? [config.completionSuggestion] : []),
 	]
 

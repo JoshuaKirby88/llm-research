@@ -1,6 +1,5 @@
+- [ ] Replaced variables in prompt dialog overlap vertically
 - [ ] Use user api key for all ai features
-- [ ] Revive recursion batch ai
-- [ ] Make research more flexible
 - [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error

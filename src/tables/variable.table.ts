@@ -1,4 +1,5 @@
 import { capitalize } from "@/utils/capitalize"
+import { getOrdinalSuffix } from "@/utils/get-ordinal-suffix"
 import { BlockingValueT, BlockingVariableCombinationT, BlockingVariableT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
 
 export class VariableTable {
@@ -20,8 +21,8 @@ export class VariableTable {
 		return variable.substring(2, variable.length - 2)
 	}
 
-	static messageToVarName(input: { role: "system" | "user" | "assistant" } & ({ isCompletion: false; index: number } | { isCompletion: true })) {
-		return input.isCompletion ? "Completion" : `${input.index} ${capitalize(input.role)} Prompt`
+	static messageToVarName(input: { role: "system" | "user" | "assistant" } & ({ isCompletion: false; count: number } | { isCompletion: true })) {
+		return input.isCompletion ? "Completion" : input.role === "system" ? "System Prompt" : `${getOrdinalSuffix(input.count)} ${capitalize(input.role)} Prompt`
 	}
 
 	static messageToVar(input: Parameters<typeof this.messageToVarName>[0]) {
@@ -66,7 +67,8 @@ export class VariableTable {
 
 		// Messages
 		variables.messages.forEach((message, i) => {
-			const variable = !message.isCompletion ? this.messageToVar({ role: message.role, isCompletion: false, index: i }) : this.messageToVar({ role: message.role, isCompletion: true })
+			const count = variables.messages.slice(0, i + 1).filter(m => m.role === message.role).length
+			const variable = !message.isCompletion ? this.messageToVar({ role: message.role, isCompletion: false, count }) : this.messageToVar({ role: message.role, isCompletion: true })
 			results = replaceResults(variable, message.content)
 		})
 

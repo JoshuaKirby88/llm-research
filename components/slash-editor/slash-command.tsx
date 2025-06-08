@@ -44,12 +44,7 @@ export const SlashCommand = forwardRef((props: { emptyLabel?: string } & Suggest
 						className={cn("group flex w-full items-center space-x-2 rounded-xl p-1 pr-5 text-left text-sm", "hover:bg-accent data-[state=active]:bg-accent")}
 					>
 						<div className="flex size-10 shrink-0 items-center justify-center rounded-lg border bg-background">
-							<item.icon
-								className={cn(
-									"size-4.5! text-muted-foreground transition-all",
-									"group-hover:size-5! group-hover:text-foreground group-data-[state=active]:size-5! group-data-[state=active]:text-foreground",
-								)}
-							/>
+							<item.icon className={cn("size-5 text-muted-foreground transition-all", "group-hover:text-foreground group-data-[state=active]:text-foreground")} />
 						</div>
 						<div>
 							<p className="font-medium">{item.label}</p>

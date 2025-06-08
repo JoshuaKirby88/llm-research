@@ -9,9 +9,9 @@ import { AIFeature, AIModel } from "../features"
 import { AIServiceSchema, AIServiceSchemaKey, APIKeyT } from "../schemas"
 import { BatchAIService } from "./batch-ai.service"
 
-type EmbeddingModel = Parameters<(typeof AIServiceInstance)["prototype"]["models"]["textEmbeddingModel"]>[0]
+type EmbeddingModel = Parameters<(typeof AIServiceI)["prototype"]["models"]["textEmbeddingModel"]>[0]
 
-export class AIServiceInstance {
+export class AIServiceI {
 	private apiKey
 	private models
 
@@ -105,4 +105,4 @@ export class AIServiceInstance {
 	}
 }
 
-export const AIService = new AIServiceInstance({ openai: env.OPENAI_API_KEY })
+export const MyAIService = new AIServiceI({ openai: env.OPENAI_API_KEY })

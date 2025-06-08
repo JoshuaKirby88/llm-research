@@ -13,7 +13,7 @@ import {
 	aiServiceSchemas,
 } from "@/src/schemas"
 import { VariableTable } from "@/src/tables"
-import { AIServiceInstance } from "../../ai.service"
+import { AIServiceI } from "../../ai.service"
 
 type Input = Pick<RunTestI, "models" | "iterations"> & {
 	apiKey: APIKeyT
@@ -28,7 +28,7 @@ type Input = Pick<RunTestI, "models" | "iterations"> & {
 
 export class RunTestModule {
 	static async execute(input: Input) {
-		const AIService = new AIServiceInstance(input.apiKey)
+		const UserAIService = new AIServiceI(input.apiKey)
 
 		const blockingVariableCombinations = VariableTable.createCombination({ blockingVariables: input.blockingVariables, blockingValues: input.blockingValues })
 
@@ -47,7 +47,7 @@ export class RunTestModule {
 
 		// Generate messages
 		for (const messagePrompt of input.messagePrompts) {
-			const generateMessageResults = await AIService.batchStructuredCompletion(
+			const generateMessageResults = await UserAIService.batchStructuredCompletion(
 				tests.map(test => ({
 					model: AIFeature.promptModel,
 					messages: [
@@ -71,7 +71,7 @@ export class RunTestModule {
 		}
 
 		// Run test
-		const runTestResults = await AIService.batchCompletion(
+		const runTestResults = await UserAIService.batchCompletion(
 			tests.map(test => ({
 				model: test.model,
 				messages: test.messages,
@@ -81,7 +81,7 @@ export class RunTestModule {
 		runTestResults.forEach((testResult, i) => tests[i].messages.push({ role: "assistant", content: testResult.completion, isCompletion: true, ...testResult.tokens }))
 
 		// Evaluate
-		const evalResults = await AIService.batchStructuredCompletion(
+		const evalResults = await UserAIService.batchStructuredCompletion(
 			tests.map(test => ({
 				model: AIFeature.promptModel,
 				messages: [

@@ -1,6 +1,6 @@
 import { AIModel } from "@/src/features"
 import { AIServiceSchema, AIServiceSchemaKey, APIKeyT, aiServiceSchemas } from "@/src/schemas"
-import { AIServiceInstance } from "@/src/services/ai.service"
+import { AIServiceI } from "@/src/services/ai.service"
 import { BatchAIService } from "@/src/services/batch-ai.service"
 import { chunk } from "@/utils/chunk"
 import { pick } from "@/utils/pick"
@@ -27,7 +27,7 @@ export type BatchAII = {
 	  }
 )
 
-export type BatchAIO = Pretty<{ error: string } | Return<AIServiceInstance["getCompletion" | "getStructuredCompletion"]>[]>
+export type BatchAIO = Pretty<{ error: string } | Return<AIServiceI["getCompletion" | "getStructuredCompletion"]>[]>
 
 const config = {
 	chunkSize: 50,
@@ -36,7 +36,7 @@ const config = {
 export const POST = async (request: NextRequest) => {
 	try {
 		const input: BatchAII = await request.json()
-		const AIService = new AIServiceInstance(input.apiKey)
+		const AIService = new AIServiceI(input.apiKey)
 
 		if (input.fn === "completion") {
 			const chunkedInput = chunk(input.items, { chunkSize: config.chunkSize, maxChunks: config.chunkSize })

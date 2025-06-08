@@ -1,6 +1,3 @@
-- [ ] Replaced variables in prompt dialog overlap vertically
-- [ ] Use user api key for all ai features
-- [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
@@ -8,6 +5,7 @@
 # New research form
 
 - [ ] Compare mode: Each test has 2 different messages. Evaluation prompt can access both, and compare
+- [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
 - [ ] Option to enforce token count for message prompts
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Support research without blocking variables

@@ -1,8 +1,7 @@
 "use server"
-
 import { generateValuePrompts } from "@/src/prompts/create-research/generate-value.prompts"
 import { createResearchISchema, variableSchema } from "@/src/schemas"
-import { AIService } from "@/src/services/ai.service"
+import { MyAIService } from "@/src/services/ai.service"
 import { createAction } from "@/utils/actions/create-action"
 import { z } from "zod"
 
@@ -19,8 +18,8 @@ export const generateValueAction = createAction(
 	"signedIn",
 	schema,
 )(async ({ input }) => {
-	const { completion } = await AIService.getStructuredCompletion({
-		model: "GPT-4o mini",
+	const { completion } = await MyAIService.getStructuredCompletion({
+		model: "Gemini 2.5 Flash",
 		messages: [
 			{ role: "system", content: generateValuePrompts.system },
 			{ role: "user", content: generateValuePrompts.user(input) },

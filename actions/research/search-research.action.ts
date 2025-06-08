@@ -4,7 +4,7 @@ import { db } from "@/drizzle/db"
 import { Research, UserToStarredResearch } from "@/drizzle/schema"
 import { ResearchRepo } from "@/src/repos"
 import { ResearchVectorRepo } from "@/src/repos/research-vector.repo"
-import { AIService } from "@/src/services/ai.service"
+import { MyAIService } from "@/src/services/ai.service"
 import { ClerkService } from "@/src/services/clerk.service"
 import { createAction } from "@/utils/actions/create-action"
 import { destructureArray } from "@/utils/destructure-array"
@@ -17,7 +17,7 @@ export const searchResearchAction = createAction(
 )(async ({ user, input }) => {
 	const result = await (async () => {
 		if (input.search) {
-			const embedding = await AIService.createEmbedding({ model: "text-embedding-3-small", text: input.search })
+			const embedding = await MyAIService.createEmbedding({ model: "text-embedding-3-small", text: input.search })
 
 			const researchIds = await ResearchVectorRepo.query(embedding, { topK: 10, minScore: 0.3 })
 

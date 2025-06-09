@@ -8,7 +8,7 @@ import {
 	IndependentValueT,
 	IndependentVariableT,
 	InsertMessageT,
-	MessagePromptT,
+	MessageTemplateT,
 	RunTestI,
 	aiServiceSchemas,
 } from "@/src/schemas"
@@ -22,7 +22,7 @@ type Input = Pick<RunTestI, "models" | "iterations"> & {
 	blockingVariables: BlockingVariableT[]
 	blockingValues: BlockingValueT[]
 	dependentValues: DependentValueT[]
-	messagePrompts: MessagePromptT[]
+	messageTemplates: MessageTemplateT[]
 	evalPrompt: EvalPromptT
 }
 
@@ -46,28 +46,51 @@ export class RunTestModule {
 		)
 
 		// Generate messages
-		for (const messagePrompt of input.messagePrompts) {
-			const generateMessageResults = await UserAIService.batchStructuredCompletion(
-				tests.map(test => ({
-					model: AIFeature.promptModel,
-					messages: [
-						{
-							role: "user",
-							content: VariableTable.replaceVariables(messagePrompt.text, {
-								independentVariable: input.independentVariable,
-								independentValue: test.independentValue,
-								blockingVariableCombination: test.blockingVariableCombination,
-								messages: test.messages,
-							}).reduce((acc, curr) => acc + curr.text, ""),
-						},
-					],
-					schema: aiServiceSchemas.generateMessage().json,
-				})),
-			)
+		for (const messageTemplate of input.messageTemplates) {
+			if (messageTemplate.isPrompt) {
+				const generateMessageResults = await UserAIService.batchStructuredCompletion(
+					tests.map(test => ({
+						model: AIFeature.promptModel,
+						messages: [
+							{
+								role: "user",
+								content: VariableTable.replaceVariables(messageTemplate.text, {
+									independentVariable: input.independentVariable,
+									independentValue: test.independentValue,
+									blockingVariableCombination: test.blockingVariableCombination,
+									messages: test.messages,
+								}).reduce((acc, curr) => acc + curr.text, ""),
+							},
+						],
+						schema: aiServiceSchemas.generateMessage().json,
+					})),
+				)
 
-			generateMessageResults.forEach((messageResult, i) =>
-				tests[i].messages.push({ role: messagePrompt.role, content: messageResult.completion.answer, isCompletion: false, messagePromptId: messagePrompt.id, ...messageResult.tokens }),
-			)
+				generateMessageResults.forEach((messageResult, i) =>
+					tests[i].messages.push({
+						type: "generated",
+						role: messageTemplate.role,
+						content: messageResult.completion.answer,
+						promptTokens: messageResult.tokens.promptTokens,
+						completionTokens: messageResult.tokens.completionTokens,
+						messageTemplateId: messageTemplate.id,
+					}),
+				)
+			} else {
+				tests.forEach(test =>
+					test.messages.push({
+						type: "raw",
+						role: messageTemplate.role,
+						content: VariableTable.replaceVariables(messageTemplate.text, {
+							independentVariable: input.independentVariable,
+							independentValue: test.independentValue,
+							blockingVariableCombination: test.blockingVariableCombination,
+							messages: test.messages,
+						}).reduce((acc, curr) => acc + curr.text, ""),
+						messageTemplateId: messageTemplate.id,
+					}),
+				)
+			}
 		}
 
 		// Run test
@@ -78,7 +101,15 @@ export class RunTestModule {
 			})),
 		)
 
-		runTestResults.forEach((testResult, i) => tests[i].messages.push({ role: "assistant", content: testResult.completion, isCompletion: true, ...testResult.tokens }))
+		runTestResults.forEach((testResult, i) =>
+			tests[i].messages.push({
+				type: "completion",
+				role: "assistant",
+				content: testResult.completion,
+				promptTokens: testResult.tokens.promptTokens,
+				completionTokens: testResult.tokens.completionTokens,
+			}),
+		)
 
 		// Evaluate
 		const evalResults = await UserAIService.batchStructuredCompletion(

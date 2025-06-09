@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT } from "@/src/schemas"
+import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessageT, MessageTemplateT, TestT } from "@/src/schemas"
 import { MessageCard } from "./message-card"
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
 	dependentValues: DependentValueT[]
-	messagePrompts: MessagePromptT[]
+	messageTemplates: MessageTemplateT[]
 	evalPrompt: EvalPromptT
 	test: TestT
 	messages: MessageT[]
@@ -20,8 +20,8 @@ export const TestCard = (props: Props) => {
 	const evaluation = props.evals.find(e => e.testId === props.test.id)!
 	const dependentValue = props.dependentValues.find(dVal => dVal.id === props.test.dependentValueId)!
 
-	const totalInputTokens = filteredMessages.reduce((acc, curr) => acc + curr.promptTokens, evaluation.promptTokens)
-	const totalOutputTokens = filteredMessages.reduce((acc, curr) => acc + curr.completionTokens, evaluation.completionTokens)
+	const totalInputTokens = filteredMessages.reduce((acc, curr) => acc + (curr.promptTokens ?? 0), evaluation.promptTokens)
+	const totalOutputTokens = filteredMessages.reduce((acc, curr) => acc + (curr.completionTokens ?? 0), evaluation.completionTokens)
 
 	return (
 		<Card size="sm">
@@ -39,7 +39,7 @@ export const TestCard = (props: Props) => {
 						dependentValue={dependentValue}
 						messages={filteredMessages}
 						message={message}
-						messagePrompts={props.messagePrompts}
+						messageTemplates={props.messageTemplates}
 					/>
 				))}
 

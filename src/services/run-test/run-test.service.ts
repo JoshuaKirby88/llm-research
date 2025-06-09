@@ -5,7 +5,7 @@ import { RunTestModule } from "./modules/run-test.module"
 
 export class RunTestService {
 	static async execute(input: RunTestI) {
-		const [{ research, independentVariable, independentValues, blockingVariables, blockingValues, dependentValues, messagePrompts, evalPrompt }, apiKey] = await Promise.all([
+		const [{ research, independentVariable, independentValues, blockingVariables, blockingValues, dependentValues, messageTemplates, evalPrompt }, apiKey] = await Promise.all([
 			QueryModule.queryResearch(input.researchId),
 			QueryModule.queryAPIKey(input.userId),
 		])
@@ -19,7 +19,7 @@ export class RunTestService {
 			blockingVariables,
 			blockingValues,
 			dependentValues,
-			messagePrompts,
+			messageTemplates,
 			evalPrompt,
 		})
 

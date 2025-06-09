@@ -16,27 +16,27 @@ const config = {
 		label: name,
 		description: values.map(v => `"${v}"`).join(" | "),
 	}),
-	createPromptSuggestion: (role: "system" | "user" | "assistant", index: number, messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id">): Suggestion => ({
-		id: VariableTable.messageToVarName({ role, isCompletion: false, count: config.messagePromptIndexToCount(index, messagePromptFields) }),
+	createPromptSuggestion: (role: "system" | "user" | "assistant", index: number, messageTemplateFields: UseFieldArrayReturn<CreateResearchI, "messageTemplates", "id">): Suggestion => ({
+		id: VariableTable.messageToVarName({ type: "generated", role, count: config.messageTemplateIndexToCount(index, messageTemplateFields) }),
 		icon: SquareChevronRightIcon,
-		label: VariableTable.messageToVarName({ role, isCompletion: false, count: config.messagePromptIndexToCount(index, messagePromptFields) }),
+		label: VariableTable.messageToVarName({ type: "generated", role, count: config.messageTemplateIndexToCount(index, messageTemplateFields) }),
 		description: `The generated ${role} prompt.`,
 	}),
 	completionSuggestion: {
-		id: VariableTable.messageToVarName({ role: "assistant", isCompletion: true }),
+		id: VariableTable.messageToVarName({ type: "completion", role: "assistant", count: 1 }),
 		icon: BotMessageSquareIcon,
-		label: VariableTable.messageToVarName({ role: "assistant", isCompletion: true }),
+		label: VariableTable.messageToVarName({ type: "completion", role: "assistant", count: 1 }),
 		description: "The generated completion, based on the generated messages.",
 	} satisfies Suggestion,
 	dependentFields: ["evalPrompt.text"] as const,
-	messagePromptIndexToCount(index: number, messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id">) {
-		const role = messagePromptFields.fields[index].role
-		const messageOfRoleCount = messagePromptFields.fields.slice(0, index + 1).filter(field => field.role === role).length
+	messageTemplateIndexToCount(index: number, messageTemplateFields: UseFieldArrayReturn<CreateResearchI, "messageTemplates", "id">) {
+		const role = messageTemplateFields.fields[index].role
+		const messageOfRoleCount = messageTemplateFields.fields.slice(0, index + 1).filter(field => field.role === role).length
 		return messageOfRoleCount
 	},
 }
 
-export const VariableSlashEditor = (props: { name: string; index: number; messagePromptFields: UseFieldArrayReturn<CreateResearchI, "messagePrompts", "id"> }) => {
+export const VariableSlashEditor = (props: { name: string; index: number; messageTemplateFields: UseFieldArrayReturn<CreateResearchI, "messageTemplates", "id"> }) => {
 	const form = useFormContext<CreateResearchI>()
 	const [independent, blockings] = form.watch(["independentVariable", "blockingVariables"])
 	const blockingNames = blockings.map(b => b.name)
@@ -45,11 +45,11 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 	useEffect(() => {
 		// Independent variable name
 		if (prevRef.current.independentVariableName !== independent.name) {
-			props.messagePromptFields.fields.forEach((field, i) => {
+			props.messageTemplateFields.fields.forEach((field, i) => {
 				const currentValue = SlashEditorFeature.tiptapStringToCustomString(field.text)
 				if (currentValue.includes(VariableTable.toVar(prevRef.current.independentVariableName))) {
 					const updatedValue = currentValue.replaceAll(VariableTable.toVar(prevRef.current.independentVariableName), VariableTable.toVar(independent.name))
-					props.messagePromptFields.update(i, { ...field, text: SlashEditorFeature.customStringToTiptapString(updatedValue) })
+					props.messageTemplateFields.update(i, { ...field, text: SlashEditorFeature.customStringToTiptapString(updatedValue) })
 				}
 			})
 
@@ -67,11 +67,11 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 			const updatedBlockings = prevRef.current.blockingVariableNames.map((prevName, i) => ({ prevName, i })).filter(blocking => blocking.prevName !== blockings[blocking.i].name)
 
 			updatedBlockings.forEach(updatedBlocking => {
-				props.messagePromptFields.fields.forEach((field, i) => {
+				props.messageTemplateFields.fields.forEach((field, i) => {
 					const currentValue = SlashEditorFeature.tiptapStringToCustomString(field.text)
 					if (currentValue.includes(VariableTable.toVar(updatedBlocking.prevName))) {
 						const updatedValue = currentValue.replaceAll(VariableTable.toVar(updatedBlocking.prevName), VariableTable.toVar(blockings[updatedBlocking.i].name))
-						props.messagePromptFields.update(i, { ...field, text: SlashEditorFeature.customStringToTiptapString(updatedValue) })
+						props.messageTemplateFields.update(i, { ...field, text: SlashEditorFeature.customStringToTiptapString(updatedValue) })
 					}
 				})
 
@@ -92,8 +92,8 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 	const suggestions: Suggestion[] = [
 		...(independent.name ? [config.createVariableSuggestion(independent.name, independent.values)] : []),
 		...blockings.flatMap(bVar => (bVar.name ? [config.createVariableSuggestion(bVar.name, bVar.values)] : [])),
-		...props.messagePromptFields.fields.slice(0, props.index).map((field, i) => config.createPromptSuggestion(field.role, i, props.messagePromptFields)),
-		...(props.index === props.messagePromptFields.fields.length - 1 ? [config.completionSuggestion] : []),
+		...props.messageTemplateFields.fields.slice(0, props.index).map((field, i) => config.createPromptSuggestion(field.role, i, props.messageTemplateFields)),
+		...(props.index === props.messageTemplateFields.fields.length - 1 ? [config.completionSuggestion] : []),
 	]
 
 	return <FormSlashEditor name={props.name} suggestions={suggestions} emptyLabel="No variables defined." placeholder='"/" to reference a variable.' />

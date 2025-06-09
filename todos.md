@@ -1,3 +1,5 @@
+- [ ] Fix run test loading
+- [ ] Add types to batch structured completion
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Fix clerk middleware error
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)

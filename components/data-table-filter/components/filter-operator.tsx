@@ -62,11 +62,6 @@ interface FilterOperatorControllerProps<TData, TType extends ColumnDataType> {
 	locale?: Locale
 }
 
-/*
- *
- * TODO: Reduce into a single component. Each data type does not need it's own controller.
- *
- */
 export function FilterOperatorController<TData, TType extends ColumnDataType>({ filter, column, actions, closeController, locale = "en" }: FilterOperatorControllerProps<TData, TType>) {
 	switch (column.type) {
 		case "option":

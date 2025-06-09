@@ -4,7 +4,7 @@ import { PageTabs, PageTabsList } from "@/components/page-tabs"
 import { Suspense } from "@/components/suspense"
 import { TabsContent } from "@/components/ui/tabs"
 import { AIFeature, AIModel } from "@/src/features"
-import { TestModelBatchT, TestT } from "@/src/schemas"
+import { MessageT, TestModelBatchT, TestT } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
 import { notFound } from "next/navigation"
 import { TestFilter } from "./_components/test-filter/test-filter"
@@ -37,7 +37,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "
 		independentValues,
 		blockingVariables,
 		blockingValues,
-		messagePrompts,
+		messageTemplates,
 		evalPrompt,
 		dependentValues,
 		testModelBatches,
@@ -85,12 +85,12 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "
 							independentValues={independentValues}
 							blockingVariableCombinations={blockingVariableCombinations}
 							dependentValues={dependentValues}
-							messagePrompts={messagePrompts}
+							messageTemplates={messageTemplates}
 							evalPrompt={evalPrompt}
 							testModelBatches={testModelBatches}
 							tests={tests}
 							testToBlockingValues={testToBlockingValues}
-							messages={messages}
+							messages={messages as MessageT[]}
 							evals={evals}
 						/>
 					</TabsContent>

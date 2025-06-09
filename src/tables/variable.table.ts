@@ -1,5 +1,6 @@
 import { capitalize } from "@/utils/capitalize"
 import { getOrdinalSuffix } from "@/utils/get-ordinal-suffix"
+import { pick } from "@/utils/pick"
 import { BlockingValueT, BlockingVariableCombinationT, BlockingVariableT, IndependentValueT, IndependentVariableT, MessageT } from "../schemas"
 
 export class VariableTable {
@@ -21,8 +22,14 @@ export class VariableTable {
 		return variable.substring(2, variable.length - 2)
 	}
 
-	static messageToVarName(input: { role: "system" | "user" | "assistant" } & ({ isCompletion: false; count: number } | { isCompletion: true })) {
-		return input.isCompletion ? "Completion" : input.role === "system" ? "System Prompt" : `${getOrdinalSuffix(input.count)} ${capitalize(input.role)} Prompt`
+	static messageToVarName(input: Pick<MessageT, "type" | "role"> & { count: number }) {
+		if (input.type === "completion") {
+			return "Completion"
+		} else if (input.role === "system") {
+			return "System Prompt"
+		} else {
+			return `${getOrdinalSuffix(input.count)} ${capitalize(input.role)} Prompt`
+		}
 	}
 
 	static messageToVar(input: Parameters<typeof this.messageToVarName>[0]) {
@@ -35,7 +42,7 @@ export class VariableTable {
 			independentVariable: IndependentVariableT
 			independentValue: IndependentValueT
 			blockingVariableCombination: BlockingVariableCombinationT
-			messages: Pick<MessageT, "role" | "content" | "isCompletion">[]
+			messages: Pick<MessageT, "type" | "role" | "content">[]
 		},
 	) {
 		let results: Array<{ type: "text"; text: string } | { type: "variable"; name: string; text: string }> = [{ type: "text", text }]
@@ -68,7 +75,7 @@ export class VariableTable {
 		// Messages
 		variables.messages.forEach((message, i) => {
 			const count = variables.messages.slice(0, i + 1).filter(m => m.role === message.role).length
-			const variable = !message.isCompletion ? this.messageToVar({ role: message.role, isCompletion: false, count }) : this.messageToVar({ role: message.role, isCompletion: true })
+			const variable = this.messageToVar({ ...pick(message, ["type", "role"]), count })
 			results = replaceResults(variable, message.content)
 		})
 

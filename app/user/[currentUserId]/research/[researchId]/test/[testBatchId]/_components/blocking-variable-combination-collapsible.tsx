@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleChevronIcon, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessagePromptT, MessageT, TestT, TestToBlockingValueT } from "@/src/schemas"
+import { BlockingVariableCombinationT, DependentValueT, EvalPromptT, EvalT, IndependentValueT, IndependentVariableT, MessageT, MessageTemplateT, TestT, TestToBlockingValueT } from "@/src/schemas"
 import { TestTable } from "@/src/tables"
 import { TestCard } from "./test-card"
 
@@ -9,7 +9,7 @@ type Props = {
 	independentValue: IndependentValueT
 	blockingVariableCombination: BlockingVariableCombinationT
 	dependentValues: DependentValueT[]
-	messagePrompts: MessagePromptT[]
+	messageTemplates: MessageTemplateT[]
 	evalPrompt: EvalPromptT
 	tests: TestT[]
 	testToBlockingValues: TestToBlockingValueT[]
@@ -45,7 +45,7 @@ export const BlockingVariableCombinationCollapsible = (props: Props) => {
 						independentValue={props.independentValue}
 						blockingVariableCombination={props.blockingVariableCombination}
 						dependentValues={props.dependentValues}
-						messagePrompts={props.messagePrompts}
+						messageTemplates={props.messageTemplates}
 						evalPrompt={props.evalPrompt}
 						test={test}
 						messages={props.messages}

@@ -6,8 +6,8 @@ import {
 	EvalT,
 	IndependentValueT,
 	IndependentVariableT,
-	MessagePromptT,
 	MessageT,
+	MessageTemplateT,
 	TestModelBatchT,
 	TestT,
 	TestToBlockingValueT,
@@ -20,7 +20,7 @@ type Props = {
 	independentValues: IndependentValueT[]
 	blockingVariableCombinations: BlockingVariableCombinationT[]
 	dependentValues: DependentValueT[]
-	messagePrompts: MessagePromptT[]
+	messageTemplates: MessageTemplateT[]
 	evalPrompt: EvalPromptT
 	testModelBatches: TestModelBatchT[]
 	tests: TestT[]
@@ -47,7 +47,7 @@ export const TestModelTabContent = (props: Props) => {
 					independentValue={independentValue}
 					blockingVariableCombinations={props.blockingVariableCombinations}
 					dependentValues={props.dependentValues}
-					messagePrompts={props.messagePrompts}
+					messageTemplates={props.messageTemplates}
 					evalPrompt={props.evalPrompt}
 					testModelBatches={filteredTestModelBatches}
 					tests={filteredTests}

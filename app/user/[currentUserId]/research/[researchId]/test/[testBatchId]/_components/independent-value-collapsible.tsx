@@ -7,8 +7,8 @@ import {
 	EvalT,
 	IndependentValueT,
 	IndependentVariableT,
-	MessagePromptT,
 	MessageT,
+	MessageTemplateT,
 	TestModelBatchT,
 	TestT,
 	TestToBlockingValueT,
@@ -20,7 +20,7 @@ type Props = {
 	independentValue: IndependentValueT
 	blockingVariableCombinations: BlockingVariableCombinationT[]
 	dependentValues: DependentValueT[]
-	messagePrompts: MessagePromptT[]
+	messageTemplates: MessageTemplateT[]
 	evalPrompt: EvalPromptT
 	testModelBatches: TestModelBatchT[]
 	tests: TestT[]
@@ -57,7 +57,7 @@ export const IndependentValueCollapsible = (props: Props) => {
 						independentValue={props.independentValue}
 						blockingVariableCombination={blockingVariableCombination}
 						dependentValues={props.dependentValues}
-						messagePrompts={props.messagePrompts}
+						messageTemplates={props.messageTemplates}
 						evalPrompt={props.evalPrompt}
 						tests={filteredTests}
 						testToBlockingValues={filteredTestToBlockingValues}

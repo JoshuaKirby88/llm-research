@@ -12,14 +12,13 @@ import { testFilterToDrizzle } from "../_components/test-filter/test-filter-to-d
 export const testPageQuery = async (input: { params: NextParam<"researchId" | "testBatchId">; searchParams: NextSearchParam; user: ClerkPublicUser }) => {
 	const { testBatchFilters, testFilters, testToBlockingValueFilters } = testFilterToDrizzle({ params: input.params, searchParams: input.searchParams })
 
-	// TODO: Use .select over .query for blockingVariableCombination filter
 	const result = await db.query.Research.findFirst({
 		where: and(eq(Research.id, Number.parseInt(input.params.researchId)), ResearchRepo.getPublicWhere({ user: input.user })),
 		with: {
 			contributors: true,
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },
-			messagePrompts: true,
+			messageTemplates: true,
 			evalPrompt: true,
 			dependentValues: true,
 			testBatches: {
@@ -56,7 +55,7 @@ export const testPageQuery = async (input: { params: NextParam<"researchId" | "t
 			independentValues,
 			blockingVariables,
 			blockingValues,
-			messagePrompts,
+			messageTemplates,
 			evalPrompt: [evalPrompt],
 			dependentValues,
 			testModelBatches,
@@ -69,7 +68,7 @@ export const testPageQuery = async (input: { params: NextParam<"researchId" | "t
 		contributors: true,
 		independentVariable: { independentValues: true },
 		blockingVariables: { blockingValues: true },
-		messagePrompts: true,
+		messageTemplates: true,
 		evalPrompt: true,
 		dependentValues: true,
 		testBatches: { testModelBatches: { tests: { testToBlockingValues: true, messages: true, evals: true } } },
@@ -95,7 +94,7 @@ export const testPageQuery = async (input: { params: NextParam<"researchId" | "t
 		independentValues,
 		blockingVariables,
 		blockingValues,
-		messagePrompts,
+		messageTemplates,
 		evalPrompt,
 		dependentValues,
 		testModelBatches,
@@ -113,7 +112,7 @@ export const testPageQuery = async (input: { params: NextParam<"researchId" | "t
 		independentValues,
 		blockingVariables,
 		blockingValues,
-		messagePrompts,
+		messageTemplates,
 		evalPrompt,
 		dependentValues,
 		testModelBatches,

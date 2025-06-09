@@ -39,7 +39,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 		independentValues,
 		blockingVariables,
 		blockingValues,
-		messagePrompts,
+		messageTemplates,
 		evalPrompt,
 		dependentValues,
 		testBatches,

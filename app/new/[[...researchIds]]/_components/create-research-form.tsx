@@ -5,9 +5,11 @@ import { Form } from "@/components/form/client/form"
 import { FormButton } from "@/components/form/client/form-button"
 import { FormInput } from "@/components/form/client/form-input"
 import { FormSelect, FormSelectItem } from "@/components/form/client/form-select"
+import { FormSwitchWithLabels } from "@/components/form/client/form-switch-with-labels"
 import { FormTagInput } from "@/components/form/client/form-tag-input"
 import { FormCard, FormCardContent, FormCardFooter, FormCardHeader } from "@/components/form/form-card"
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
+import { Tooltip } from "@/components/tooltip"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -32,7 +34,7 @@ const config = {
 				values: ["A Day in the Life of a Time Traveler", "The Secret Garden of a Forgotten City", "A Lost Letter from the Past"],
 			},
 		],
-		messagePrompts: [
+		messageTemplates: [
 			{
 				role: "system",
 				text: `Create a story that can be enjoyed in around ~30 minutes.
@@ -40,29 +42,31 @@ The purpose of the story is to test the reading and recall abilities.
 So, the story should include many names, facts, and events that are all fictional.
 The story should be written in ${VariableTable.toVar("First Language")}.
 Topic: ${VariableTable.toVar("Story Topic")}.`,
+				isPrompt: true,
 			},
 			{
 				role: "user",
 				text: `Story:
 """
-${VariableTable.toVar(VariableTable.messageToVarName({ role: "system", count: 1, isCompletion: false }))}
+${VariableTable.toVar(VariableTable.messageToVarName({ type: "generated", role: "system", count: 1 }))}
 """
 
 I want to test reading and recall abilities.
 Please ask a question in ${VariableTable.toVar("Second Language")} about the above story that requires reading and analyzing the story.`,
+				isPrompt: true,
 			},
 		],
 		evalPrompt: {
 			text: `Quiz Context:
 """
-${VariableTable.toVar(VariableTable.messageToVarName({ role: "system", count: 1, isCompletion: false }))}
+${VariableTable.toVar(VariableTable.messageToVarName({ type: "generated", role: "system", count: 1 }))}
 """
 
 Question:
-${VariableTable.toVar(VariableTable.messageToVarName({ role: "user", count: 1, isCompletion: false }))}
+${VariableTable.toVar(VariableTable.messageToVarName({ type: "generated", role: "user", count: 1 }))}
 
 Answer:
-${VariableTable.toVar(VariableTable.messageToVarName({ role: "assistant", isCompletion: true }))}
+${VariableTable.toVar(VariableTable.messageToVarName({ type: "completion", role: "assistant", count: 1 }))}
 
 Is the answer correct?`,
 		},
@@ -70,7 +74,7 @@ Is the answer correct?`,
 	} satisfies CreateResearchI,
 	formatDefaultValues: (values: Partial<CreateResearchI>): Partial<CreateResearchI> => ({
 		...values,
-		messagePrompts: values.messagePrompts?.map(mp => ({ role: mp.role, text: SlashEditorFeature.customStringToTiptapString(mp.text) })),
+		messageTemplates: values.messageTemplates?.map(mp => ({ role: mp.role, text: SlashEditorFeature.customStringToTiptapString(mp.text), isPrompt: mp.isPrompt })),
 		evalPrompt: values.evalPrompt ? { text: SlashEditorFeature.customStringToTiptapString(values.evalPrompt.text) } : undefined,
 	}),
 }
@@ -88,9 +92,9 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 		name: "blockingVariables",
 	})
 
-	const messagePromptFields = useFieldArray({
+	const messageTemplateFields = useFieldArray({
 		control: form.control,
-		name: "messagePrompts",
+		name: "messageTemplates",
 	})
 
 	const onSubmit = async (input: CreateResearchI) => {
@@ -225,26 +229,42 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 							title="Can We Prompt it? Yes We Can!"
 							description="You are prompting an LLM to generate prompts that will be used to generate an answer, which we are researching."
 						>
-							Message prompt
+							Messages
 						</LabelWithTooltip>
 					</FormCardHeader>
 
 					<FormCardContent>
-						{messagePromptFields.fields.map((field, i) => (
+						{messageTemplateFields.fields.map((field, i) => (
 							<div key={field.id} className="group flex flex-col gap-4">
 								<div className="space-y-2">
-									<FormSelect name={`messagePrompts.${i}.role`}>
-										{[...(i === 0 ? ["system"] : []), "user", "assistant"].map(role => (
-											<FormSelectItem key={role} value={role} className="capitalize">
-												{role}
-											</FormSelectItem>
-										))}
-									</FormSelect>
+									<div className="flex items-center justify-between">
+										<FormSelect name={`messageTemplates.${i}.role`}>
+											{[...(i === 0 ? ["system"] : []), "user", "assistant"].map(role => (
+												<FormSelectItem key={role} value={role} className="capitalize">
+													{role}
+												</FormSelectItem>
+											))}
+										</FormSelect>
 
-									<VariableSlashEditor name={`messagePrompts.${i}.text`} index={i} messagePromptFields={messagePromptFields} />
+										<FormSwitchWithLabels
+											name={`messageTemplates.${i}.isPrompt`}
+											start={
+												<Tooltip onClick={e => e.preventDefault()} tooltip="Only replace variables.">
+													Raw
+												</Tooltip>
+											}
+											end={
+												<Tooltip onClick={e => e.preventDefault()} tooltip="Replace variables, then generate message using this as the prompt.">
+													Prompt
+												</Tooltip>
+											}
+										/>
+									</div>
+
+									<VariableSlashEditor name={`messageTemplates.${i}.text`} index={i} messageTemplateFields={messageTemplateFields} />
 								</div>
 
-								<Button type="button" className="w-full" variant="red" onClick={() => messagePromptFields.remove(i)}>
+								<Button type="button" className="w-full" variant="red" onClick={() => messageTemplateFields.remove(i)}>
 									Delete Message
 								</Button>
 
@@ -257,7 +277,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 						<Button
 							type="button"
 							className="w-full"
-							onClick={() => messagePromptFields.append({ role: messagePromptFields.fields.at(-1)?.role === "user" ? "assistant" : "user", text: "" })}
+							onClick={() => messageTemplateFields.append({ role: messageTemplateFields.fields.at(-1)?.role === "user" ? "assistant" : "user", text: "", isPrompt: false })}
 						>
 							Add Message
 						</Button>
@@ -267,12 +287,12 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 				<FormCard>
 					<FormCardHeader>
 						<LabelWithTooltip size="2xl" icon={<RulerIcon />} title="How to evaluate the answer?" description="An LLM will evaluate the answer based on this prompt.">
-							Evaluation prompt
+							Evaluation
 						</LabelWithTooltip>
 					</FormCardHeader>
 
 					<FormCardContent>
-						<VariableSlashEditor name="evalPrompt.text" index={messagePromptFields.fields.length} messagePromptFields={messagePromptFields} />
+						<VariableSlashEditor name="evalPrompt.text" index={messageTemplateFields.fields.length} messageTemplateFields={messageTemplateFields} />
 					</FormCardContent>
 				</FormCard>
 

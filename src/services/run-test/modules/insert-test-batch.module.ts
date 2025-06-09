@@ -4,12 +4,12 @@ import { ContributorRepo, EvalRepo, MessageRepo, TestBatchRepo, TestBatchResultR
 import {
 	DependentValueT,
 	InsertEvalT,
-	InsertMessageT,
 	InsertTestBatchResultT,
 	InsertTestModelBatchResultT,
 	InsertTestModelBatchT,
 	InsertTestT,
 	InsertTestToBlockingValueT,
+	RawInsertMessageT,
 	ResearchT,
 	RunTestI,
 } from "@/src/schemas"
@@ -63,14 +63,9 @@ export class InsertTestBatchModule {
 				)
 				const newTestToBlockingValues = await TestToBlockingValueRepo.insertMany(testToBlockingValuesToInsert)
 
-				const messagesToInsert: InsertMessageT[] = newTests.flatMap((newTest, i) =>
+				const messagesToInsert: RawInsertMessageT[] = newTests.flatMap((newTest, i) =>
 					input.testResults[i].messages.map(message => ({
-						role: message.role,
-						content: message.content,
-						promptTokens: message.promptTokens,
-						completionTokens: message.completionTokens,
-						isCompletion: message.isCompletion,
-						messagePromptId: message.messagePromptId,
+						...message,
 						testId: newTest.id,
 					})),
 				)

@@ -105,10 +105,11 @@ export const BlockingValue = sqliteTable("BlockingValue", {
 	...defaultColumns,
 })
 
-export const MessagePrompt = sqliteTable("MessagePrompt", {
+export const MessageTemplate = sqliteTable("MessageTemplate", {
 	id: integer().primaryKey({ autoIncrement: true }),
 	role: text({ enum: ["system", "user", "assistant"] }).notNull(),
 	text: text().notNull(),
+	isPrompt: integer({ mode: "boolean" }).notNull(),
 	researchId: integer()
 		.notNull()
 		.references(() => Research.id, { onDelete: "cascade" }),
@@ -198,18 +199,27 @@ export const Message = sqliteTable(
 	"Message",
 	{
 		id: integer().primaryKey({ autoIncrement: true }),
+		type: text({ enum: ["raw", "generated", "completion"] }).notNull(),
 		role: text({ enum: ["system", "user", "assistant"] }).notNull(),
 		content: text().notNull(),
-		promptTokens: integer().notNull(),
-		completionTokens: integer().notNull(),
-		isCompletion: integer({ mode: "boolean" }).notNull(),
+		promptTokens: integer(),
+		completionTokens: integer(),
 		testId: integer()
 			.notNull()
 			.references(() => Test.id, { onDelete: "cascade" }),
-		messagePromptId: integer().references(() => MessagePrompt.id, { onDelete: "cascade" }),
+		messageTemplateId: integer().references(() => MessageTemplate.id, { onDelete: "cascade" }),
 		...defaultColumns,
 	},
-	table => [check("messagePromptId", or(and(eq(table.isCompletion, sql`false`), isNotNull(table.messagePromptId)), and(eq(table.isCompletion, sql`true`), isNull(table.messagePromptId)))!)],
+	table => [
+		check(
+			"type-check",
+			or(
+				and(eq(table.type, sql`'raw'`), isNull(table.promptTokens), isNull(table.completionTokens), isNotNull(table.messageTemplateId)),
+				and(eq(table.type, sql`'generated'`), isNotNull(table.promptTokens), isNotNull(table.completionTokens), isNotNull(table.messageTemplateId)),
+				and(eq(table.type, sql`'completion'`), eq(table.role, sql`'assistant'`), isNotNull(table.promptTokens), isNotNull(table.completionTokens), isNull(table.messageTemplateId)),
+			)!,
+		),
+	],
 )
 
 export const Eval = sqliteTable("Eval", {
@@ -280,7 +290,7 @@ export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	contributors: many(Contributor),
 	independentVariable: one(IndependentVariable),
 	blockingVariables: many(BlockingVariable),
-	messagePrompts: many(MessagePrompt),
+	messageTemplates: many(MessageTemplate),
 	evalPrompt: one(EvalPrompt),
 	dependentValues: many(DependentValue),
 	testBatches: many(TestBatch),
@@ -335,9 +345,9 @@ export const BlockingValueRelations = relations(BlockingValue, ({ one }) => ({
 	}),
 }))
 
-export const MessagePromptRelations = relations(MessagePrompt, ({ one }) => ({
+export const MessageTemplateRelations = relations(MessageTemplate, ({ one }) => ({
 	research: one(Research, {
-		fields: [MessagePrompt.researchId],
+		fields: [MessageTemplate.researchId],
 		references: [Research.id],
 	}),
 }))

@@ -18,7 +18,7 @@ export class QueryModule {
 					with: { blockingValues: true },
 				},
 				dependentValues: true,
-				messagePrompts: true,
+				messageTemplates: true,
 				evalPrompt: true,
 			},
 		})
@@ -38,7 +38,7 @@ export class QueryModule {
 			independentVariable: { independentValues: true },
 			blockingVariables: { blockingValues: true },
 			dependentValues: true,
-			messagePrompts: true,
+			messageTemplates: true,
 			evalPrompt: true,
 		})
 

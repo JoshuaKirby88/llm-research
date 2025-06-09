@@ -90,7 +90,6 @@ export function FilterValueOptionDisplay<TData>({ filter, column, actions, local
 		)
 	}
 	const name = column.displayName.toLowerCase()
-	// TODO: Better pluralization for different languages
 	const pluralName = name.endsWith("s") ? `${name}es` : `${name}s`
 
 	const hasOptionIcons = !options?.some(o => !o.icon)

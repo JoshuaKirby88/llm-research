@@ -10,10 +10,10 @@ import {
 	EvalPromptRepo,
 	IndependentValueRepo,
 	IndependentVariableRepo,
-	MessagePromptRepo,
+	MessageTemplateRepo,
 	ResearchRepo,
 } from "@/src/repos"
-import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessagePromptT, createResearchISchema } from "@/src/schemas"
+import { InsertBlockingValueT, InsertBlockingVariableT, InsertDependentValueT, InsertIndependentValueT, InsertMessageTemplateT, createResearchISchema } from "@/src/schemas"
 import { DependentValueTable } from "@/src/tables"
 import { createAction } from "@/utils/actions/create-action"
 import { getParamsFromHeaders } from "@/utils/get-params-from-headers"
@@ -25,7 +25,7 @@ export const createResearchAction = createAction(
 )(async ({ user, input }) => {
 	const forkedResearchId = await getParamsFromHeaders("/new")
 
-	const messagePrompts = input.messagePrompts.map(mp => ({ ...mp, text: SlashEditorFeature.tiptapStringToCustomString(mp.text) }))
+	const messageTemplates = input.messageTemplates.map(mp => ({ ...mp, text: SlashEditorFeature.tiptapStringToCustomString(mp.text) }))
 	const evalPrompt = SlashEditorFeature.tiptapStringToCustomString(input.evalPrompt.text)
 
 	const newResearch = await ResearchRepo.insert({
@@ -58,8 +58,8 @@ export const createResearchAction = createAction(
 		)
 		const newBlockingValues = await BlockingValueRepo.insertMany(blockingValesToInsert)
 
-		const messagePromptsToInsert: InsertMessagePromptT[] = messagePrompts.map(mp => ({ role: mp.role, text: mp.text, researchId: newResearch.id }))
-		const newMessagePrompts = await MessagePromptRepo.insertMany(messagePromptsToInsert)
+		const messageTemplatesToInsert: InsertMessageTemplateT[] = messageTemplates.map(mp => ({ role: mp.role, text: mp.text, isPrompt: mp.isPrompt, researchId: newResearch.id }))
+		const newMessageTemplates = await MessageTemplateRepo.insertMany(messageTemplatesToInsert)
 
 		const newEvalPrompt = await EvalPromptRepo.insert({ researchId: newResearch.id, text: evalPrompt })
 

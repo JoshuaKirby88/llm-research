@@ -6,7 +6,7 @@ import { dependentValueSchema } from "../db/dependent-value.schema"
 import { evalPromptSchema } from "../db/eval-prompt.schema"
 import { independentValueSchema } from "../db/independent-value.schema"
 import { independentVariableSchema } from "../db/independent-variable.schema"
-import { messagePromptSchema } from "../db/message-prompt.schema"
+import { messageTemplateSchema } from "../db/message-template.schema"
 import { researchSchema } from "../db/research.schema"
 
 const strictSchema = z.object({
@@ -17,7 +17,7 @@ const strictSchema = z.object({
 		.extend({ values: blockingValueSchema.shape.value.array().min(1) })
 		.array()
 		.min(1),
-	messagePrompts: messagePromptSchema.pick({ role: true, text: true }).array().min(1),
+	messageTemplates: messageTemplateSchema.pick({ role: true, text: true, isPrompt: true }).array().min(1),
 	evalPrompt: evalPromptSchema.pick({ text: true }),
 	dependentValues: dependentValueSchema.shape.value.array().min(1),
 })

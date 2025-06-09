@@ -21,7 +21,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 					independentVariable: { with: { independentValues: true } },
 					blockingVariables: { with: { blockingValues: true } },
 					dependentValues: true,
-					messagePrompts: true,
+					messageTemplates: true,
 					evalPrompt: true,
 				},
 			})
@@ -34,19 +34,19 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 				research: { name: research.name },
 				independentVariable: { name: research.independentVariable.name, values: research.independentVariable.independentValues.map(iVal => iVal.value) },
 				blockingVariables: research.blockingVariables.map(bVar => ({ name: bVar.name, values: bVar.blockingValues.map(bVal => bVal.value) })),
-				messagePrompts: research.messagePrompts.map(mp => pick(mp, ["role", "text"])),
+				messageTemplates: research.messageTemplates.map(mp => pick(mp, ["role", "text", "isPrompt"])),
 				evalPrompt: { text: research.evalPrompt.text },
 				dependentValues: research.dependentValues.map(dVal => dVal.value),
-			}
+			} satisfies CreateResearchI
 		} else {
 			return {
 				research: { name: "" },
 				independentVariable: { name: "", values: [] },
 				blockingVariables: [{ name: "", values: [] }],
-				messagePrompts: [{ role: "system", text: "" }],
+				messageTemplates: [{ role: "system", text: "", isPrompt: false }],
 				evalPrompt: { text: "" },
 				dependentValues: [],
-			}
+			} satisfies CreateResearchI
 		}
 	})()
 

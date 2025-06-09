@@ -19,7 +19,7 @@ export const downloadResearchAction = createAction(
 			independentVariable: { with: { independentValues: true } },
 			blockingVariables: { with: { blockingValues: true } },
 			dependentValues: true,
-			messagePrompts: true,
+			messageTemplates: true,
 			evalPrompt: true,
 			testBatches: {
 				where: input.testBatchId ? eq(TestBatch.id, input.testBatchId) : undefined,

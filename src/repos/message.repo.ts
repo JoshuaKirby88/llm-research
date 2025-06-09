@@ -2,10 +2,10 @@ import { db } from "@/drizzle/db"
 import { Message } from "@/drizzle/schema"
 import { DrizzleService } from "@/src/services/drizzle.service"
 import { eq } from "drizzle-orm"
-import { InsertMessageT, MessageT, UpdateMessageT } from "../schemas"
+import { MessageT, RawInsertMessageT, UpdateMessageT } from "../schemas"
 
 export class MessageRepo {
-	static async insertMany(input: InsertMessageT[]) {
+	static async insertMany(input: RawInsertMessageT[]) {
 		const newMessages = await DrizzleService.batchInsert(Message, input, items => db.insert(Message).values(items).returning())
 		return newMessages
 	}

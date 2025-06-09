@@ -36,7 +36,7 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentVal
 	}
 
 	return (
-		<Form {...form} onSubmit={onSubmit} className="flex h-full flex-col justify-between gap-20">
+		<Form {...form} onSubmit={onSubmit} className="flex grow flex-col justify-between gap-20">
 			<div className="space-y-10">
 				<div className="space-y-2">
 					<LabelWithTooltip>Select AI Models to run the tests on</LabelWithTooltip>

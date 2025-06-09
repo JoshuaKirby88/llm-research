@@ -17,7 +17,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchId">> }
 	}
 
 	return (
-		<div className="h-full w-full max-w-xl space-y-20 pb-10">
+		<div className="flex w-full max-w-xl grow flex-col space-y-20">
 			<div className="space-y-2 text-center">
 				<h1 className="font-semibold text-4xl">Run Test</h1>
 				<p className="font-medium text-lg text-muted-foreground">{research.name}</p>

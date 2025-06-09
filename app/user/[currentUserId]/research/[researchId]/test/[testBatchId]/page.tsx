@@ -58,7 +58,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchId" | "
 	const tabs = config.getTabs({ models, tests, testModelBatches })
 
 	return (
-		<div className="w-full">
+		<div className="mb-20 w-full">
 			<PageTabs tabs={tabs} searchParams={searchParams} name={config.tabName}>
 				<div className="mb-1 flex gap-5">
 					<TestFilter

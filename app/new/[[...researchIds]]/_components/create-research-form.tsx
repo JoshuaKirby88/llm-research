@@ -113,7 +113,7 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 	}
 
 	return (
-		<Form {...form} onSubmit={onSubmit} className="mb-20 space-y-10">
+		<Form {...form} onSubmit={onSubmit} className="space-y-10">
 			<div className="flex items-center justify-between">
 				<h1 className="font-semibold text-3xl">New Research</h1>
 

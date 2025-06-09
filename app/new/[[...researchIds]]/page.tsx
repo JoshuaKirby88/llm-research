@@ -51,7 +51,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"researchIds">> 
 	})()
 
 	return (
-		<div className="w-full max-w-3xl">
+		<div className="mb-20 w-full max-w-3xl">
 			<CreateResearchForm defaultValues={defaultValues} />
 		</div>
 	)

@@ -41,7 +41,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId">
 	const currentUser = queriedUsers.find(u => u.id === params.currentUserId)
 
 	return (
-		<div className="w-full max-w-4xl space-y-5">
+		<div className="mb-20 w-full max-w-4xl space-y-5">
 			{!currentUser && (
 				<div className="flex items-center justify-center gap-2 rounded-md bg-red-500 p-2 text-sm text-white">
 					<AlertTriangleIcon />

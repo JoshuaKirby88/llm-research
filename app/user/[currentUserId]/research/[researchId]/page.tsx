@@ -57,7 +57,7 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 	const tabs = config.getTabs({ params, user, testBatches })
 
 	return (
-		<div className="mx-auto w-full max-w-5xl pb-20">
+		<div className="mx-auto mb-20 w-full max-w-5xl">
 			<PageTabs tabs={tabs} searchParams={searchParams}>
 				<div className="flex items-start gap-5">
 					<PageTabsList tabs={tabs} />

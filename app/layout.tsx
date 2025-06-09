@@ -14,15 +14,17 @@ export const metadata: Metadata = {
 const Layout = (props: { children: React.ReactNode }) => {
 	return (
 		<html lang="en" suppressHydrationWarning className="h-full">
-			<body className="h-full antialiased">
+			<body className="flex min-h-full flex-col antialiased">
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 					<ClerkProvider>
 						<PostHogProvider>
 							<Navbar />
 
-							<main className="container mx-auto flex h-full flex-col items-center space-y-10 py-40">{props.children}</main>
+							<main className="container mx-auto flex min-h-full grow flex-col items-center space-y-10 pt-40">{props.children}</main>
 
-							<Toaster />
+							<footer className="h-10">
+								<Toaster />
+							</footer>
 						</PostHogProvider>
 					</ClerkProvider>
 				</ThemeProvider>

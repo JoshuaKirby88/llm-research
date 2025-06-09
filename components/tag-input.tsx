@@ -3,7 +3,6 @@
 import { cn } from "@/utils/cn"
 import { TagInput as EmplorTagInput, TagInputProps } from "emblor"
 import { XIcon } from "lucide-react"
-import { useState } from "react"
 import { Button } from "./ui/button"
 import { inputVariants } from "./ui/input"
 
@@ -15,7 +14,6 @@ type Props = Partial<Omit<TagInputProps, "tags" | "onTagAdd" | "onTagRemove" | "
 }
 
 export const TagInput = ({ tags, onTagAdd, onTagRemove, onClearAll, className, ...props }: Props) => {
-	const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
 	const emblorTags = tags.map(tag => ({ id: tag, text: tag }))
 
 	return (
@@ -37,11 +35,12 @@ export const TagInput = ({ tags, onTagAdd, onTagRemove, onClearAll, className, .
 				}}
 				inlineTags={false}
 				inputFieldPosition="top"
-				activeTagIndex={activeTagIndex}
-				setActiveTagIndex={setActiveTagIndex}
+				activeTagIndex={null}
+				setActiveTagIndex={() => {}}
 				draggable={false}
 				className="flex-col-reverse"
 				placeholder='"↵" to add'
+				truncate={30}
 				{...props}
 			/>
 

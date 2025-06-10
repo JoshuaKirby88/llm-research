@@ -45,7 +45,7 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 	useEffect(() => {
 		// Independent variable name
 		if (prevRef.current.independentVariableName !== independent.name) {
-			props.messageTemplateFields.fields.forEach((field, i) => {
+			form.getValues("messageTemplates").forEach((field, i) => {
 				const currentValue = SlashEditorFeature.tiptapStringToCustomString(field.text)
 				if (currentValue.includes(VariableTable.toVar(prevRef.current.independentVariableName))) {
 					const updatedValue = currentValue.replaceAll(VariableTable.toVar(prevRef.current.independentVariableName), VariableTable.toVar(independent.name))
@@ -67,7 +67,7 @@ export const VariableSlashEditor = (props: { name: string; index: number; messag
 			const updatedBlockings = prevRef.current.blockingVariableNames.map((prevName, i) => ({ prevName, i })).filter(blocking => blocking.prevName !== blockings[blocking.i].name)
 
 			updatedBlockings.forEach(updatedBlocking => {
-				props.messageTemplateFields.fields.forEach((field, i) => {
+				form.getValues("messageTemplates").forEach((field, i) => {
 					const currentValue = SlashEditorFeature.tiptapStringToCustomString(field.text)
 					if (currentValue.includes(VariableTable.toVar(updatedBlocking.prevName))) {
 						const updatedValue = currentValue.replaceAll(VariableTable.toVar(updatedBlocking.prevName), VariableTable.toVar(blockings[updatedBlocking.i].name))

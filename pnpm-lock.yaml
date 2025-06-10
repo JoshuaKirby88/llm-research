@@ -7516,10 +7516,10 @@ packages:
                 integrity: sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw==,
             }
 
-    tailwind-merge@3.3.0:
+    tailwind-merge@3.3.1:
         resolution:
             {
-                integrity: sha512-fyW/pEfcQSiigd5SNn0nApUOxx0zB/dm6UDU/rEwc2c3sX2smWUNbapHv+QRqLGVp9GWX3THIa7MUGPo+YkDzQ==,
+                integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==,
             }
 
     tailwindcss@4.0.15:
@@ -11940,7 +11940,7 @@ snapshots:
             react: 19.0.0
             react-dom: 19.0.0(react@19.0.0)
             react-easy-sort: 1.6.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-            tailwind-merge: 3.3.0
+            tailwind-merge: 3.3.1
         transitivePeerDependencies:
             - "@types/react"
             - "@types/react-dom"
@@ -13196,7 +13196,7 @@ snapshots:
 
     tailwind-merge@3.0.2: {}
 
-    tailwind-merge@3.3.0: {}
+    tailwind-merge@3.3.1: {}
 
     tailwindcss@4.0.15: {}
 

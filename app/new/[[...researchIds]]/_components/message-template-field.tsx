@@ -7,10 +7,16 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { CreateResearchI } from "@/src/schemas"
 import { HardHatIcon } from "lucide-react"
-import { UseFieldArrayReturn } from "react-hook-form"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import { VariableSlashEditor } from "./variable-slash-editor"
 
-export const MessageTemplateField = (props: { messageTemplateFields: UseFieldArrayReturn<CreateResearchI, "messageTemplates", "id"> }) => {
+export const MessageTemplateField = () => {
+	const form = useFormContext<CreateResearchI>()
+	const messageTemplateFields = useFieldArray({
+		control: form.control,
+		name: "messageTemplates",
+	})
+
 	return (
 		<FormCard>
 			<FormCardHeader>
@@ -25,7 +31,7 @@ export const MessageTemplateField = (props: { messageTemplateFields: UseFieldArr
 			</FormCardHeader>
 
 			<FormCardContent>
-				{props.messageTemplateFields.fields.map((field, i) => (
+				{messageTemplateFields.fields.map((field, i) => (
 					<div key={field.id} className="group flex flex-col gap-4">
 						<div className="space-y-2">
 							<div className="flex items-center justify-between">
@@ -52,10 +58,10 @@ export const MessageTemplateField = (props: { messageTemplateFields: UseFieldArr
 								/>
 							</div>
 
-							<VariableSlashEditor name={`messageTemplates.${i}.text`} index={i} messageTemplateFields={props.messageTemplateFields} />
+							<VariableSlashEditor name={`messageTemplates.${i}.text`} index={i} />
 						</div>
 
-						<Button type="button" className="w-full" variant="red" onClick={() => props.messageTemplateFields.remove(i)}>
+						<Button type="button" className="w-full" variant="red" onClick={() => messageTemplateFields.remove(i)}>
 							Delete Message
 						</Button>
 
@@ -68,7 +74,7 @@ export const MessageTemplateField = (props: { messageTemplateFields: UseFieldArr
 				<Button
 					type="button"
 					className="w-full"
-					onClick={() => props.messageTemplateFields.append({ role: props.messageTemplateFields.fields.at(-1)?.role === "user" ? "assistant" : "user", text: "", isPrompt: false })}
+					onClick={() => messageTemplateFields.append({ role: messageTemplateFields.fields.at(-1)?.role === "user" ? "assistant" : "user", text: "", isPrompt: false })}
 				>
 					Add Message
 				</Button>

@@ -11,7 +11,7 @@ import { VariableTable } from "@/src/tables"
 import { isResultValid } from "@/utils/actions/is-result-valid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BookOpenIcon, RotateCcwIcon } from "lucide-react"
-import { FieldPath, useFieldArray, useForm } from "react-hook-form"
+import { FieldPath, useForm } from "react-hook-form"
 import { BlockingVariableField } from "./blocking-variable-field"
 import { DependentVariableField } from "./dependent-variable-field"
 import { EvaluationField } from "./evaluation-field"
@@ -83,11 +83,6 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 		mode: "onChange",
 	})
 
-	const messageTemplateFields = useFieldArray({
-		control: form.control,
-		name: "messageTemplates",
-	})
-
 	const onSubmit = async (input: CreateResearchI) => {
 		const result = await createResearchAction(input)
 		isResultValid(result)
@@ -134,9 +129,9 @@ export const CreateResearchForm = (props: { defaultValues: Partial<CreateResearc
 
 				<BlockingVariableField appendGeneratedValues={appendGeneratedValues} />
 
-				<MessageTemplateField messageTemplateFields={messageTemplateFields} />
+				<MessageTemplateField />
 
-				<EvaluationField messageTemplateFields={messageTemplateFields} />
+				<EvaluationField />
 
 				<DependentVariableField appendGeneratedValues={appendGeneratedValues} />
 			</div>

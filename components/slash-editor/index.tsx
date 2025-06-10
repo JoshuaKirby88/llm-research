@@ -43,7 +43,7 @@ export const SlashEditor = (props: { suggestions: Suggestion[]; emptyLabel?: str
 				suggestion: {
 					char: "/",
 					items(input) {
-						return suggestionsRef.current.filter(s => s.label.toLowerCase().startsWith(input.query.toLowerCase()))
+						return suggestionsRef.current.filter(s => s.label.toLowerCase().includes(input.query.toLowerCase()))
 					},
 					render() {
 						let component: ReactRenderer<typeof SlashCommand>

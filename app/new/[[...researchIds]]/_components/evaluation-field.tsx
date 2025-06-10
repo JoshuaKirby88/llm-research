@@ -2,10 +2,13 @@ import { FormCard, FormCardContent, FormCardHeader } from "@/components/form/for
 import { LabelWithTooltip } from "@/components/form/label-with-tooltip"
 import { CreateResearchI } from "@/src/schemas"
 import { RulerIcon } from "lucide-react"
-import { UseFieldArrayReturn } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { VariableSlashEditor } from "./variable-slash-editor"
 
-export const EvaluationField = (props: { messageTemplateFields: UseFieldArrayReturn<CreateResearchI, "messageTemplates", "id"> }) => {
+export const EvaluationField = () => {
+	const form = useFormContext<CreateResearchI>()
+	const [messageTemplates] = form.watch(["messageTemplates"])
+
 	return (
 		<FormCard>
 			<FormCardHeader>
@@ -15,7 +18,7 @@ export const EvaluationField = (props: { messageTemplateFields: UseFieldArrayRet
 			</FormCardHeader>
 
 			<FormCardContent>
-				<VariableSlashEditor name="evalPrompt.text" index={props.messageTemplateFields.fields.length} messageTemplateFields={props.messageTemplateFields} />
+				<VariableSlashEditor name="evalPrompt.text" index={messageTemplates.length} />
 			</FormCardContent>
 		</FormCard>
 	)

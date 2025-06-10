@@ -1,3 +1,4 @@
+- [ ] Updating variable names broken
 - [ ] Fix run test loading
 - [ ] Add types to batch structured completion
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
@@ -7,8 +8,6 @@
 # New research form
 
 - [ ] Compare mode: Each test has 2 different messages. Evaluation prompt can access both, and compare
-- [ ] Add a section underneath create research form to submit a message when a user is unable to research what they want
-- [ ] Option to enforce token count for message prompts
 - [ ] Generate sample prompts for all prompt inputs
 - [ ] Support research without blocking variables
     - Make test filter page more flexible to different data
@@ -18,7 +17,6 @@
 # Get Cloudflare Pro
 
 - Increases CPU time limit from 10ms to 300,000ms
-- Stop using batch AI proxy, and limit number batch length to 1,000
 
 # Research examples
 

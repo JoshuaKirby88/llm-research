@@ -1,9 +1,9 @@
 "use client"
 
-import { Slot } from "@radix-ui/react-slot"
 import { useSearchParams } from "next/navigation"
+import { Slot } from "radix-ui"
 
-export const QueryStateSlot = (props: { name: string; value: string } & React.ComponentProps<typeof Slot>) => {
+export const QueryStateSlot = (props: { name: string; value: string } & React.ComponentProps<typeof Slot.Root>) => {
 	const searchParams = useSearchParams()
 
 	const onClick = () => {
@@ -12,5 +12,5 @@ export const QueryStateSlot = (props: { name: string; value: string } & React.Co
 		window.history.replaceState(null, "", `?${params.toString()}`)
 	}
 
-	return <Slot {...props} onClick={onClick} />
+	return <Slot.Root {...props} onClick={onClick} />
 }

@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn"
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { VariantProps, cva } from "class-variance-authority"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 import * as React from "react"
 import { buttonVariantClasses } from "./button"
 

@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn"
-import * as AvatarPrimitive from "@radix-ui/react-avatar"
 import { VariantProps, cva } from "class-variance-authority"
 import Image from "next/image"
+import { Avatar as AvatarPrimitive } from "radix-ui"
 import * as React from "react"
 
 export type AvatarProps = VariantProps<typeof avatarVariants>

@@ -10,41 +10,41 @@
 	"observability": {
 		"enabled": true,
 		"logs": {
-			"enabled": false,
-		},
+			"enabled": false
+		}
 	},
 	"services": [
 		{
 			"binding": "WORKER_SELF_REFERENCE",
-			"service": "llm-research",
-		},
+			"service": "llm-research"
+		}
 	],
 	"assets": {
 		"directory": ".open-next/assets",
-		"binding": "ASSETS",
+		"binding": "ASSETS"
 	},
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "llm-research",
 			"database_id": "98fd5254-fd05-4459-a74d-3c9ad082c314",
-			"migrations_dir": "drizzle/migrations",
-		},
+			"migrations_dir": "drizzle/migrations"
+		}
 	],
 	"vectorize": [
 		{
 			"binding": "VECTORIZE_PROD",
-			"index_name": "llm-research-prod",
+			"index_name": "llm-research-prod"
 		},
 		{
 			"binding": "VECTORIZE_DEV",
-			"index_name": "llm-research-dev",
-		},
+			"index_name": "llm-research-dev"
+		}
 	],
 	"routes": [
 		{
 			"pattern": "llmresearch.joshuakirby.webcam",
-			"custom_domain": true,
-		},
-	],
+			"custom_domain": true
+		}
+	]
 }

@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn"
-import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 import { ChevronDownIcon, ChevronUpIcon, LucideProps } from "lucide-react"
+import { Collapsible as CollapsiblePrimitive } from "radix-ui"
 
 function Collapsible({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
 	return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} className={cn("rounded-xl", props.className)} />

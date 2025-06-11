@@ -1,4 +1,3 @@
-- [ ] Fix run test loading
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text
 - [ ] Light theme flash on prod when theme is dark (Syntax on theme had solution)
 - [ ] Compare completion mode

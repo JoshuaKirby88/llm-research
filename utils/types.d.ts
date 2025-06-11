@@ -6,7 +6,7 @@ type PickRequired<T, K extends keyof T> = Pretty<T & RequiredObj<Pick<T, K>>>
 
 type NextSearchParam = { [key: string]: string | undefined }
 
-type InternalNextParam = { currentUserId: string; researchId: string; testBatchId: string; researchIds: string[] | undefined }
+type InternalNextParam = { currentUserId: string; researchId: string; testBatchId: string; researchIds: string[] | undefined; requestId: string }
 type NextParamKey = keyof InternalNextParam
 type NextParam<T extends NextParamKey> = Pretty<Pick<InternalNextParam, T>>
 

@@ -138,7 +138,7 @@ export const DependentValue = sqliteTable("DependentValue", {
 
 export const TestBatch = sqliteTable("TestBatch", {
 	id: integer().primaryKey({ autoIncrement: true }),
-	// Maybe give this a better name?
+	// TODO: Maybe give this a better name?
 	// This is the model for generating the messages, to test the LLM model in subject
 	model: text({ enum: AIFeature.models as AIModelArr }).notNull(),
 	iterations: integer().notNull(),
@@ -284,6 +284,15 @@ export const TestModelBatchResult = sqliteTable(
 	},
 	table => [unique().on(table.testModelBatchId, table.dependentValueId)],
 )
+
+export const Request = sqliteTable("Request", {
+	id: text().primaryKey(),
+	isLoading: integer({ mode: "boolean" }).notNull().default(true),
+	successId: integer(),
+	error: text(),
+	userId: text().notNull(),
+	...defaultColumns,
+})
 
 export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	userToStarredResearches: many(UserToStarredResearch),

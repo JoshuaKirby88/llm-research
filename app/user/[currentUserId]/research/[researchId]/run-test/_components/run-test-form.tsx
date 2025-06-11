@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { HashIcon, RocketIcon } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { v4 } from "uuid"
 import { AIModelSelect } from "./ai-model-select"
 import { RunTestFormCard } from "./run-test-form-card"
 
@@ -26,13 +27,13 @@ export const RunTestForm = (props: { maskedAPIKey: MaskedAPIKeyT; independentVal
 	})
 
 	const onSubmit = async (input: RunTestFormS) => {
-		runTestAction({ ...input, researchId: Number.parseInt(params.researchId) }).then(result => {
-			if (!isResultValid(result)) {
-				router.push(`/user/${params.currentUserId}/research/${params.researchId}/run-test`)
-			}
+		const requestId = v4()
+
+		runTestAction({ ...input, researchId: Number.parseInt(params.researchId), requestId }).then(result => {
+			isResultValid(result)
 		})
 
-		router.push(`/user/${params.currentUserId}/research/${params.researchId}/run-test/loading`)
+		router.push(`/user/${params.currentUserId}/research/${params.researchId}/run-test/request/${requestId}`)
 	}
 
 	return (

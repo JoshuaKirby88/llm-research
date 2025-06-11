@@ -3,7 +3,7 @@ import { omit } from "@/utils/omit"
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { createGoogleGenerativeAI } from "@ai-sdk/google"
 import { createOpenAI } from "@ai-sdk/openai"
-import { CoreMessage, LoadAPIKeyError, customProvider, embed, generateObject, generateText } from "ai"
+import { CoreMessage, LanguageModelUsage, LoadAPIKeyError, customProvider, embed, generateObject, generateText } from "ai"
 import { ZodSchema, z } from "zod"
 import { APIKeyError } from "../entities/errors"
 import { AIFeature, AIModel } from "../features"
@@ -76,7 +76,7 @@ export class AIServiceI {
 	async batchCompletion(inputs: { model: AIModel; messages: CoreMessage[] }[]) {
 		const promise = BatchAIService.batchCompletion(inputs, this.apiKey)
 
-		return await this.handleAPIKeyError(promise, inputs[0])
+		return (await this.handleAPIKeyError(promise, inputs[0])) as Return<typeof this.getCompletion>[]
 	}
 
 	async getStructuredCompletion<T extends ZodSchema>(input: { model: AIModel; schema: T; messages: CoreMessage[] }) {
@@ -101,7 +101,7 @@ export class AIServiceI {
 	async batchStructuredCompletion<T extends AIServiceSchema[AIServiceSchemaKey]["json"]>(inputs: { model: AIModel; schema: T; messages: CoreMessage[] }[]) {
 		const promise = BatchAIService.batchStructuredCompletion(inputs, this.apiKey)
 
-		return await this.handleAPIKeyError(promise, inputs[0])
+		return (await this.handleAPIKeyError(promise, inputs[0])) as { completion: z.infer<AIServiceSchema[T["key"]]["schema"]>; tokens: LanguageModelUsage }[]
 	}
 
 	async createEmbedding(input: { model: EmbeddingModel; text: string }) {

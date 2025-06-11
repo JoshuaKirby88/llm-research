@@ -3,7 +3,6 @@ import { env } from "@/utils/env"
 import { CoreMessage } from "ai"
 import { AIModel } from "../features"
 import { AIServiceSchema, AIServiceSchemaKey, APIKeyT } from "../schemas"
-import { AIServiceI } from "./ai.service"
 
 export class BatchAIService {
 	static async batchCompletion(inputs: { model: AIModel; messages: CoreMessage[] }[], apiKey: Partial<APIKeyT>) {
@@ -20,10 +19,10 @@ export class BatchAIService {
 			throw new Error(json.error)
 		}
 
-		return json as Return<AIServiceI["getCompletion"]>[]
+		return json
 	}
 
-	static async batchStructuredCompletion<T extends AIServiceSchema[AIServiceSchemaKey]["json"]>(inputs: { model: AIModel; messages: CoreMessage[]; schema: T }[], apiKey: Partial<APIKeyT>) {
+	static async batchStructuredCompletion<T extends AIServiceSchemaKey>(inputs: { model: AIModel; messages: CoreMessage[]; schema: AIServiceSchema[T]["json"] }[], apiKey: Partial<APIKeyT>) {
 		const payload: BatchAII = { apiKey, fn: "structuredCompletion", items: inputs }
 
 		const result = await fetch(`${env.NEXT_PUBLIC_URL}/api/batch-ai`, {
@@ -37,6 +36,6 @@ export class BatchAIService {
 			throw new Error(json.error)
 		}
 
-		return json as Return<AIServiceI["getStructuredCompletion"]>[]
+		return json
 	}
 }

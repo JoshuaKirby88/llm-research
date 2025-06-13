@@ -58,9 +58,10 @@ const TestBatchCardDropdown = (props: { research: ResearchT; testBatch: TestBatc
 
 			<DropdownMenuContent>
 				<FormRouteHandler
-					as="button"
 					action="/api/download-research"
 					input={{ researchId: props.research.id, testBatchId: props.testBatch.id } satisfies ActionI<typeof downloadResearchAction>}
+					variant="ghost"
+					size="sm"
 					className={dropdownMenuItemVariants()}
 				>
 					<DownloadIcon />

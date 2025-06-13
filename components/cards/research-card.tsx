@@ -88,9 +88,10 @@ const ResearchCardDropdown = (props: Props) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<FormRouteHandler
-						as="button"
 						action="/api/download-research"
 						input={{ researchId: props.research.id } satisfies ActionI<typeof downloadResearchAction>}
+						size="sm"
+						variant="ghost"
 						className={dropdownMenuItemVariants()}
 					>
 						<DownloadIcon />
@@ -102,8 +103,9 @@ const ResearchCardDropdown = (props: Props) => {
 							<DropdownMenuSeparator />
 
 							<FormActionButton
-								as="button"
 								action={(props.research.isArchived ? unarchiveResearchAction : archiveResearchAction).bind(null, { researchId: props.research.id })}
+								size="sm"
+								variant="ghost"
 								className={dropdownMenuItemVariants({ variant: props.research.isArchived ? "inverseBlue" : "inverseRed" })}
 							>
 								{props.research.isArchived ? <ArchiveRestoreIcon /> : <ArchiveIcon />}

@@ -25,7 +25,7 @@ export const buttonVariantClasses = {
 
 export const buttonVariants = cva(
 	cn(
-		"inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all disabled:pointer-events-none disabled:opacity-50",
+		"relative inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all disabled:pointer-events-none disabled:opacity-50",
 		"focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
 		"[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 	),
@@ -59,10 +59,10 @@ function Button({ className, variant, size, asChild, isLoading, children, disabl
 	const Comp = asChild ? SlotPrimitive.Slot : "button"
 
 	return (
-		<Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} disabled={disabled || isLoading} {...props}>
+		<Comp data-slot="button" className={cn(buttonVariants({ variant, size }), className)} disabled={disabled || isLoading} {...props}>
 			<>
 				{children}
-				{isLoading && <Spinner className="absolute" />}
+				{isLoading && <Spinner className="-translate-x-[50%] absolute left-[50%]" />}
 			</>
 		</Comp>
 	)

@@ -16,9 +16,10 @@ export const ResearchStarButton = ({ user, research, userToStarredResearch, ...p
 		<FormActionButton
 			disabled={!user.userId}
 			{...props}
-			as="button" // Render HTML button
 			action={(userToStarredResearch ? unstarResearchAction : starResearchAction).bind(null, { researchId: research.id, currentUserId: research.userId })}
-			className={cn("group flex items-center gap-2 rounded-full px-2 py-1 transition-colors not-disabled:hover:bg-blue-500/10", props.className)}
+			variant="ghost"
+			size="sm"
+			className={cn("group rounded-full not-disabled:hover:bg-blue-500/10", props.className)}
 		>
 			<StarIcon className={cn("size-6 text-blue-500 transition-all", userToStarredResearch && "fill-blue-500 text-blue-500")} />
 			<p>{research.starCount}</p>

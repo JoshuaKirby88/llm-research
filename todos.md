@@ -1,13 +1,18 @@
-- [ ] Perform proper research on all models and publish on prod
-- [ ] Disable buttons after loading: Star research, Publish research button
-    - Use client side buttons- [ ] Fix test filter. Filters acting on different tables are "or"ed. Maybe I need client side filtering?
-- [ ] Attempt large research with large tests, mocking batch ai, returning static text
-- [ ] Compare completion mode
-- [ ] Generate sample button for research create form
+- [ ] Store evaluation reasoning and add "View Reasoning" button beside "View Prompt" button
+- [ ] Changing tab in query param doesn't update tab if resulting page is the same pathanme
+- [ ] Support completion with structured completion
 - [ ] Research without blocking variables
     - Check everywhere where I'm using blocking variables
+- [ ] Fix test filter. Filters acting on different tables are "or"ed. Maybe I need client side filtering?
+- [ ] Attempt large research with large tests, mocking batch ai, returning static text
+    - If this causes issues, consider using cloudflare queues
+- [ ] Compare completion mode
+
+# Other
+
+- [ ] Perform proper research on all models and publish on prod
 - [ ] Fix long tags getting clipped in research create form
-- [ ] Example research button should be dropdown with different examples
+- [ ] Generate sample button for research create form
 
 # Get Cloudflare Pro
 
@@ -17,5 +22,4 @@
 
 - Do LLMs bias toward identified over anonymous individuals?
 - Should conversation history be in individual messages or user prompt?
-- What identification method is it best at: (index, UUID, word combo, quote the entire value)
 - Look for more examples using LLM

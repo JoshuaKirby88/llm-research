@@ -16,7 +16,7 @@ export const DynamicRequestPolling = Suspense(async (props: { params: Promise<Ne
 
 	const result = await new Promise<PollResult>(async resolve => {
 		const poll = async () => {
-			const request = await RequestRepo.query(params.requestId)
+			const request = await RequestRepo.query(Number.parseInt(params.requestId))
 
 			console.log("request", JSON.stringify(request, null, 2))
 
@@ -39,26 +39,26 @@ export const DynamicRequestPolling = Suspense(async (props: { params: Promise<Ne
 			})
 		}
 
-		for (let i = 0; i < 50; i++) {
+		for (let i = 0; i < 1000; i++) {
 			const result: PollResult | undefined = await poll()
 
 			if (result) {
 				if (result.deleteRequest) {
 					after(async () => {
-						await RequestRepo.delete(params.requestId)
+						await RequestRepo.delete(Number.parseInt(params.requestId))
 					})
 				}
 
 				resolve(result)
 			}
 
-			await new Promise(resolve => setTimeout(resolve, config.pollingIntervalSeconds ** (Math.floor(i / 10) + 1) * 1000))
+			await new Promise(resolve => setTimeout(resolve, config.pollingIntervalSeconds ** (Math.floor(i / 100) + 1) * 1000))
 		}
 	})
 
 	if ("redirectUrl" in result) {
 		return <ClientRedirect redirectUrl={result.redirectUrl} />
 	} else if ("error" in result) {
-		return <ClientToast error={result.error} />
+		return <ClientToast error={{ title: result.error, data: { duration: Infinity } }} />
 	}
 }, null)

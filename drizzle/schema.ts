@@ -270,7 +270,7 @@ export const TestModelBatchResult = sqliteTable(
 )
 
 export const Request = sqliteTable("Request", {
-	id: text().primaryKey(),
+	id: integer().primaryKey({ autoIncrement: true }),
 	isLoading: integer({ mode: "boolean" }).notNull().default(true),
 	successId: integer(),
 	error: text(),

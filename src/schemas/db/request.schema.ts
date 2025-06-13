@@ -7,6 +7,7 @@ export const requestSchema = createSelectSchema(Request)
 export type RequestT = z.infer<typeof requestSchema>
 
 export const insertRequestSchema = createInsertSchema(Request).omit({
+	id: true,
 	createdAt: true,
 	updatedAt: true,
 })

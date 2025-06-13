@@ -237,22 +237,6 @@ export const Eval = sqliteTable("Eval", {
 	...defaultColumns,
 })
 
-export const ResearchResult = sqliteTable(
-	"ResearchResult",
-	{
-		id: integer().primaryKey({ autoIncrement: true }),
-		count: integer().notNull(),
-		researchId: integer()
-			.notNull()
-			.references(() => Research.id, { onDelete: "cascade" }),
-		dependentValueId: integer()
-			.notNull()
-			.references(() => DependentValue.id, { onDelete: "cascade" }),
-		...defaultColumns,
-	},
-	table => [unique().on(table.researchId, table.dependentValueId)],
-)
-
 export const TestBatchResult = sqliteTable(
 	"TestBatchResult",
 	{
@@ -303,7 +287,6 @@ export const ResearchRelations = relations(Research, ({ many, one }) => ({
 	evalPrompt: one(EvalPrompt),
 	dependentValues: many(DependentValue),
 	testBatches: many(TestBatch),
-	researchResults: many(ResearchResult),
 	forkedResearch: one(Research, {
 		fields: [Research.forkedResearchId],
 		references: [Research.id],
@@ -437,17 +420,6 @@ export const EvalRelations = relations(Eval, ({ one }) => ({
 	test: one(Test, {
 		fields: [Eval.testId],
 		references: [Test.id],
-	}),
-}))
-
-export const ResearchResultRelations = relations(ResearchResult, ({ one }) => ({
-	research: one(Research, {
-		fields: [ResearchResult.researchId],
-		references: [Research.id],
-	}),
-	dependentValue: one(DependentValue, {
-		fields: [ResearchResult.dependentValueId],
-		references: [DependentValue.id],
 	}),
 }))
 

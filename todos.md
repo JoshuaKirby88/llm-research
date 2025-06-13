@@ -1,4 +1,4 @@
-- [ ] Remove research result page
+- [ ] Perform proper research on all models and publish on prod
 - [ ] Disable buttons after loading: Star research, Publish research button
     - Use client side buttons- [ ] Fix test filter. Filters acting on different tables are "or"ed. Maybe I need client side filtering?
 - [ ] Attempt large research with large tests, mocking batch ai, returning static text

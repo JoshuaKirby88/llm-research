@@ -6,10 +6,9 @@ import { buttonVariants } from "@/components/ui/button"
 import { TabsContent } from "@/components/ui/tabs"
 import { ClerkPublicUser, TestBatchT } from "@/src/schemas"
 import { authProcedure } from "@/utils/auth-procedure"
-import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, ShapesIcon, SquareStackIcon } from "lucide-react"
+import { CogIcon, FlaskConicalIcon, GitForkIcon, RocketIcon, SquareStackIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { ResearchOverviewPage } from "./_components/overview/research-overview-page"
-import { ResearchResultPage } from "./_components/result/research-result-page"
 import { ResearchSettingsPage } from "./_components/settings/research-settings-page"
 import { TestRunPage } from "./_components/test-runs/test-run-page"
 import { researchPageQuery } from "./_queries/research-page-query"
@@ -19,7 +18,6 @@ const config = {
 		return [
 			{ value: "Overview", icon: FlaskConicalIcon },
 			{ value: "Test Runs", icon: SquareStackIcon },
-			...(input.testBatches.length ? [{ value: "Result", icon: ShapesIcon }] : []),
 			...(input.params.currentUserId === input.user.userId ? [{ value: "Settings", icon: CogIcon }] : []),
 		]
 	},
@@ -106,12 +104,6 @@ const Page = Suspense(async (props: { params: Promise<NextParam<"currentUserId" 
 						testBatchResults={testBatchResults}
 					/>
 				</TabsContent>
-
-				{testBatches.length > 0 && (
-					<TabsContent value="Result">
-						<ResearchResultPage research={research} dependentValues={dependentValues} testBatchResults={testBatchResults} />
-					</TabsContent>
-				)}
 
 				{params.currentUserId === user.userId && (
 					<TabsContent value="Settings">
